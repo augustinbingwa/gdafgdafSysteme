@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% load activite_filter %}
+
+{% load helper_filter %}
+
+{% block javascript %}
+  <script src="{% static 'js/activite.js' %}"></script>
+  <script type="text/javascript">
+    //Initialiser les dates de la période
+    Helpers.DatePicker('app_du'); //Date début
+    Helpers.DatePicker('app_au'); //Date fin
+  </script>
+{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <div class="card-header">   
+      <div class="row">
+        <div class="col-sm-8" style="padding-top: 6px;">
+          <h4 class="card-title mb-0"><i class="fa fa-language"></i>&nbsp;Gestion d'allocation des panneaux publicitaires</h4>
+        </div>
+        <div class="col-sm-4 hidden-sm-down" style="padding-top: 6px;">
+          {% if not user.is_superuser %}
+            <button type="button" class="btn btn-primary float-right js-create-entity" data-url="{% url 'allocation_panneau_publicitaire_create' %}" {% if user.is_superuser or request.user|has_group:'IT_ADMIN' or request.user|has_group:'IT_USERS' %} disabled="disabled" title="Vous n'avez pas droit" {% endif %}>
+              <i class="fa fa-plus"></i>&nbsp;Créer une allocation
+            </button>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="card-body" style= "overflow-x:auto; padding-top: 5px;">
+      <form method="POST" action="{% url 'allocation_panneau_publicitaire_list' %}">
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="btn-toolbar float-left" role="toolbar" aria-label="Toolbar with button groups">
+              <div>
+                <label class="label_search">Du:<input type="text" id="app_du" name="app_du" value="{{ app_du }}" placeholder="" title="Date début" class="form-control search-input"/></label>
+                <label class="label_search">Au:<input type="text" id="app_au" name="app_au" value="{{ app_au }}" placeholder="" title="Date fin" class="form-control search-input"/></label>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-8">
+            <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
+              <div>
+                <label class="label_search">Référence:<input type="text" name="app_numero_allocation" value="{{ app_numero_allocation }}" placeholder="..." title="Contenant le numéro d'allocation" class="form-control search-input"/></label>
+                <label class="label_search">Réf-juridique:<input type="text" name="app_reference_juridique" value="{{ app_reference_juridique }}" placeholder="..." title="Contenant la référence juridique" class="form-control search-input"/></label>
+                <label class="label_search">N° parcelle:<input type="text" name="app_numero_parcelle" value="{{ app_numero_parcelle }}" placeholder="..." title="Contenant le numéro de la parcelle" class="form-control search-input"/></label>
+                <label class="label_search">Matricule:<input type="text" name="app_contribuable" value="{{ app_contribuable }}" placeholder="..." title="Contenant le matricule du contribuable" class="form-control search-input"/></label>
+                <label class="label_search">Nom:<input type="text" name="app_contribuable_nom" value="{{ app_contribuable_nom }}" placeholder="..." title="Contenant le nom du contribuable" class="form-control search-input"/></label>
+                <label class="label_search">Utilisateur:<input type="text" name="app_user_create" value="{{ app_user_create }}" placeholder="..." title="Crée par" class="form-control search-input"/></label>
+                <label class="label_search">
+                  Status:
+                  <select name="app_status" class="form-control search-input">
+                    <option value="0">...</option>
+                    <option value="1" {% if app_status == '1' %} selected='selected' {% endif %}>Validée</option>
+                    <option value="2" {% if app_status == '2' %} selected='selected' {% endif %}>En attente</option>
+                    <option value="3" {% if app_status == '3' %} selected='selected' {% endif %}>Brouillon</option>
+                  </select> 
+                </label>
+                <label><button type="submit" id="btn_search" title="Rechercher/Actualiser" class="btn btn-primary btn-sm search-button"><i class="fa fa-search"></i></button></label>
+                <label>&nbsp;&nbsp;&nbsp;&nbsp;<button type="submit" id="btn_excel" title="Genere excel" class="btn btn-sm btn-success"><i class="fa fa-file-excel-o"></i>&nbsp;Generer excel</button></label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <table class="table table-hover table-bordered table-striped table-outline mb-0 nowrap" id="entity-table" width="100%" cellspacing="0">
+        <thead class="thead-default">
+          <tr>
+            <th class="text-center"></th>
+            <th class="text-center">Action</th>
+            <th class="text-center">Status</th>
+            <th class="text-center">Référence</th> 
+            <th class="text-center">Réf juridique</th> 
+            <th class="text-center">Contribuable</th>
+            <th class="text-center">Info parcelle</th>
+            <th class="text-center">Superficie</th>
+            <th class="text-center">Tarif</th>
+            <th class="text-center">Montant</th>
+            <th class="text-center">Date</th>
+            <th class="text-center">Solde départ</th>
+            <th class="text-center">Crée par</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% include 'allocation_panneau_publicitaire/includes/_allocation_panneau_publicitaire_list.html' %}          
+        </tbody>   
+      </table>
+      {% include 'paginator.html' %}
+    </div>
+    <div class="card-footer">{{ lst | nombre_enreg_by_user:user }}</div>
+  </div>
+{% endblock %}

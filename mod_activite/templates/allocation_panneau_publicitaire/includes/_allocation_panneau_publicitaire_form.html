@@ -1,0 +1,112 @@
+{% block javascript %}
+  <script type="text/javascript">
+    $(document).ready(function(){
+      //Autocompletion de l'espace/parcelle publique non occupée et validée
+      $( "#id_auto_parcelle_publique" ).autocomplete({
+        'minLength':1,
+        source: "/foncier/parcelle_publique/autocomplete/",
+        appendTo: idModalEntity,
+        select: function(event, ui) {
+          event.preventDefault();
+          $(this).val(ui.item.label); 
+          $("#id_parcelle_publique").val(ui.item.value);               
+        },
+        focus: function(event, ui) {
+          event.preventDefault();                    
+          $(this).val(ui.item.label);
+        }
+      });
+
+      //Autocompletion du contribuable
+      $( "#id_auto_contribuable" ).autocomplete({
+        'minLength':1,
+        source: "/crm/contribuable/autocomplete/",
+        appendTo: idModalEntity,
+        select: function(event, ui) {
+          event.preventDefault();
+          $(this).val(ui.item.label); 
+          $("#id_contribuable").val(ui.item.value);               
+        },
+        focus: function(event, ui) {
+          event.preventDefault();                    
+          $(this).val(ui.item.label);
+        }
+      });
+    });
+
+    //Date picker : date debut activité
+    Helpers.DatePicker('id_date_debut');
+  </script>
+{% endblock %}
+
+{% load activite_filter %}
+
+{% load widget_tweaks %}
+
+<div class="container">
+  <div class="row"> 
+    <div class="form-group col-sm-3">
+      <label for="{{ form.numero_allocation.id_for_label }}">{{ form.numero_allocation.label_tag }}</label>
+      {% render_field form.numero_allocation class+="form-control" %}
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.numero_allocation.help_text }}]</em></small></p>
+    </div>
+
+    <div class="form-group col-sm-3">
+      <i class="required_field">*</i>
+      <label for="{{ form.reference_juridique.id_for_label }}">{{ form.reference_juridique.label_tag }}</label>
+      {% render_field form.reference_juridique class+="form-control" %}
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.reference_juridique.help_text }}]</em></small></p>
+    </div>
+
+    <div class="form-group col-sm-3">
+      <i class="required_field">*</i>
+      <label for="{{ form.date_debut.id_for_label }}">{{ form.date_debut.label_tag }}</label>
+      {% render_field form.date_debut class+="form-control" %}
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.date_debut.help_text }}]</em></small></p>
+    </div>
+
+    <div class="form-group col-sm-3">
+      <label for="{{ form.solde_depart.id_for_label }}">{{ form.solde_depart.label_tag }}</label>
+      {% render_field form.solde_depart class+="form-control" %}
+      {% if form.solde_depart.help_text %}
+        <p class="help-inline"><small><em class="help-inline-ext">[{{ form.solde_depart.help_text }}]</em></small></p>
+      {% endif %}
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="form-group col-sm-12">
+      <i class="required_field">*</i>
+      <label for="{{ form.parcelle_publique.id_for_label }}">{{ form.parcelle_publique.label_tag }}</label>  
+      <input type="text" name="auto_parcelle_publique" placeholder="Chercher la parcelle ou l'espace par référence, commune, zone, quartier, précision..." class="form-control" id="id_auto_parcelle_publique" value="{{ form.instance.parcelle_publique | get_reference_parcelle }}" {% if form.instance.date_validate %} disabled="disabled" {% endif %}/>
+      <input type="hidden" name="parcelle_publique" class="form-control" required="" id="id_parcelle_publique" value="{{form.instance.parcelle_publique.id}}"/>
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.parcelle_publique.help_text }}]</em></small></p>
+    </div>    
+  </div>
+
+  <div class="row">
+    <div class="form-group col-sm-12">
+      <i class="required_field">*</i>
+      <label for="{{ form.taxe.id_for_label }}">{{ form.taxe.label_tag }}</label>
+      {% render_field form.taxe  class+="form-control" %}
+       <p class="help-inline"><small><em class="help-inline-ext">[{{ form.taxe.help_text }}]</em></small></p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group col-sm-3">
+      <i class="required_field">*</i>
+      <label for="{{ form.superficie.id_for_label }}">{{ form.superficie.label_tag }}</label>
+      {% render_field form.superficie  class+="form-control" %}
+       <p class="help-inline"><small><em class="help-inline-ext">[{{ form.superficie.help_text }}]</em></small></p>
+    </div>
+
+    <div class="form-group col-sm-9">
+      <i class="required_field">*</i>
+      <label for="{{ form.contribuable.id_for_label }}">{{ form.contribuable.label_tag }}</label>  
+      <input type="text" name="auto_contribuable" placeholder="Chercher contribuable..." class="form-control" id="id_auto_contribuable" value="{{form.instance.contribuable}}" {% if form.instance.date_validate %} disabled="disabled" {% endif %}/>
+      <input type="hidden" name="contribuable" class="form-control" required="" id="id_contribuable" value="{{form.instance.contribuable.id}}"/>
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.contribuable.help_text }}]</em></small></p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% load transport_filter %}
+{% load helper_filter %}
+{% block javascript %}
+<!--  <script src="{% static 'js/activite.js' %}"></script>-->
+  <script type="text/javascript">
+    //Initialiser les dates de la période
+    Helpers.DatePicker('vaa_du'); //Date début
+    Helpers.DatePicker('vaa_au'); //Date fin
+    Helpers.DatePicker('vaa_dateouvert');
+    Helpers.DatePicker('id_datereouverture');
+  </script>
+{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <div class="card-header">   
+        <div class="row">
+          <div class="col-sm-7" style="padding-top: 6px;">
+            <h4 class="card-title mb-0">Gestion des activités arrêtées et de reouverture d'activite </h4>
+          </div>
+          <div class="col-sm-5 hidden-sm-down" style="padding-top: 6px;">
+                       
+          </div>
+        </div>
+    </div>
+    <div class="card-body" style= "overflow-x:auto; padding-top: 5px;">
+        <form method="POST" action="{% url 'vehicule_arret_service_list' %}">
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="btn-toolbar float-left" role="toolbar" aria-label="Toolbar with button groups">
+            <div>
+              <label class="label_search">Du:<input type="text" id="vaa_du" name="vaa_du" value="{{ vaa_du }}" placeholder="" title="Date début" class="form-control search-input"/></label>
+              <label class="label_search">Au:<input type="text" id="vaa_au" name="vaa_au" value="{{ vaa_au }}" placeholder="" title="Date fin" class="form-control search-input"/></label>
+            </div>
+          </div>
+        </div>
+          <div class="col-sm-8">
+          <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
+            <div>
+              <label class="label_search">N<sup>o</sup> activite:<input type="text" name="vaa_numero_activite" value="{{ vaa_numero_activite }}" placeholder="..." title="Contenant la Référence de l'activité" class="form-control search-input"/></label>
+              <label class="label_search">Utilisateur:<input type="text" name="vaa_user_create" value="{{ vaa_user_create }}" placeholder="..." title="Crée par" class="form-control search-input"/></label>
+              <label class="label_search">
+                Status:
+                <select name="vaa_status" class="form-control search-input">
+                  <option value="0">...</option>
+                  <option value="1" {% if vaa_status == '1' %} selected='selected' {% endif %}>Parciel</option>
+                  <option value="2" {% if vaa_status == '2' %} selected='selected' {% endif %}>Definitif</option>
+                  <option value="3" {% if vaa_status == '3' %} selected='selected' {% endif %}>Valider</option>
+                  <option value="4" {% if vaa_status == '4' %} selected='selected' {% endif %}>Non Valider</option>
+                  <option value="5" {% if vaa_status == '4' %} selected='selected' {% endif %}>Reouvert</option>
+                </select>
+              </label>
+              <label><button type="submit" id="btn_search" title="Rechercher/Actualiser" class="btn btn-primary btn-sm search-button"><i class="fa fa-search"></i></button></label>
+            </div>
+          </div>
+        </div>
+      </div>
+            </form>
+       <table class="table table-hover table-bordered table-striped table-outline mb-0 nowrap" id="entity-table" width="100%" cellspacing="0">
+        <thead class="thead-default">
+            <tr>
+                <th class="text-center"></th>
+                <th class="text-center">Action</th>
+                <th class="text-center">N° activité</th>
+                <th class="text-center">Motif</th>
+                <th class="text-center">Date d'ouverture</th>
+                <th class="text-center">Date d'arrêt </th>
+                <th class="text-center">Etat </th>
+                <th class="text-center">Crée par</th>
+            </tr>
+        </thead>
+        <tbody>
+          {% include 'vehicule_arret_service/includes/_vehicule_arret_service_list.html' %}          
+        </tbody>
+      </table>
+        {% include 'paginator.html' %}
+    </div>
+  <div class="card-footer">{{ lst | nombre_enreg_by_user:user }}</div>
+</div>
+{% endblock %}

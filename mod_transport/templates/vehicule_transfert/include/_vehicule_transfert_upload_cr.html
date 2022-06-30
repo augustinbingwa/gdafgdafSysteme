@@ -1,0 +1,25 @@
+{% load parametrage_filter %}
+
+<form method="post" enctype="multipart/form-data" action="{% url 'vehicule_transfert_upload' obj.pk %}" class="js-entity-upload-form">
+   {% csrf_token %}
+  <div class="modal-header">
+    <h5 class="modal-title"><i class="fa fa-file-pdf-o"></i>&nbsp; Visualiser ou Télécharger les fichiers du  véhicule n°<em>{{ obj.plaque }}</em></h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="container">
+      <div class="form-group row">
+        <div class="col-sm-12"  style="border: 1px solid #c2cfd6;">
+          <a target="_blank" class="nav-link " href="{{ obj.fichier_carterose | get_file_upload_url }}">
+              {{ obj.fichier_carterose | get_file_upload:"carte rose" }}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-undo"></i>&nbsp;Fermer </button>
+  </div>
+</form>

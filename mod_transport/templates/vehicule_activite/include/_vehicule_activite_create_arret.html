@@ -1,0 +1,37 @@
+{% load widget_tweaks %}
+{% load transport_filter %}
+<form method="post" action="{% url 'vehicule_activite_arret' obj.id %}" class="js-entity-update-forme">
+   {% csrf_token %}
+  <div class="modal-header">
+    <h4 class="modal-title"><i class="fa fa-taxi"></i>&nbsp;Créer l'arrêt d'activite n<sup>o</sup>{{obj.numero_activite}}</h4>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="container">
+      <div class="row">
+        <div class="form-group col-sm-4">
+          <i class="required_field">*</i>
+          <label>Référence</label>
+          <input type="text" name="numero_activite" class="form-control" required="" id="id_numero_activite" value="{{obj.numero_activite}}" disabled="disabled"/>
+          <input type="hidden" name="activite" class="form-control" required="" id="id_activite" value="{{obj.id}}" />
+          <p class="help-inline"><small><em class="help-inline-ext">Numero d'activite</em></small></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-10">
+          <i class="required_field">*</i>
+          <label>Motif d'arrêt d'activite</label>
+          <textarea name="motif" class="form-control" id="id_motif" required="required"></textarea>
+<!--          <input type="text" name="motif" placeholder="Ajouter le motif d'arrêt d'activite" class="form-control" id="id_motif" value="" required="required"/>-->
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="submit" name="arretp" class="btn btn-primary" value="1" title="Arrêt partiel d'activite"> <i class="fa fa-stop"></i>&nbsp;Arrêt Partiel</button>
+    <button type="submit" name="arrett" class="btn btn-warning" value="2" title="Arrêt total d'activite"> <i class="fa fa-stop" ></i>&nbsp;Arrêt Total</button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-undo"></i>&nbsp;Annuler</button>
+  </div>
+</form>

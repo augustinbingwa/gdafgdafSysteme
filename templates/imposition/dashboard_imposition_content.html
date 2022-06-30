@@ -1,0 +1,349 @@
+
+{% load contribuable_filter %}
+
+{% load activite_filter %}
+
+{% load impot_filter %}
+
+{% load foncier_filter %}
+
+{% load helper_filter %}
+
+{% load humanize %}
+
+{% load mathfilters %}
+
+<div class="row">
+    <div class="col-sm-6 col-lg-2">
+        <div class="card text-white bg-success card-body-traffic">
+            <div class="card-body pb-0">
+                <i class="icon-people"></i>&nbsp;<span class="font-weight-bold">CONTRIBUABLES</span>
+                <div class="btn-group float-right">
+                    <button type="button" class="btn btn-transparent dropdown-toggle p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="icon-settings"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="{% url 'physique_list' %}">Personnes Physiques</a>
+                        <a class="dropdown-item" href="{% url 'morale_list' %}">Personnes Morales</a>
+                    </div>
+                </div>
+                <p>
+                    <h4 class="mb-0">{{ 0 | nombre_contribuables }}</h4><p>Enregistrés</p>
+                    <h4 class="mb-0">{{ 1 | nombre_contribuables }}</h4><p>Personnes physiques</p>
+                    <h4 class="mb-0">{{ 2 | nombre_contribuables }}</h4><p>Personne morales</p>
+                </p>
+            </div>
+        </div>
+    </div>
+    <!--/.col-->
+
+    <div class="col-sm-6 col-lg-2">
+        <div class="card text-white bg-primary card-body-traffic">
+            <div class="card-body pb-0">
+                <i class="fa fa-map-signs"></i>&nbsp;<span class="font-weight-bold">IMPÔT FONCIER</span>
+                <div class="btn-group float-righcard-body-traffict">
+                    <button type="button" class="btn btn-transparent dropdown-toggle p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="icon-settings"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="{% url 'foncier_parcelle_list' %}">Parcelle privée</a>
+                        <a class="dropdown-item" href="{% url 'foncier_expertise_list' %}">Délarations</a>
+                    </div>
+                </div>
+                <p>
+                    <h4 class="mb-0">{{ 1 | nombre_impot_foncier }}</h4><p>Parcelles</p>
+                    <h4 class="mb-0">{{ 2 | nombre_impot_foncier }}</h4><p>Déclarations</p>
+                    <h4 class="mb-0">{{ 6 | nombre_contribuables }}</h4><p>Contribuables</p>
+                </p>
+            </div>
+        </div>
+    </div>
+    <!--/.col-->
+
+    <div class="col-sm-6 col-lg-2">
+        <div class="card text-white bg-info card-body-traffic">
+            <div class="card-body pb-0">
+                <i class="fa fa-files-o"></i>&nbsp;<span class="font-weight-bold">ACTIVITES STANDARD</span>
+                <div class="btn-group float-right">
+                    <button type="button" class="btn btn-transparent dropdown-toggle p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="icon-settings"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="{% url 'activite_standard_list' %}">Activités standard</a>
+                    </div>
+                </div>
+                <p>
+                    <h4 class="mb-0">{{ 1 | nombre_activite }}</h4><p>Enregistrés</p>
+                    <h4 class="mb-0">{{ 4 | nombre_contribuables }}</h4><p>Contribuables</p>
+                </p>
+            </div>
+            <div class="chart-wrapper px-3" style="height:60px;">
+                <canvas id="card-chart1" class="chart" height="60px"></canvas>
+            </div>
+        </div>
+    </div>
+    <!--/.col-->
+
+    <div class="col-sm-6 col-lg-2">
+        <div class="card text-white bg-secondary card-body-traffic">
+            <div class="card-body pb-0">
+                <i class="fa fa-files-o"></i>&nbsp;<span class="font-weight-bold">ACTIVITES MARCHÉ</span>
+                <div class="btn-group float-right">
+                    <button type="button" class="btn btn-transparent dropdown-toggle p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="icon-settings"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="{% url 'activite_marche_list' %}">Activités dans le marché</a>
+                    </div>
+                </div>
+                <p>
+                    <h4 class="mb-0">{{ 2 | nombre_activite }}</h4><p>Enregistrés</p>
+                    <h4 class="mb-0">{{ 5 | nombre_contribuables }}</h4><p>Contribuables</p>
+                </p>
+            </div>
+            <div class="chart-wrapper px-3" style="height:60px;">
+                <canvas id="card-chart1" class="chart" height="60px"></canvas>
+            </div>
+        </div>
+    </div>
+    <!--/.col-->
+
+    <div class="col-sm-6 col-lg-2">
+        <div class="card text-white bg-dark card-body-traffic">
+            <div class="card-body pb-0">
+                <i class="fa fa-credit-card-alt"></i>&nbsp;<span class="font-weight-bold">AVIS D'IMPOSITION</span>
+                <div class="btn-group float-right">
+                    <button type="button" class="btn btn-transparent dropdown-toggle p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="icon-settings"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="{% url 'avis_imposition_list' 3 %}">Avis activité standard</a>
+                        <a class="dropdown-item" href="{% url 'avis_imposition_list' 3 %}">Avis activité marché</a>
+                    </div>
+                </div>
+                <p>
+                    {% with ai_as_p=1|nombre_ai_payement ai_as_np=1|nombre_ai_payement:False ai_am_p=2|nombre_ai_payement ai_am_np=2|nombre_ai_payement:False %}
+                    <h4 class="mb-0">{{ ai_as_p | addition:ai_as_np | addition:ai_am_p | addition:ai_am_np }}</h4><p>Enregistrées</p>
+                    <h4 class="mb-0">{{ ai_as_p | addition:ai_as_np }} / <span class="text-success">{{ ai_as_p }}</span> / <span class="text-danger">{{ ai_as_np }}</span></h4><p>Activité Standard</p>
+                    <h4 class="mb-0">{{ ai_am_p | addition:ai_am_np }} / <span class="text-success">{{ ai_am_p }}</span> / <span class="text-danger">{{ ai_am_np }}</span></h4><p>Activité Marché</p>
+                    {% endwith %}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-lg-2">
+        <div class="card text-dark bg-warning card-body-traffic">
+            <div class="card-body pb-0">
+                <i class="fa fa-credit-card-alt"></i>&nbsp;<span class="font-weight-bold">NOTES D'IMPOSITION</span>
+                <div class="btn-group float-right">
+                    <button type="button" class="btn btn-transparent dropdown-toggle p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="icon-settings"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="{% url 'ni_impot_foncier_list' %}">Impôt foncier</a>
+                        <a class="dropdown-item" href="{% url 'ni_activite_standard_list' %}">Activité standard</a>
+                        <a class="dropdown-item" href="{% url 'ni_activite_marche_list' %}">Activité marché</a>
+                    </div>
+                </div>
+                <p>
+                    {% with ni_if_p=10|nombre_ni_payement ni_if_np=10|nombre_ni_payement:False ni_as_p=1|nombre_ni_payement ni_as_np=1|nombre_ni_payement:False ni_am_p=2|nombre_ni_payement ni_am_np=2|nombre_ni_payement:False %}
+                    <h4 class="mb-0">{{ ni_if_p | addition:ni_if_np }} / <span class="text-success">{{ ni_if_p }}</span> / <span class="text-danger">{{ ni_if_np }}</span></h4><p>Impôt Foncier</p>
+                    <h4 class="mb-0">{{ ni_as_p | addition:ni_as_np }} / <span class="text-success">{{ ni_as_p }}</span> / <span class="text-danger">{{ ni_as_np }}</span></h4><p>Activité Standard</p>   
+                    <h4 class="mb-0">{{ ni_am_p | addition:ni_am_np }} / <span class="text-success">{{ ni_am_p }}</span> / <span class="text-danger">{{ ni_am_np }}</span></h4><p>Activité Marché</p>
+                    {% endwith %}
+                </p> 
+            </div>
+        </div>
+    </div>
+    <!--/.col-->
+</div>
+
+<!--/.row-->
+<div class="card card-body-traffic">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-5">
+                <h4 class="card-title mb-0">Traffic</h4>
+                <div class="small text-muted">du {% now "d-m-Y" %}</div>
+            </div>
+            <!--/.col-->
+            <div class="col-sm-7 hidden-sm-down">
+                <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
+                    <div class="btn-group mr-3" data-toggle="buttons" aria-label="First group">
+                        <label class="btn btn-outline-secondary active">
+                            <input type="radio" name="options" id="option1" onchange="">{% now "d" %}
+                        </label>
+                        <label class="btn btn-outline-secondary">
+                            <input type="radio" name="options" id="option2" onchange="">{% now "m" %}
+                        </label>
+                        <label class="btn btn-outline-secondary">
+                            <input type="radio" name="options" id="option3" onchange="">{% now "Y" %}
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <!--/.col-->
+        </div>
+        <!--/.row-->
+
+        <!--ONLY STAFF-->
+        {% if request.user|has_group:'STAFF_IMPOSITION' or user.is_superuser %}
+            {% with ai_as_np=1|ai_recette_entity_not_payed ai_as_d_np=14|ai_recette_entity_not_payed ai_as_p=1|ai_recette_entity_payed ai_as_d_p=14|ai_recette_entity_payed ai_am_np=2|ai_recette_entity_not_payed ai_am_d_np=15|ai_recette_entity_not_payed ai_am_p=2|ai_recette_entity_payed ai_am_d_p=15|ai_recette_entity_payed ni_if_np=10|ni_recette_entity_not_payed ni_as_np=1|ni_recette_entity_not_payed ni_am_np=2|ni_recette_entity_not_payed ni_if_p=10|ni_recette_entity_payed ni_as_p=1|ni_recette_entity_payed ni_am_p=2|ni_recette_entity_payed prev_ni_if_np=10|ni_recette_entity_not_payed prev_ni_as_np=1|ni_recette_entity_not_payed prev_ni_am_np=2|ni_recette_entity_not_payed prev_ni_if_p=10|ni_recette_entity_payed prev_ni_as_p=1|ni_recette_entity_payed prev_ni_am_p=2|ni_recette_entity_payed %}
+                <div class="chart-wrapper">
+                    <table class="table table-hover table-bordered table-striped table-outline nowrap" id="tableau-bord" width="100%" cellspacing="0">
+                        <thead class="thead-default">
+                            <tr>
+                                <th class='text-center'></th>
+                                <th class='text-center'>Avis NON payés</th>
+                                <th class='text-center'>Avis payés</th>
+                                <th class='text-center'>Notes NON payées</th>
+                                <th class="text-center">Notes payées</th>
+                                <th class="text-center">Avis et Notes NON payés</th>
+                                <th class="text-center">Avis et Notes payés</th>
+                                <th class='text-center'>Prévisions des Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class='text-left'><strong>1. Impôt Foncier</strong></td>
+                                <td class='text-right'>{{ 0 }}</td>
+                                <td class='text-right'>{{ 0 }}</td>
+
+                                <td class='text-right'>{{ ni_if_np | intcomma }}</td> 
+                                <td class="text-right">{{ ni_if_p  | intcomma }}</td>   
+
+                                <td class="text-right">{{ ni_if_np | intcomma }}</td>
+                                <td class="text-right">{{ ni_if_p | intcomma }}</td>
+                                <td class="text-right"><strong>{{ prev_ni_if_np | addition:prev_ni_if_p | intcomma }}</strong></td>
+                            </tr>
+                            <tr>              
+                                <td class='text-left'><strong>2. Activités Standard</strong></td>
+                                <td class='text-right'>{{ ai_as_np | addition:ai_as_d_np | intcomma }}</td>
+                                <td class='text-right'>{{ ai_as_p  | addition:ai_as_d_p | intcomma }}</td>
+
+                                <td class='text-right'>{{ ni_as_np | intcomma }}</td>
+                                <td class="text-right">{{ ni_as_p  | intcomma }}</td> 
+
+                                <td class="text-right">{{ ai_as_np | addition:ai_as_d_np | addition:ni_as_np | intcomma }}</td>
+                                <td class="text-right">{{ ai_as_p | addition:ai_as_d_p | addition:ni_as_p | intcomma }}</td>
+                                <td class="text-right"><strong>{{ prev_ni_as_np | addition:prev_ni_as_p | intcomma }}</strong></td>
+                            </tr>
+                            <tr>              
+                                <td class='text-left'><strong>2. Activités Marché</strong></td>
+                                <td class='text-right'>{{ ai_am_np | addition:ai_am_d_np | intcomma }}</td>
+                                <td class='text-right'>{{ ai_am_p  | addition:ai_am_d_p | intcomma }}</td>
+
+                                <td class='text-right'>{{ ni_am_np | intcomma }}</td>
+                                <td class="text-right">{{ ni_am_p  | intcomma }}</td> 
+
+                                <td class="text-right">{{ ai_am_np | addition:ai_am_d_np | addition:ni_am_np | intcomma }}</td>
+                                <td class="text-right">{{ ai_am_p | addition:ai_am_d_p | addition:ni_am_p | intcomma }}</td>
+                                <td class="text-right"><strong>{{ prev_ni_am_np | addition:prev_ni_am_p | intcomma }}</strong></td>
+                            </tr>
+                            <tr class="bg-light">  
+                                <td class='text-left'><strong>TOTAUX</strong></td>
+                                
+                                <td class='text-right'><strong>{{ ai_as_np | addition:ai_as_d_np | addition:ai_am_np | addition:ai_am_d_np | intcomma }}</strong></td>
+                                
+                                <td class='text-right'><strong>{{ ai_as_p | addition:ai_as_d_p | addition:ai_am_p | addition:ai_am_d_p | intcomma }}</strong></td>
+                                
+                                <td class='text-right'><strong>{{ ni_if_np | addition:ni_as_np | addition:ni_am_np | intcomma }}</strong></td>
+                                
+                                <td class="text-right"><strong>{{ ni_if_p  | addition:ni_as_p  | addition:ni_am_p  | intcomma }}</strong></td>             
+                                
+                                <td class="text-right"><strong>{{ ai_as_np | addition:ai_as_d_np | addition:ai_am_np | addition:ai_am_d_np | addition:ni_if_np | addition:ni_as_np | addition:ni_am_np | intcomma }}</strong></td>
+                                
+                                <td class="text-right"><strong>{{ ai_as_p | addition:ai_as_d_p | addition:ai_am_p | addition:ai_am_d_p | addition:ni_if_p | addition:ni_as_p | addition:ni_am_p | intcomma }}</strong></td>
+
+                                <td class="text-right"><strong style="color:red;">{{ prev_ni_if_np | addition:prev_ni_as_np | addition:prev_ni_am_np | addition:prev_ni_if_p | addition:prev_ni_as_p | addition:prev_ni_am_p | intcomma }}</strong></td>
+                            </tr>
+                        </tbody>
+                    </table> 
+                </div>
+            {% endwith %}
+        {% endif %}
+
+        <br>
+        <div class="chart-wrapper">
+            <table class="table table-hover table-bordered table-striped table-outline nowrap" id="tableau-bord" width="100%" cellspacing="0">
+                <thead class="thead-default">
+                    <tr>
+                        <th rowspan="2" class='text-center'>Utilisateurs</th>
+                        <th colspan="5" class='text-center'>IMPÔT FONCIER</th>
+                        <th colspan="5" class='text-center'>ACTIVITÉS STANDARD</th>
+                        <th colspan="5" class='text-center'>ACTIVITÉS MARCHÉ</th>
+                    </tr>
+                    <tr>
+                        <th class='text-center text-secondary'>Saisies</th>
+                        <th class='text-center text-primary'>Validées</th>
+                        <th class='text-center text-info'>Générées</th>
+                        <th class='text-center text-success'>Payées</th>
+                        <th class='text-center text-danger'>Impayées</th>
+
+                        <th class='text-center text-secondary'>Saisies</th>
+                        <th class='text-center text-primary'>Validées</th>
+                        <th class='text-center text-info'>Générées</th>
+                        <th class='text-center text-success'>Payées</th>
+                        <th class='text-center text-danger'>Impayées</th>
+
+                        <th class='text-center text-secondary'>Saisies</th>
+                        <th class='text-center text-primary'>Validées</th>
+                        <th class='text-center text-info'>Générées</th>
+                        <th class='text-center text-success'>Payées</th>
+                        <th class='text-center text-danger'>Impayées</th>
+                    </tr>
+                </thead>
+                <tbody>        
+                    {% for user in user_list %}
+                        {% with foncier_genere=3|foncier_get_number_by_user:user|default:'' foncier_paye=4|foncier_get_number_by_user:user|default:'' standard_genere=3|standard_get_number_by_user:user|default:'' standard_paye=4|standard_get_number_by_user:user|default:'' marche_genere=3|marche_get_number_by_user:user|default:'' marche_paye=4|marche_get_number_by_user:user|default:'' %}
+                        
+                        <tr>
+                            <td>{{ forloop.counter }}.{{ user|show_me_dashboard:request }}</td>
+                            <td class='text-center dashboard-td-1 text-secondary'>{{ 1|foncier_get_number_by_user:user|default:'' }}</td>
+                            <td class='text-center dashboard-td-1 text-primary'>{{ 2|foncier_get_number_by_user:user|default:'' }}</td>
+                            <td class='text-center dashboard-td-1 text-info'>{{ foncier_genere }}</td>
+                            <td class='text-center dashboard-td-1 text-success'>{{ foncier_paye }}</td>
+                            <td class='text-center dashboard-td-1 text-danger'>{{ foncier_genere|sub:foncier_paye|default:'' }}</td>
+
+                            <td class='text-center dashboard-td-2 text-secondary'>{{ 1|standard_get_number_by_user:user|default:'' }}</td>
+                            <td class='text-center dashboard-td-2 text-primary'>{{ 2|standard_get_number_by_user:user|default:'' }}</td>
+                            <td class='text-center dashboard-td-2 text-info'>{{ standard_genere }}</td>
+                            <td class='text-center dashboard-td-2 text-success'>{{ standard_paye }}</td>
+                            <td class='text-center dashboard-td-2 text-danger'>{{ standard_genere|sub:standard_paye|default:'' }}</td>
+
+                            <td class='text-center dashboard-td-3 text-secondary'>{{ 1|marche_get_number_by_user:user|default:'' }}</td>
+                            <td class='text-center dashboard-td-3 text-primary'>{{ 2|marche_get_number_by_user:user|default:'' }}</td>
+                            <td class='text-center dashboard-td-3 text-info'>{{ marche_genere }}</td>
+                            <td class='text-center dashboard-td-3 text-success'>{{ marche_paye }}</td>
+                            <td class='text-center dashboard-td-3 text-danger'>{{ marche_genere|sub:marche_paye|default:'' }}</td>
+                        </tr>
+                        {% endwith %}
+                    {% endfor %}
+                    {% with foncier_genere=3|foncier_get_total_user foncier_paye=4|foncier_get_total_user standard_genere=3|standard_get_total_user standard_paye=4|standard_get_total_user marche_genere=3|marche_get_total_user marche_paye=4|marche_get_total_user %}
+                        <tr class="bg-light">
+                            <td class="text-primary dashboard-total"><strong>TOTAUX</strong></td>
+                            <td class='text-center  dashboard-total text-secondary'><strong>{{ 1|foncier_get_total_user }}</strong></td>
+                            <td class='text-center  dashboard-total text-primary'><strong>{{ 2|foncier_get_total_user }}</strong></td>
+                            <td class='text-center  dashboard-total text-info'><strong>{{ foncier_genere }}</strong></td>
+                            <td class='text-center  dashboard-total text-success'><strong>{{ foncier_paye }}</strong></td>
+                            <td class='text-center  dashboard-total text-danger'><strong>{{ foncier_genere|sub:foncier_paye }}</strong></td>
+
+                            <td class='text-center  dashboard-total text-secondary'><strong>{{ 1|standard_get_total_user }}</strong></td>
+                            <td class='text-center  dashboard-total text-primary'><strong>{{ 2|standard_get_total_user }}</strong></td>
+                            <td class='text-center  dashboard-total text-info'><strong>{{ standard_genere }}</strong></td>
+                            <td class='text-center  dashboard-total text-success'><strong>{{ standard_paye }}</strong></td>
+                            <td class='text-center  dashboard-total text-danger'><strong>{{ standard_genere|sub:standard_paye }}</strong></td>
+
+                            <td class='text-center  dashboard-total text-secondary'><strong>{{ 1|marche_get_total_user }}</strong></td>
+                            <td class='text-center  dashboard-total text-primary'><strong>{{ 2|marche_get_total_user }}</strong></td>
+                            <td class='text-center  dashboard-total text-info'><strong>{{ marche_genere }}</strong></td>
+                            <td class='text-center  dashboard-total text-success'><strong>{{ marche_paye }}</strong></td>
+                            <td class='text-center  dashboard-total text-danger'><strong>{{ marche_genere|sub:marche_paye }}</strong></td>
+                        </tr>
+                    {% endwith %}
+                </tbody>
+            </table> 
+        </div>
+    </div>
+</div>

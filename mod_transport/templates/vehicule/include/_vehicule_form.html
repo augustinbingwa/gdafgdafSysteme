@@ -1,0 +1,130 @@
+{% block javascript %}
+  <script type="text/javascript">
+    $(document).ready(function(){
+      //Autocompletion du contribuable ou propriétaire du véhicule
+      $( "#id_auto_contribuable" ).autocomplete({
+        'minLength':3,
+        source: "/crm/contribuable/autocomplete/",
+        appendTo: idModalEntity,
+        select: function(event, ui) {
+          event.preventDefault();
+          $(this).val(ui.item.label); 
+          $("#id_contribuable").val(ui.item.value);               
+        },
+        focus: function(event, ui) {
+          event.preventDefault();                    
+          $(this).val(ui.item.label);
+        }
+      });
+
+      //Autocompletion du modèle de véhicule
+      $( "#id_auto_modele" ).autocomplete({
+        'minLength':3,
+        source: "/transport/vehicule/modele/autocomplete/",
+        appendTo: idModalEntity,
+        select: function(event, ui) {
+          event.preventDefault();
+          $(this).val(ui.item.label); 
+          $("#id_modele").val(ui.item.value);               
+        },
+        focus: function(event, ui) {
+          event.preventDefault();                    
+          $(this).val(ui.item.label);
+        }
+      });
+
+    });
+
+    //Mettre le numéro de chassi en majiscule
+    To_Majiscule('#id_chassis');
+
+    //Mettre le numéro de la plaque en majiscule
+    To_Majiscule('#id_plaque');
+
+    //Colorer le compte propre pour plus de visibilité
+    $('#id_compte_propre').attr('style', 'background-color:yellow');
+  </script>
+{% endblock %}
+
+{% load widget_tweaks %}
+
+{% load transport_filter %}
+
+<div class="container"> 
+  <div class="row">
+    <div class="form-group col-sm-6">
+      <i class="required_field">*</i>
+      <label for="{{ form.sous_categorie.id_for_label }}">{{ form.sous_categorie.label_tag }}</label>
+      {% render_field form.sous_categorie  class+="form-control" %}
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.sous_categorie.help_text }}]</em></small></p>
+    </div>
+
+    <div class="form-group col-sm-3">
+      <i class="required_field">*</i>
+      <label for="{{ form.locale.id_for_label }}">{{ form.locale.label_tag }}</label>       
+      {% render_field form.locale  class+="form-control" %}
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.locale.help_text }}]</em></small></p>
+    </div>
+
+    <div class="form-group col-sm-3">
+      <i class="required_field">*</i>
+      <label for="{{ form.plaque.id_for_label }}">{{ form.plaque.label_tag }}</label>       
+      {% render_field form.plaque  class+="form-control" %}
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.plaque.help_text }}]</em></small></p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group col-sm-8">
+      <i class="required_field">*</i>
+      <label for="{{ form.modele.id_for_label }}">{{ form.modele.label_tag }}</label>  
+      <input type="text" name="auto_modele" placeholder="Chercher la marque/modèle..." class="form-control"
+        id="id_auto_modele" value="{{form.instance.modele}}"
+        {% if form.instance.date_validate %} disabled="disabled" {% endif %} />
+      <input type="hidden" name="modele" class="form-control" required="" id="id_modele" value="{{form.instance.modele.id}}"
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.modele.help_text }}]</em></small></p>
+    </div>
+
+    <div class="form-group col-sm-4">
+      <i class="required_field">*</i>
+      <label for="{{ form.chassis.id_for_label }}">{{ form.chassis.label_tag }}</label>
+      <input type="text" name="chassis" placeholder="Choisir le numéro de chassis..." class="form-control" 
+        id="id_chassis" value="{{ form.instance.chassis|filter_value_none }}" maxlength="17" />
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.chassis.help_text }}]</em></small></p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group col-sm-8">
+      <i class="required_field">*</i>
+      <label for="{{ form.contribuable.id_for_label }}">{{ form.contribuable.label_tag }}</label>  
+      <input type="text" name="auto_contribuable" placeholder="Chercher le propriétaire..." class="form-control"
+        id="id_auto_contribuable" value="{{form.instance.contribuable}}"
+        {% if form.instance.date_validate %} disabled="disabled" {% endif %} />
+      <input type="hidden" name="contribuable" class="form-control" required="" id="id_contribuable" value="{{form.instance.contribuable.id}}"
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.contribuable.help_text }}]</em></small></p>
+    </div>
+
+    <div class="form-group col-sm-4">
+      <i class="required_field">*</i>
+      <label for="{{ form.remunere.id_for_label }}">{{ form.remunere.label_tag }}</label>
+      {% render_field form.remunere  class+="form-control" %}
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.remunere.help_text }}]</em></small></p>
+    </div>
+  </div> 
+  
+  <div class="row">
+    <div class="form-group col-sm-8">
+      <i class="required_field">*</i>
+      <label for="{{ form.compte_propre.id_for_label }}">{{ form.compte_propre.label_tag }}</label>
+      {% render_field form.compte_propre  class+="form-control" %}
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.compte_propre.help_text }}]</em></small></p>
+    </div>
+
+    <div class="form-group col-sm-4">
+      <label for="{{ form.actif.id_for_label }}">{{ form.actif.label_tag }}</label>
+      <input name="actif" class="form-control" required="" id="id_actif" value="{{ form.instance.actif | vehicule_bool }}" disabled="disabled" />
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.actif.help_text }}]</em></small></p>
+    </div>
+  </div>
+</div>

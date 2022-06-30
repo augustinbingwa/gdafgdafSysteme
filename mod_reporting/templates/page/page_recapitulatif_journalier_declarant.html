@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% load reporting_filter %}
+
+{% load mathfilters %}
+
+{% load humanize %} 
+
+{% block javascript %}
+  <script type="text/javascript">
+    //Initialiser l'année en cours
+    var d = new Date();
+    year = d.getFullYear();
+    $('#recap_journalier_declarant_annee').val(year);
+        
+    function ControleDate(obj) {
+      if (obj.value < year);
+        $('#recap_journalier_declarant_annee').val(year);        
+    }
+
+  </script>
+{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <div class="card-header">
+      <div class="row">
+        <div class="col-sm-12" style="padding-top: 6px;">
+            <h4 class="card-title mb-0"><i class="fa fa-map-o"></i>&nbsp;Reporting / Récapitulatif journalier du nommbre de déclarants imposés par type d'impôts et taxes</h4>
+          </div>
+      </div>
+    </div>
+    <div class="card-body" style= "overflow-x:auto; padding-top: 5px;">
+      <form method="POST" action="{% url 'recapitulatif_journalier_declarant' %}">
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="btn-toolbar float-left" role="toolbar" aria-label="Toolbar with button groups">
+              <div>
+                <span><strong>{% if somme %} Total:   <em class="text-primary">{{ somme | floatformat:"0" | intcomma }}</em> Bif {% endif %}</strong></span>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-8">
+            <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
+              <div>
+                <label class="label_search">
+                  Mois:
+                  <select name="recap_journalier_declarant_mois" class="form-control search-input">
+                    <option value="1" {% if recap_journalier_declarant_mois == '1' %} selected='selected' {% endif %}>
+                    Janvier</option>
+                    <option value="2" {% if recap_journalier_declarant_mois == '2' %} selected='selected' {% endif %}>Février</option>
+                    <option value="3" {% if recap_journalier_declarant_mois == '3' %} selected='selected' {% endif %}>Mars</option>
+                    <option value="4" {% if recap_journalier_declarant_mois == '4' %} selected='selected' {% endif %}>Avril</option>
+                    <option value="5" {% if recap_journalier_declarant_mois == '5' %} selected='selected' {% endif %}>Mai</option>
+                    <option value="6" {% if recap_journalier_declarant_mois == '6' %} selected='selected' {% endif %}>Juin</option>
+                    <option value="7" {% if recap_journalier_declarant_mois == '7' %} selected='selected' {% endif %}>Juillet</option>
+                    <option value="8" {% if recap_journalier_declarant_mois == '8' %} selected='selected' {% endif %}>Août</option>
+                    <option value="9" {% if recap_journalier_declarant_mois == '9' %} selected='selected' {% endif %}>Septembre</option>
+                    <option value="10" {% if recap_journalier_declarant_mois == '10' %} selected='selected' {% endif %}>Octobre</option>
+                    <option value="11" {% if recap_journalier_declarant_mois == '11' %} selected='selected' {% endif %}>Novembre</option>
+                    <option value="11" {% if recap_journalier_declarant_mois == '12' %} selected='selected' {% endif %}>Décembre</option>
+                  </select> 
+                </label>
+                <label class="label_year">Année:<input type="text" id="recap_journalier_declarant_annee" name="recap_journalier_declarant_annee" value="{{ recap_journalier_declarant_annee }}" title="Date du jour" class="form-control search-input" maxlength="4" onblur="ControleDate(this);"/></label>
+                <label>
+                  <button type="submit" id="btn_search" title="Rechercher/Actualiser" class="btn btn-primary btn-sm search-button"><i class="fa fa-search"></i></button>
+                  {% if count > 0 %}
+                    <a href="{% url 'recapitulatif_journalier_declarant_print_pdf' %}" target="_blank" class="btn btn-primary btn-sm" title="Imprimer le résultat"><span class="fa fa-print"></span></a>
+                  {% endif %}
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <table class="table table-hover table-bordered table-striped table-outline mb-0 nowrap" id="entity-table" width="100%" cellspacing="0">
+        <thead class="thead-default">
+          <tr>
+            <th class="text-center">N°</th>
+            <th class="text-center">Date</th>
+            <th class="text-center">Foncier</th>
+            <th class="text-center">Standard</th>
+            <th class="text-center">Marché</th>
+            <th class="text-center">Place-Marché</th>
+            <th class="text-center">Transport-Mun</th>
+            <th class="text-center">Stationnement</th>
+            <th class="text-center">Propriété</th>
+            <th class="text-center">Publicité</th>
+            <th class="text-center">Panneau</th>
+            <th class="text-center">Esp-Publique</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for obj in lst %}
+            <tr>
+              <td align="center">{{ forloop.counter }}</td>
+              <td align="center" class="{% if forloop.counter == count %} somme {% endif %}">{{ obj.date }}</td>
+              <td align="right" class="{% if forloop.counter == count %} somme {% endif %}">{{ obj.nb_foncier | floatformat:"0" | intcomma  }}</td>
+              <td align="right" class="{% if forloop.counter == count %} somme {% endif %}">{{ obj.nb_standard | floatformat:"0" | intcomma }}</td>
+              <td align="right" class=" {% if forloop.counter == count %} somme {% endif %}">{{ obj.nb_marche | floatformat:"0" | intcomma }}</td>
+              <td align="right" class="{% if forloop.counter == count %} somme {% endif %}">{{ obj.nb_place_marche | floatformat:"0" | intcomma }}</td>
+              <td align="right" class="{% if forloop.counter == count %} somme {% endif %}">{{ obj.nb_transport | floatformat:"0" | intcomma }}</td>
+              <td align="right" class="{% if forloop.counter == count %} somme {% endif %}">{{ obj.nb_stationnement | floatformat:"0" | intcomma }}</td>
+              <td align="right" class=" {% if forloop.counter == count %} somme {% endif %}">{{ obj.nb_propriete | floatformat:"0" | intcomma }}</td>
+              <td align="right" class="{% if forloop.counter == count %} somme {% endif %}">{{ obj.nb_publicite | floatformat:"0" | intcomma }}</td>
+              <td align="right" class="{% if forloop.counter == count %} somme {% endif %}">{{ obj.nb_panneau | floatformat:"0" | intcomma }}</td>
+              <td align="right" class="{% if forloop.counter == count %} somme {% endif %}">{{ obj.nb_espace_pub | floatformat:"0" | intcomma }}</td>
+            </tr>
+          {% endfor %}  
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

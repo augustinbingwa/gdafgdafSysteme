@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block javascript %}
+  <script src="{% static 'js/activite.js' %}"></script>
+  <script type="text/javascript">
+    //Initialiser les dates de la période
+    Helpers.DatePicker('aa_du'); //Date début
+    Helpers.DatePicker('aa_au'); //Date fin
+  </script>
+{% endblock %}
+{% block content %}
+  <div class="card">
+    <div class="card-header">
+        <div class="row">
+          <div class="col-sm-9" style="padding-top: 6px;">
+            <h4 class="card-title mb-0">Gestion des activités arrêtées</h4>
+          </div>
+        </div>
+    </div>
+    <div class="card-body" style= "overflow-x:auto; padding-top: 5px;">
+        <form method="POST" action="{% url 'activite_arret_service_list' %}">
+            <div class="row">
+              <div class="col-sm-4">
+                <div class="btn-toolbar float-left" role="toolbar" aria-label="Toolbar with button groups">
+                <div>
+                  <label class="label_search">Du:<input type="text" id="aa_du" name="aa_du" value="{{ aa_du }}" placeholder="" title="Date début" class="form-control search-input"/></label>
+                  <label class="label_search">Au:<input type="text" id="aa_au" name="aa_au" value="{{ aa_au }}" placeholder="" title="Date fin" class="form-control search-input"/></label>
+                </div>
+              </div>
+              </div>
+              <div class="col-sm-8">
+                 <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
+                    <div>
+                       <label class="label_search">N<sup>o</sup> activite:<input type="text" name="aa_numero_activite" value="{{ aa_numero_activite }}" placeholder="..." title="Contenant la Référence de l'activité" class="form-control search-input"/></label>
+                       <label class="label_search">
+                            Status:
+                            <select name="vaa_status" class="form-control search-input">
+                              <option value="0">...</option>
+                              <option value="1" {% if aa_status == '1' %} selected='selected' {% endif %}>Encour d'arrêt</option>
+                              <option value="2" {% if aa_status == '2' %} selected='selected' {% endif %}>Arrêt complet</option>
+                            </select>
+                       </label>
+                       <label><button type="submit" id="btn_search" title="Rechercher/Actualiser" class="btn btn-primary btn-sm search-button"><i class="fa fa-search"></i></button></label>
+                    </div>
+                 </div>
+              </div>
+            </div>
+        </form>
+        <table class="table table-hover table-bordered table-striped table-outline mb-0 nowrap" id="entity-table" width="100%" cellspacing="0">
+            <thead class="thead-default">
+                <tr>
+                    <th class="text-center"></th>
+                    <th class="text-center">Action</th>
+                    <th class="text-center">N° activité</th>
+                    <th class="text-center">Motif</th>
+                    <th class="text-center">Date d'ouverture</th>
+                    <th class="text-center">Date d'arrêt</th>
+                    <th class="text-center">Arrêt par</th>
+                    <th class="text-center">crée par</th>
+                </tr>
+            </thead>
+            <tbody>
+              {% include 'activite_arret_service/includes/_activite_arret_service_list.html' %}
+            </tbody>
+        </table>
+    </div>
+  <div class="card-footer"></div>
+</div>
+{% endblock %}

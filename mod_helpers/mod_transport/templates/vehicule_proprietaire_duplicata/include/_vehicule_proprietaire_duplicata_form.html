@@ -1,0 +1,39 @@
+{% block javascript %}
+  <script type="text/javascript">
+    //Autocompletion des cartes des propriétaires des véhicules qui n'ont pas de carte rose
+    $(document).ready(function(){
+      $( "#id_auto_vehicule_proprietaire" ).autocomplete({
+        source: "/transport/vehicule_proprietaire/autocomplete/",
+        minLength : 3,
+        appendTo: idModalEntity,
+        select: function(event, ui) {
+          event.preventDefault();
+          $(this).val(ui.item.label); 
+          $("#id_vehicule_proprietaire").val(ui.item.value);   
+        },
+        focus: function(event, ui) {
+          event.preventDefault();                    
+          $(this).val(ui.item.label);
+        }
+      });
+    });
+  </script>
+{% endblock %}
+
+{% load widget_tweaks %}
+
+<div class="container"> 
+  <div class="row">
+    <div class="form-group col-sm-12">
+      <i class="required_field">*</i>
+      <label for="{{ form.vehicule_proprietaire.id_for_label }}">{{ form.vehicule_proprietaire.label_tag }}</label>  
+      <input type="text" name="auto_vehicule_proprietaire" placeholder="Chercher le véhicule par numéro de carte, plaque, chassis" class="form-control" id="id_auto_vehicule_proprietaire" 
+      {% if form.instance.vehicule_proprietaire  %}
+        value="{{ form.instance.vehicule_proprietaire }} - {{ form.instance.vehicule_proprietaire.vehicule.plaque }} ({{ form.instance.vehicule_proprietaire.vehicule.modele }}) - {{ form.instance.vehicule_proprietaire.vehicule.sous_categorie.nom }} - {{ form.instance.vehicule_proprietaire.contribuable.nom }}" 
+      {% endif %}
+      {% if form.instance.date_validate %} disabled="disabled" {% endif %}/>
+      <input type="hidden" name="vehicule_proprietaire" class="form-control" required="" id="id_vehicule_proprietaire" value="{{ form.instance.vehicule_proprietaire.id}} " />
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.vehicule_proprietaire.help_text }}]</em></small></p>
+    </div>
+  </div>
+</div>

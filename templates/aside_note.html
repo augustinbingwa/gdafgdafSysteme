@@ -1,0 +1,25 @@
+{% load static %}
+
+{% load helper_filter %}
+
+{% block message %}
+  {% for obj in lst_notification %}
+    <div class="message">
+      <div class="pb-5 mr-3 float-left">
+        <div class="avatar">
+            <img src="{{ obj.user_create | get_user_avatar }}" class="img-avatar" alt="admin@bootstrapmaster.com">
+            <span class="avatar-status badge-success"></span>
+        </div>
+      </div>
+      <div>
+        <small class="text-muted">{{ obj.user_create | capfirst }}</small>
+        <small class="text-muted float-right mt-1">{{ obj.date_create | date:"d/m/Y" }}</small>
+      </div>
+      <div class="font-weight-bold" style="font-size: 12px;">{{ obj.title }}</div>
+      <small class="text-muted"><a href="#" data-url="{% url 'edit_note' obj.id obj.class_name obj.view_list_name %}"" class=" js-update-entity">{{ obj.note }}</a></small>
+    </div>
+    <hr>
+  {% empty %}
+    <small class="text-muted">Aucun message</small>
+  {% endfor %}
+{% endblock %}

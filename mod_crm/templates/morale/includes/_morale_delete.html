@@ -1,0 +1,16 @@
+<form method="post" action="{% url 'morale_delete' obj.id %}" class="js-entity-delete-form">
+  {% csrf_token %}
+   <div class="modal-header">
+    <h4 class="modal-title"><i class="fa fa-times-circle" style="color: red;"></i>&nbsp;Confirmer la suppression</h4>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p class="lead">Etes-vous sûr de vouloir supprimer l'objet activité. Réf-<strong>{{ obj.nom }}</strong>&nbsp;?</p>
+ </div>
+ <div class="modal-footer">
+    <button type="submit" class="btn btn-danger"><i class="fa fa-remove"></i>&nbsp;Supprimer</button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-undo"></i>&nbsp;Annuler</button>      
+  </div>
+</form>

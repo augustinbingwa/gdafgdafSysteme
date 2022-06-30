@@ -1,0 +1,70 @@
+{% load static %}
+
+<div class="sidebar">
+    <nav class="sidebar-nav">
+        <ul class="nav">
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-people text-white"></i>Contribuable</a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'physique_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Physique</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'morale_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Morale</a>
+                    </li>                   
+                </ul>
+            </li>
+            
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-credit-card text-white"></i>Avis d'imposition</a>
+               <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <!-- mod_parametrage.enums.choix_taxe_filter.TAXE_AI_DOCUMENT_FINANCIER = 13 -->
+                        <a class="nav-link" href="{% url 'avis_imposition_list' TAXE_AI_DOCUMENT_FINANCIER  %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Transports</a>
+                    </li>            
+                </ul>
+            </li>                 
+            
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-car text-white"></i>Transport</a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'vehicule_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Véhicules/Moto/Vélos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'vehicule_proprietaire_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Cartes de propriété</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'vehicule_proprietaire_duplicata_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Duplicata</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'vehicule_activite_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Cartes municipales</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'vehicule_activite_duplicata_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Duplicata</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'vehicule_stationnement_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Droits stationnement</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-credit-card-alt text-white"></i>Finances</a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'ni_vehicule_activite_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;NI-Transport Mun</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'ni_droit_stationnement_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;NI-Stationnement</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'ni_vehicule_proprietaire_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;NI-Taxe Propriété</a>
+                    </li>
+                </ul>
+            </li>  
+            <li class="divider"></li>
+        </ul>
+    </nav>
+    <button class="sidebar-minimizer brand-minimizer" type="button"></button>
+</div>

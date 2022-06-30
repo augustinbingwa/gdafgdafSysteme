@@ -1,0 +1,163 @@
+{% load activite_filter %}
+
+{% load parametrage_filter %}
+
+{% load qr_code %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>AM-Carte Professionnelle</title>
+  <style type="text/css">
+    /*MARGE SUPERIEUR !!! IMPORTANT !!!*/
+    @page { 
+      margin: 0; 
+      padding-left: 0px;
+      padding-top: 42px;
+    }
+    
+    .information {
+      font-family: tahoma, arial, sans-serif;
+      font-size:10px;
+    }
+
+    .size {
+      font-size:8px;
+    }
+
+    .data {
+      font-family: tahoma, arial, sans-serif;
+      font-size:10px;
+    }
+
+    .strong {
+      font-weight: bold;
+    }
+
+    .data_numero {
+      font-family: tahoma, arial, sans-serif;
+      font-size:10px;
+      font-weight: bold;
+      color: #BE560C;
+      padding-left: 25px;
+    }
+
+    .data_specific {
+      color: #BE560C;
+    }
+
+    .marge {
+      padding-left: 10px;
+    }
+
+    .marge_numero_carte {
+      padding-left: 35px;
+    }
+
+    .image_qr_left {
+      text-align: left;
+    }
+
+    .image_qr_right {
+      text-align: left;
+    }
+
+    .image_left {
+      padding-right: 20px;
+      text-align: right;
+    }
+
+    .image_right {
+      padding-right: 10px;
+      text-align: right;
+    }
+  </style>   
+</head>
+<body> 
+  <table border="0" >
+    <tr>
+      <td width="100px"></td> 
+      <td width="177px"><div class="data_numero">{{ obj.numero_activite }}</div></td>  
+      <td width="100px"></td>
+      <td width="175px"><div class="data_numero marge_numero_carte">{{ obj.numero_activite }}</div></td>  
+    </tr>
+    <tr>
+      <td colspan="4" style="height: 15px;"></td> 
+    </tr>
+    <tr>
+      <td><div class="image_qr_left">{% qr_from_text qr_data options=qr_options %}</div></td> 
+      <td><div class="image_left"><img src="{{ photo_url }}" width="120px" height="100px"></div></td> 
+      <td><div class="image_qr_right">{% qr_from_text qr_data options=qr_options %}</div></td>
+      <td><div class="image_right"><img src="{{ photo_url }}" width="120px" height="100px"></div></td>
+    </tr>
+    <tr>
+      <td colspan="2"><div class="information strong marge" style="color: grey;">{{ obj.numero_carte_physique }}</div></td>
+      <td colspan="2"><div class="information strong marge" style="color: grey;">{{ obj.numero_carte_physique }}</div></td>
+    </tr>
+    <tr>
+      <td colspan="4" style="height: 10px;"></td> 
+    </tr>
+    <tr>
+      <td><div class="information strong marge">NIC:</div></td>
+      <td><div class="data strong data_specific size">{{ obj.allocation_place_marche.contribuable.matricule }}</div></td>
+      <td><div class="information strong marge">NIC:</div></td>
+      <td><div class="data strong data_specific">{{ obj.allocation_place_marche.contribuable.matricule }}</div></td>
+    </tr>
+    <tr>
+      <td valign="top"><div class="information strong marge">Nom et prénom:</div></td>
+      <td><div class="data strong data_specific size">{{ obj.allocation_place_marche.contribuable.nom }}</div></td>
+      <td valign="top"><div class="information strong marge">Nom et prénom:</div></td>
+      <td><div class="data strong data_specific">{{ obj.allocation_place_marche.contribuable.nom }}</div></td>
+    </tr>
+    <!--ADRESSE CONTRIBUABLE-->
+    <tr>
+      <td valign="top"><div class="information strong marge">Adresse:</div></td>
+      <td valign="top"><div class="data size">{{ obj.allocation_place_marche.contribuable.adresse.zone.commune.nom }} {{ obj.allocation_place_marche.contribuable.adresse.zone.nom }} {{ obj.allocation_place_marche.contribuable.adresse.nom }}</div></td>
+      <td valign="top"><div class="information strong marge">Adresse:</div></td>
+      <td valign="top"><div class="data">{{ obj.allocation_place_marche.contribuable.adresse.zone.commune.nom }} {{ obj.allocation_place_marche.contribuable.adresse.zone.nom }} {{ obj.allocation_place_marche.contribuable.adresse.nom }}</div></td>
+    </tr>
+    <tr>
+      <td valign="top"><div class="information strong marge">Rue/Avenue:</div></td>
+      <td valign="top"><div class="data size">{{ obj.allocation_place_marche.contribuable.numero_rueavenue | default:'' }} {{ obj.allocation_place_marche.contribuable.numero_police | default:'' }}</div></td>
+      <td valign="top"><div class="information strong marge">Rue/Avenue:</div></td>
+      <td valign="top"><div class="data">{{ obj.allocation_place_marche.contribuable.numero_rueavenue | default:'' }} {{ obj.allocation_place_marche.contribuable.numero_police | default:'' }}</div></td>
+    </tr>
+    <tr>
+      <td colspan="4" style="height: 10px;"></td> 
+    </tr>
+    <!--INFORMATION DU MARCHE-->
+    <tr>
+      <td valign="top"><div class="information strong marge">Type activité:</div></td>
+      <td valign="top"><div class="data size">{{ obj.allocation_place_marche.taxe.libelle | capfirst }}</div></td>
+      <td valign="top"><div class="information strong marge">Type activité:</div></td>
+      <td valign="top"><div class="data">{{ obj.allocation_place_marche.taxe.libelle | capfirst }}</div></td>
+    </tr>
+    <tr>
+      <td valign="top"><div class="information strong marge">Nom du marché:</div></td>
+      <td valign="top"><div class="data size">{{ obj.allocation_place_marche.droit_place_marche.nom_marche }}</div></td>
+      <td valign="top"><div class="information strong marge">Nom du marché:</div></td>
+      <td valign="top"><div class="data">{{ obj.allocation_place_marche.droit_place_marche.nom_marche }}</div></td>
+    </tr>
+    <tr>
+      <td valign="top"><div class="information strong marge">Place n°:</div></td>
+      <td valign="top"><div class="data size">{{ obj.allocation_place_marche.droit_place_marche.numero_place }}</div></td>
+      <td valign="top"><div class="information strong marge">Place n°:</div></td>
+      <td valign="top"><div class="data">{{ obj.allocation_place_marche.droit_place_marche.numero_place }}</div></td>
+    </tr>
+    <tr>
+      <td colspan="4" style="height: 10px;"></td> 
+    </tr>
+    <tr>
+      <td colspan="2"><div class="information marge">Validée et délivrée par: BIZIMANA Désiré</div></td>
+      <td colspan="2"><div class="information marge">Validée et délivrée par: BIZIMANA Désiré</div></td>
+    </tr>
+    <tr>
+      <td><div class="information marge">Date:</div></td>
+      <td><div class="data">{{ obj.date_validate|date:"d/m/Y" }}</div></td>
+      <td><div class="information marge">Date:</div></td>
+      <td><div class="data">{{ obj.date_validate|date:"d/m/Y" }}</div></td>
+    </tr>
+  </table>
+</body>
+</html>

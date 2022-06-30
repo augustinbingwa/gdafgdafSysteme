@@ -1,0 +1,38 @@
+{% load transport_filter %}
+
+<form method="post" action="{% url 'vehicule_transfert_update' obj.pk %}" class="js-entity-update-form">
+   {% csrf_token %}
+  <div class="modal-header">
+    <h4 class="modal-title"><i class="fa fa-car"></i>&nbsp; Visualisez les informations de transfert du véhicule/moto/vélo {{ obj.note | show_note }}</h4>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+      {% include 'vehicule_transfert/include/_vehicule_transfert_form.html' %}
+      {% if not obj.date_transfert %}
+        <div class="container bg-warning">
+          <div class="row"> 
+            <div class="col-sm-1 pt-1 pb-1 mr-1 "><i class="fa fa-exclamation-triangle" style="font-size:50px"></i></div>
+            <div class="col-sm-10 text-dark"> 
+              - si vous cliquez sur transfert avec activite, l'acitivite du vehicule restera activer .<br>
+              - si vous cliquez sur transfert sans activite l'acitivte du vehicule restera désactive, il y'aura une nouvelle creation d'activite pour le nouveau contribuable .
+            </div>
+          </div>
+        </div>
+      {% endif %}
+  </div>
+  <div class="modal-footer">
+    {% if not obj.vehicule.fichier_carterose %}
+      {% if not obj.date_transfert %}
+        <button type="button" class="btn btn-success" onclick="_Validate('{{ obj.pk }}', 'validate/', 'Êtes-vous sûr de vouloir effectue cet transfert ?')"> <i class="fa fa-check"></i>&nbsp;Transfert avec activite</button>
+        <button type="button" class="btn btn-primary" onclick="_Validate('{{ obj.pk }}', 'validate/', 'Êtes-vous sûr de vouloir effectue cet transfert ?')"> <i class="fa fa-check"></i>&nbsp;Transfert sans activite</button>
+      {% else %}
+        <span class="alert-warning" style="width:100%; padding-left: 5px;"> <i class="fa fa-warning"></i>&nbsp;Pièce jointe manquante (Carte rose)</span>
+      {% endif %}
+    {% else %}
+      <span class='bg bg-success' align="right">&nbsp;Transfert le {{ obj.date_transfert }}&nbsp;</span>
+    {% endif %}
+    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close"></i>&nbsp;Fermer</button>
+  </div>
+</form>

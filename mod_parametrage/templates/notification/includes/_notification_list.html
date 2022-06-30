@@ -1,0 +1,21 @@
+{% load parametrage_filter %}
+
+{% for obj in lst %}
+<tr>
+	<td class="text-center">{{ forloop.counter }}</td>
+	<td class="text-center" style="width: 100px">
+		<button type="button" title="{% if obj.date_validate is None  %} Modifier les informations du véhicule {% else %} Visualiser les informations du véhicule {% endif %}"
+			class="btn {% if obj.date_validate is None %} btn-primary {% else %} btn-secondary {% endif %} btn-sm js-update-entity"
+			data-url="{% url 'notification_update' obj.id %}">
+			<span class="{% if obj.date_validate is None  %} fa fa-edit {% else %} fa fa-folder-open-o {% endif %}"></span> <!--Modification-->
+		</button>
+	</td>
+	<td><div class="text-center">{{ obj.date_validate | filter_status_validate }}</div></td>
+	<td><div class="text-center"> {{ obj.get_type_display }}</div></td>
+	<td><div>{{ obj.objet }}</div></td>
+	<td><div>{{ obj.message }}</div></td>
+	<td><div class="text-center">{{ obj.user_validate }}</div></td>
+	<td><div class="text-center">{{ obj.date_create }}</div></td>
+</tr>
+{% endfor %}
+

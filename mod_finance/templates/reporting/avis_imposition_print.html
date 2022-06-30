@@ -1,0 +1,111 @@
+{% load impot_filter %}
+
+{% load helper_filter %}
+
+{% load humanize %} 
+
+{% load qr_code %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Avis</title>
+  <style type="text/css">
+    .entete {
+      font-family: tahoma, arial, sans-serif;
+      font-size:12px;
+      text-align: center;
+    }
+
+    .titre {
+      font-family: tahoma, arial, sans-serif;
+      font-size:14px;
+      text-align: center;
+    }
+
+    .information {
+      font-family: tahoma, arial, sans-serif;
+      font-size:12px;
+    }
+    .data {
+      font-family: tahoma, arial, sans-serif;
+      font-size:12px;
+    }
+
+    .strong {
+      font-weight: bold;
+    }
+
+    .data_specific {
+      color: #000;
+    }
+
+    .marge {
+      padding-left: 10px;
+    }
+
+    .marge_image_left {
+      width: 80px;
+      text-align: left;
+    }
+
+    .marge_image_right {
+      width: 80px;
+      text-align: right;
+    }
+  </style>   
+</head>
+<body>
+  <table align="center" border="0">
+    <tr>
+      <td width="12%"><div class="marge_image_left"><img src="static/img/logo-pays.png"></div></td> 
+      <td width="76%" ><div class="entete">REPUBLIQUE DU BURUNDI <br> MINISTÉRE DE L'INTÉRIEUR, DE LA FORMATION PATRIOTIQUE ET DU DÉVELOPPEMENT LOCAL <br>MUNICIPALITÉ DE BUJUMBURA</div></td>  
+      <td width="12%"><div class="marge_image_right"><img src="static/img/logo-mairie.png"></div></td>
+    </tr>
+    <tr>
+      <td colspan="3" style="height: 10px;"></td> 
+    </tr>
+    <tr>
+      <td colspan="3"><div class="titre strong">Avis d'imposition pour {{ obj | get_titre_reporting }}</div></td>  
+    </tr>
+     <tr>
+      <td colspan="3" style="height: 10px;"></td> 
+    </tr>
+  </table>
+  <table align="center" border="0">
+    <tr>
+      <td width="20%"><div class="information strong marge">Référence:</div></td>
+      <td width="80%"><div class="data strong data_specific">{{ obj.reference }}</div></td>
+    </tr>
+    {% if obj.contribuable %}
+    <tr>
+      <td><div class="information strong marge">NIC:</div></td>
+      <td><div class="data">{{ obj.contribuable.matricule }}</div></td>
+    </tr>
+    {% endif %}
+    <tr>
+      <td><div class="information strong marge">Nom et prénom:</div></td>
+      <td><div class="data">{% if obj.contribuable %} {{ obj.contribuable.nom }} {% else %} {{ obj.nom }} {% endif %}</div></td>
+    </tr>
+    <tr>
+      <td><div class="information strong marge">Mention:</div></td>
+      <td><div class="data">{% if obj.entity %} {{ obj.libelle }} {% else %} {{ obj.taxe.libelle }} {% endif %}</div></td>
+    </tr>
+    <tr>
+      <td><div class="information strong marge">Montant à payer:</div></td>
+      <td><div class="data strong">{{ obj.montant_total | floatformat:0 | intcomma }}</div></td>
+    </tr>
+    <tr>
+      <td><div class="information strong marge">Date:</div></td>
+      <td><div class="data">{{ obj.date_print }}</div></td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <hr width="90%">
+        <div class="data" style="text-align: center;">{{ None|get_mairie_identification }}</div>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

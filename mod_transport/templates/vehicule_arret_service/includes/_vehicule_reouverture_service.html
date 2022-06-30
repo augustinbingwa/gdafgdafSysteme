@@ -1,0 +1,31 @@
+{% load parametrage_filter %}
+{% load helper_filter %}
+{% block javascript %}
+  <script type="text/javascript">
+    Helpers.DatePicker('id_datereouverture');
+  </script>
+{% endblock %}
+<form method="post"  action="{% url 'vehicule_reouverture_service' obj.pk %}" class="js-entity-update-form">
+   {% csrf_token %}
+  <div class="modal-header">
+    <h5 class="modal-title"><i class="fa fa-calendar"></i>&nbsp;Date de reouverture d'activite</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="container">
+      <div class="form-group row">
+        <div class="col-sm-4 " id="">
+          <i class="required_field">*</i>
+            <label>Date de Reouverture</label>
+            <input id="id_datereouverture" type="text" class="form-control" name="datereouverture">
+        </div>
+      </div>          
+    </div>
+  </div>
+  <div class="modal-footer">
+      <button type="submit" class="btn btn-primary" onclick="_Reouverture('{{ obj.pk }}','', 'Êtes-vous sûr de vouloir effectue la reouverture de cette activite?')"> <i class="fa fa-save"></i>&nbsp;Enregistrer</button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-undo"></i>&nbsp;Annuler</button>
+  </div>
+</form>

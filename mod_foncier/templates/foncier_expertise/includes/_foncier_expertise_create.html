@@ -1,0 +1,16 @@
+<form method="post" action="{% url 'foncier_expertise_create' %}" class="js-entity-create-form">
+   {% csrf_token %}
+  <div class="modal-header">
+    <h4 class="modal-title"><i class="fa fa-map-o"></i>&nbsp;Enregsitrer les données foncières</h4>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+     {% include 'foncier_expertise/includes/_foncier_expertise_form.html' %}
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;Enregistrer</button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-undo"></i>&nbsp;Annuler</button>
+  </div>
+</form>

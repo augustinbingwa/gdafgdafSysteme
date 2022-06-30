@@ -1,0 +1,49 @@
+{% block javascript %}
+  <script type="text/javascript">
+    
+      //Date picker : date de paiement
+      Helpers.DatePicker('id_date_paiement');
+
+      //Initialiser la date
+      //$('#id_date_paiement').datepicker('setDate', 'today'); 
+  </script>
+{% endblock %}
+
+{% load widget_tweaks %}
+
+<div class="container"> 
+  <div class="row"> 
+    <div class="form-group col-sm-3">
+      <label for="{{ form.reference.id_for_label }}">{{ form.reference.label_tag }}</label>
+      {% render_field form.reference class+="form-control" %}
+      {% if form.reference.help_text %}
+        <p class="help-inline"><small><em class="help-inline-ext">[{{ form.reference.help_text }}]</em></small></p>
+      {% endif %}
+    </div>
+
+    <div class="form-group col-sm-3">
+      <label for="{{ form.agence.id_for_label }}">{{ form.agence.label_tag }}</label>
+      {% render_field form.agence class+="form-control" %}
+      {% if form.agence.help_text %}
+        <p class="help-inline"><small><em class="help-inline-ext">[{{ form.agence.help_text }}]</em></small>
+        </p>
+      {% endif %}
+    </div>
+
+    <div class="form-group col-sm-3">
+      <label for="{{ form.ref_paiement.id_for_label }}">{{ form.ref_paiement.label_tag }}</label>
+      {% render_field form.ref_paiement class+="form-control" %}
+      {% if form.ref_paiement.help_text %}
+        <p class="help-inline"><small><em class="help-inline-ext">[{{ form.ref_paiement.help_text }}]</em></small></p>
+      {% endif %}
+    </div>
+    
+    <div class="form-group col-sm-3">
+      <label for="{{ form.date_paiement.id_for_label }}">{{ form.date_paiement.label_tag }}</label>
+      {% render_field form.date_paiement class+="form-control" %}
+      {% if form.date_paiement.help_text %}
+        <p class="help-inline"><small><em class="help-inline-ext">[{{ form.date_paiement.help_text }}]</em></small></p>
+      {% endif %}
+    </div>
+  </div>
+</div>

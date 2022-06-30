@@ -1,0 +1,94 @@
+{% load widget_tweaks %}
+
+
+{% block javascript %}
+  <script type="text/javascript">     
+    //Auto complete contribuable
+    
+    $(document).ready(function(){
+      $( "#nom_contribuable" ).autocomplete({
+        source: "/foncier/transfert_parc/autocomplete/",
+        appendTo: idModalEntity,
+        select: function(event, ui) {
+            event.preventDefault();
+            $(this).val(ui.item.value); 
+            $("#id_contribuable").val(ui.item.id);  
+            alrt(ui.item.id);
+            // Charger l'accessibilité de l´activite
+            Load_Accessibilite();
+        },
+        focus: function(event, ui) {
+            event.preventDefault();                    
+            //$(this).val(ui.item.label);
+        }
+      });
+
+      //Date picker : date de déclaration de l'impot foncier
+      Helpers.DatePicker('id_debut');
+  });
+  </script>
+{% endblock %}
+
+<form method="post" action="{% url 'parcelle_transfert' obj1.id %}" class="js-entity-upload-form">
+     {% csrf_token %}
+   <div class="modal-header">
+    <h4 class="modal-title"><i class="fa fa-times-circle" style="color: red;"></i>&nbsp;Transfert du parcelle</h4>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="container">
+      <div class="row">
+        <div class="form-group col-sm-12">
+          <i class="required_field">*</i>
+          <label for="quartier">Zone & Commune</label>
+        </div><br>
+        <div class="form-group col-sm-12">
+              <input type="text" name="date" id="date" readonly="readonly" value="{{ obj1.adresse.zone }}" style="width:20em">
+        </div><br> 
+
+        <div class="form-group col-sm-12">
+          <i class="required_field">*</i>
+          <label for="quartier">Quartier</label>
+        </div><br>
+        <div class="form-group col-sm-12">
+              <input type="text" name="date" id="date" readonly="readonly" value="{{ obj1.adresse }}" style="width:20em">
+        </div><br>  
+
+
+        <div class="form-group col-sm-12">
+          <i class="required_field">*</i>
+          <label for="quartier">Rue- Avenue</label>
+        </div><br>
+        <div class="form-group col-sm-12">
+              <input type="text" name="date" id="date" readonly="readonly" value="{{ obj.numero_rueavenue }}" style="width:20em">
+        </div><br>
+        
+        <div class="form-group col-sm-12">
+          <i class="required_field">*</i>
+          <label for="contr_ex">Contribuable existant</label>
+        </div><br>
+        <div class="form-group col-sm-12">
+              <input type="text" name="num_bordereau" id="num_bordereau" value="{{ obj.nom }}" readonly="readonly" style="width:20em">
+              
+              <input type="hidden" name="contr_ex" id="date" value="{{ obj.id }}">
+        </div><br>
+
+      
+        <div class="form-group col-sm-12">
+          <i class="required_field">*</i>
+          <label for="contnv">Contribuable nouveau</label>
+        </div><br>
+        <div class="form-group col-sm-12">
+              <input type="text" name="nom_contribuable" id="nom_contribuable" style="width:20em">
+          <input type="text" name="id_contribuable"  id="id_contribuable">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-danger" title="Annuler la déclaration"> <i class="fa fa-remove"></i>&nbsp;Transferer</button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-undo"></i>&nbsp;Fermer</button>
+  </div>
+</form>

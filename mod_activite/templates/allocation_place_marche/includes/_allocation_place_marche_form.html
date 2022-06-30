@@ -1,0 +1,116 @@
+{% block javascript %}
+  <script type="text/javascript">
+    $(document).ready(function(){
+      //Autocompletion de la place dans le marché non occupée
+      $( "#id_auto_droit_place_marche" ).autocomplete({
+        'minLength':1,
+        source: "/activite/droit_place_marche/autocomplete/",
+        appendTo: idModalEntity,
+        select: function(event, ui) {
+          event.preventDefault();
+          $(this).val(ui.item.label); 
+          $("#id_droit_place_marche").val(ui.item.value);
+          $("#id_caution_montant").val(ui.item.cout_place);
+        },
+        focus: function(event, ui) {
+          event.preventDefault();                    
+          $(this).val(ui.item.label);
+        }
+      });      
+
+      //Autocompletion du contribuable
+      $( "#id_auto_contribuable" ).autocomplete({
+        'minLength':3,
+        source: "/crm/contribuable/autocomplete/",
+        appendTo: idModalEntity,
+        select: function(event, ui) {
+          event.preventDefault();
+          $(this).val(ui.item.label); 
+          $("#id_contribuable").val(ui.item.value);               
+        },
+        focus: function(event, ui) {
+          event.preventDefault();                    
+          $(this).val(ui.item.label);
+        }
+      });
+    });
+
+    //Date picker : date debut activité
+    Helpers.DatePicker('id_date_debut');
+  </script>
+{% endblock %}
+
+{% load widget_tweaks %}
+
+<div class="container">
+  <div class="row">
+    <div class="form-group col-sm-9">
+      <i class="required_field">*</i>
+      <label for="{{ form.droit_place_marche.id_for_label }}">{{ form.droit_place_marche.label_tag }}</label>  
+      <input type="text" name="auto_droit_place_marche" placeholder="Chercher le n° du marché et n° de la place..." class="form-control {% if form.instance.date_validate %} disabled-element {% endif %}" id="id_auto_droit_place_marche" value="{{form.instance.droit_place_marche}}" required="required"/>
+      <input type="hidden" name="droit_place_marche" class="form-control" id="id_droit_place_marche" value="{{form.instance.droit_place_marche.id}}"/>
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.droit_place_marche.help_text }}]</em></small></p>
+    </div>
+
+    <div class="form-group col-sm-3">
+      <i class="required_field">*</i>
+      <label for="{{ form.date_debut.id_for_label }}">{{ form.date_debut.label_tag }}</label>
+      {% render_field form.date_debut class+="form-control" %}
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.date_debut.help_text }}]</em></small></p>
+    </div>
+  </div>
+  
+  <div class="row">  
+    <div class="form-group col-sm-12">
+      <i class="required_field">*</i>
+      <label for="{{ form.taxe.id_for_label }}">{{ form.taxe.label_tag }}</label>
+      {% render_field form.taxe  class+="form-control" %}
+       <p class="help-inline"><small><em class="help-inline-ext">[{{ form.taxe.help_text }}]</em></small></p>
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="form-group col-sm-9">
+      <i class="required_field">*</i>
+      <label for="{{ form.contribuable.id_for_label }}">{{ form.contribuable.label_tag }}</label>  
+      <input type="text" name="auto_contribuable" placeholder="Chercher contribuable..." class="form-control {% if form.instance.date_validate %} disabled-element {% endif %}" id="id_auto_contribuable" value="{{form.instance.contribuable}}" required="required"/>
+      <input type="hidden" name="contribuable" class="form-control" id="id_contribuable" value="{{form.instance.contribuable.id}}"/>
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.contribuable.help_text }}]</em></small></p>
+    </div>
+
+    <div class="form-group col-sm-3">
+      <label for="{{ form.solde_depart.id_for_label }}">{{ form.solde_depart.label_tag }}</label>
+      {% render_field form.solde_depart class+="form-control" %}
+      {% if form.solde_depart.help_text %}
+        <p class="help-inline"><small><em class="help-inline-ext">[{{ form.solde_depart.help_text }}]</em></small></p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group col-sm-6">
+      <i class="required_field">*</i>
+      <label for="{{ form.caution_payee.id_for_label }}">{{ form.caution_payee.label_tag }}</label>
+      {% render_field form.caution_payee class+="form-control" %}
+      {% if form.caution_payee.help_text %}
+        <p class="help-inline"><small><em class="help-inline-ext">[{{ form.caution_payee.help_text }}]</em></small></p>
+      {% endif %}
+    </div>
+
+    <div class="form-group col-sm-3">
+      <label for="{{ form.caution_nombre_mois.id_for_label }}">{{ form.caution_nombre_mois.label_tag }}</label>
+      {% render_field form.caution_nombre_mois class+="form-control" %}
+      {% if form.caution_nombre_mois.help_text %}
+        <p class="help-inline"><small><em class="help-inline-ext">[{{ form.caution_nombre_mois.help_text }}]</em></small></p>
+      {% endif %}
+    </div>
+
+    <div class="form-group col-sm-3">
+      <label for="{{ form.caution_montant.id_for_label }}">{{ form.caution_montant.label_tag }}</label>
+      {% render_field form.caution_montant class+="form-control" %}
+      {% if form.caution_montant.help_text %}
+        <p class="help-inline"><small><em class="help-inline-ext">[{{ form.caution_montant.help_text }}]</em></small></p>
+      {% endif %}
+    </div>
+  </div>  
+</div>

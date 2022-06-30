@@ -1,0 +1,210 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block javascript %}
+  <script type="text/javascript">
+    //Initialiser les dates de la période
+    Helpers.DatePicker('reconsiliation_date_du_jour'); //Date
+
+    //Initialiser les dates
+    date = $('#reconsiliation_date_du_jour').val();
+    if (date == "")
+      $('#reconsiliation_date_du_jour').val($.GetNewYearToDateFr());
+
+
+    function checkdiv() {
+      var x = document.getElementById("showdif");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+      }
+    }
+  </script>
+{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <div class="card-header">
+      <div class="row">
+        <div class="col-sm-12" style="padding-top: 6px;">
+            <h4 class="card-title mb-0"><i class="fa fa-map-o"></i>&nbsp;Reporting / Reconsiliation entre Mairie et les banques</h4>
+          </div>
+      </div>
+    </div>
+    <div class="card-body" style= "overflow-x:auto; padding-top: 5px;">
+      <form method="POST" action="">
+        <div class="row mb-3">
+          <div class="col-sm-6">
+            <div class="btn-toolbar float-left" role="toolbar" aria-label="Toolbar with button groups">
+              <div>
+                <label class="label_date">Date :<input type="text" id="reconsiliation_date_du_jour" name="reconsiliation_date_du_jour"  title="Date du jour Du" class="form-control search-input"/></label>
+                <span><strong> Total Banque : <em class="text-primary">245 000</em> Bif </strong></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span><strong> Total Mairie : <em class="text-primary">245 000</em> Bif </strong></span>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
+              <div>
+                <label class="label_search_module">
+                  Module:
+                  <select name="recette_module" class="form-control search-input">
+                    <option value="1">Impôt Foncier</option>
+                    <option value="2">Activité Standard</option>
+                    <option value="3">Activité Marché</option>
+                    <option value="4">Transport Rémunéré</option>
+                    <option value="5">Droit Stationnement</option>
+                    <option value="6">Véhicule Propriété</option>
+                    <option value="7">Publicité Mur/Clôture</option>
+                    <option value="8">Espace Publique</option>
+                    <option value="9">Panneau Publicitaire</option>
+                    <option value="10">Place Marché</option>
+                  </select>
+                </label>
+                <label>
+                  <button type="submit" id="btn_search" title="Rechercher/Actualiser" class="btn btn-primary btn-sm search-button"><i class="fa fa-search"></i></button>
+                </label>
+              </div>
+            </div>
+            <div class="btn-toolbar float-right mr-2" role="toolbar" aria-label="Toolbar with button groups">
+              <div>
+                <label class="label_search_module">
+                  Banque:
+                  <select name="recette_module" class="form-control search-input">
+                    <option value="1">bancobu</option>
+                    <option value="2">interbank</option>
+                    <option value="3">finbank</option>
+                    <option value="4">Ihela</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+            <div class="btn-toolbar float-right mr-2">
+              <div class="pt-3">
+                <label>
+                  <button id="open" type="button" onclick="checkdiv();"  title="" class="btn btn-primary btn-sm "><i class="fa fa-folder-open" aria-hidden="true"></i> Paiement note non reçus à la Mairie</button>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <div id="showdif" class="row mb-3" style="display: none;">
+        <div class="col-sm-8">
+          <table class="table table-hover table-bordered table-striped table-outline mb-0 nowrap"  width="100%" cellspacing="0">
+            <thead class="thead-default">
+              <tr>
+                <th colspan="3"> <h4 class="text-light">Réferance des paiements des Notes d'imposition qui n'ont pas été reçus par le système</h4> </th>
+                <th><div align="right"><h4 class="text-light">Nombre : <strong>2</strong> </h4></div></th>
+              </tr>
+              <tr>
+                <th class="text-center">Réference</th>
+                <th class="text-center">Note imposition</th>
+                <th class="text-center">NIC</th>
+                <th class="text-center">Montant</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr>
+                  <td><div>4578925368</div></td>
+                  <td><div align="center">NI20162423256</div></td>
+                  <td><div align="center">2019245645825</div></td>
+                  <td><div align="right">8000</div></td>
+                </tr>
+                <tr>
+                  <td><div>4578945658</div></td>
+                  <td><div align="center">NI20162436956</div></td>
+                  <td><div align="center">2019245123655</div></td>
+                  <td><div align="right">45000</div></td>
+                </tr>
+            </tbody>
+            <bfooter>
+              <tr><td colspan="3"><strong>Total</strong></td><td><div align="right"><strong>53 000</strong></div></td></tr>
+            </bfooter>
+          </table>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6">
+          <table class="table table-hover table-bordered table-striped table-outline mb-0 nowrap"  width="100%" cellspacing="0">
+            <thead class="thead-default">
+              <tr>
+                <th colspan="3"> <h4 class="text-light">Information Banque</h4> </th>
+                <th><div align="right"><h4 class="text-light">Nombre : <strong>3</strong> </h4></div></th>
+              </tr>
+              <tr>
+                <th class="text-center">Réference</th>
+                <th class="text-center">Note imposition</th>
+                <th class="text-center">NIC</th>
+                <th class="text-center">Montant</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr>
+                  <td><div>457575585</div></td>
+                  <td><div align="center">NI20162452145</div></td>
+                  <td><div align="center">201925478555</div></td>
+                  <td><div align="right">15000</div></td>
+                </tr>
+                <tr>
+                  <td><div>457575759</div></td>
+                  <td><div align="center">NI20162453695</div></td>
+                  <td><div align="center">20192512355</div></td>
+                  <td><div align="right">200000</div></td>
+                </tr>
+                <tr>
+                  <td><div>4578963258</div></td>
+                  <td><div align="center">NI20162452256</div></td>
+                  <td><div align="center">201924563855</div></td>
+                  <td><div align="right">30000</div></td>
+                </tr>
+            </tbody>
+            <bfooter>
+              <tr><td colspan="3"><strong>Total</strong></td><td><div align="right"><strong>245 000</strong></div></td></tr>
+            </bfooter>
+            </bfooter>
+          </table>
+        </div>
+        <div class="col-sm-6">
+          <table class="table table-hover table-bordered table-striped table-outline mb-0 nowrap"  width="100%" cellspacing="0">
+            <thead class="thead-default">
+              <tr>
+                <th colspan="3"><h4 class="text-light">Information Mairie </h4></th>
+                <th><div align="right"><h4 class="text-light">Nombre : <strong>3</strong> </h4></div></th>
+              </tr>
+              <tr>
+                <th class="text-center">Réference</th>
+                <th class="text-center">Note imposition</th>
+                <th class="text-center">NIC</th>
+                <th class="text-center">Montant</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr>
+                  <td><div>457575585</div></td>
+                  <td><div align="center">NI20162452145</div></td>
+                  <td><div align="center">201925478555</div></td>
+                  <td><div align="right">15000</div></td>
+                </tr>
+                <tr>
+                  <td><div>457575759</div></td>
+                  <td><div align="center">NI20162453695</div></td>
+                  <td><div align="center">20192512355</div></td>
+                  <td><div align="right">200000</div></td>
+                </tr>
+                <tr>
+                  <td><div>4578963258</div></td>
+                  <td><div align="center">NI20162452256</div></td>
+                  <td><div align="center">201924563855</div></td>
+                  <td><div align="right">30000</div></td>
+                </tr>
+            </tbody>
+            <bfooter>
+              <tr><td colspan="3"><strong>Total</strong></td><td><div align="right"><strong>245 000</strong></div></td></tr>
+            </bfooter>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

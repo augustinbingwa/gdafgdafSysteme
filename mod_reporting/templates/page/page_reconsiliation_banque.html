@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block javascript %}
+  <script type="text/javascript">
+    //Initialiser les dates de la période
+    Helpers.DatePicker('reconsiliation_date_du_jour'); //Date
+
+    $('#type').change(function() {
+        if ($(this).val() === '1') {
+            $("#liste_module").empty();
+            var optionni = '<option value="0"> ------ </option>'
+            optionni += '<option value="1">Impôt Foncier</option>'
+            optionni += '<option value="2">Activité Standard</option>'
+            optionni += '<option value="3">Activité Marché</option>'
+            optionni += '<option value="4">Transport Rémunéré</option>'
+            optionni += '<option value="5">Droit Stationnement</option>'
+            optionni += '<option value="6">Véhicule Propriété</option>'
+            optionni += '<option value="7">Publicité Mur/Clôture</option>'
+            optionni += '<option value="8">Espace Publique</option>'
+            optionni += '<option value="9">Panneau Publicitaire</option>'
+            optionni += '<option value="10">Place Marché</option>';
+            $("#liste_module").append(optionni);
+        }
+        if ($(this).val() === '2') {
+            $("#liste_module").empty();
+            var optionai = '<option value="0"> ------ </option>'
+            optionai += '<option value="1">Standard/Marché</option>'
+            optionai += '<option value="2">Exceptionnelle</option>'
+            optionai += '<option value="3">Acces site touristique</option>'
+            optionai += '<option value="4">Transport</option>'
+            optionai += '<option value="5">Administratif</option>'
+            optionai += '<option value="6">Autres</option>';
+            $("#liste_module").append(optionai);
+        }
+    });
+
+  </script>
+{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <div class="card-header">
+      <div class="row mb-2">
+        <div class="col-sm-7" style="padding-top: 6px;">
+          <h4 class="card-title mb-0"><i class="fa fa-map-o"></i>&nbsp;Reporting / Réconciliation ( Mairie - banques )</h4>
+        </div>
+        <div class="col-sm-5" style="padding-top: 6px;">
+          <a href="{% url 'reconsiliation_banque' %}" class="btn btn-primary btn-sm ml-2" style="float:left;">Paiement par Banque</a>
+          <a href="{% url 'reconsiliation_banque_paiement' %}" class="btn btn-primary btn-sm ml-2" style="float:left;">Verification Paiement</a>
+          <a href="{% url 'reconsiliation_banque_all' %}" class="btn btn-primary btn-sm ml-2" style="float:left;">tous les Paiements</a>
+        </div>
+      </div>
+    </div>
+    <div class="card-body" style= "overflow-x:auto; padding-top: 5px;">
+      <form method="POST" action="">
+        <div class="row mb-3">
+          <div class="col-sm-12">
+            <div class="btn-toolbar float-left" role="toolbar" aria-label="Toolbar with button groups">
+              <div>
+                <label class="label_date">Date :<input type="text" id="reconsiliation_date_du_jour" name="reconsiliation_date_du_jour"  title="Date du jour Du" class="form-control search-input"/></label>
+                <label class="label_search_module">
+                  Banque:
+                  <select name="recette_module" class="form-control search-input">
+                    <option value="1">Ihela</option>
+                    <option value="2">interbank</option>
+                    <option value="3">finbank</option>
+                    <option value="4">bancobu</option>
+                  </select>
+                </label>
+                <label class="label_search_module">
+                  Type imposition:
+                  <select id="type" name="type_module" class="form-control search-input">
+                    <option value="0"> ------ </option>
+                    <option value="1">Note d'Imposition</option>
+                    <option value="2">Avis d'Imposition</option>
+                  </select>
+                </label>
+                <label class="label_search_module">
+                  Module:
+                  <select id="liste_module" name="liste_module" class="form-control search-input">
+                    <option value="0"> ------ </option>
+<!--                    <option value="1">Impôt Foncier</option>-->
+<!--                    <option value="2">Activité Standard</option>-->
+<!--                    <option value="3">Activité Marché</option>-->
+<!--                    <option value="4">Transport Rémunéré</option>-->
+<!--                    <option value="5">Droit Stationnement</option>-->
+<!--                    <option value="6">Véhicule Propriété</option>-->
+<!--                    <option value="7">Publicité Mur/Clôture</option>-->
+<!--                    <option value="8">Espace Publique</option>-->
+<!--                    <option value="9">Panneau Publicitaire</option>-->
+<!--                    <option value="10">Place Marché</option>-->
+                  </select>
+                </label>
+<!--                <label class="label_search_module"> &lt;!&ndash;js pour le changement des select pour les option note et avis&ndash;&gt;-->
+<!--                  Module:-->
+<!--                  <select name="recette_module" class="form-control search-input">-->
+<!--                    <option value="0"> &#45;&#45;&#45;&#45;&#45;&#45; </option>-->
+<!--                    <option value="1">Standard/Marché</option>-->
+<!--                    <option value="2">Exceptionnelle</option>-->
+<!--                    <option value="3">Acces site touristique</option>-->
+<!--                    <option value="4">Transport</option>-->
+<!--                    <option value="5">Administratif</option>-->
+<!--                    <option value="6">Autres</option>-->
+<!--                  </select>-->
+<!--                </label>-->
+                <label>
+                  <button type="submit" id="btn_search" title="Rechercher/Actualiser" class="btn btn-primary btn-sm search-button"><i class="fa fa-search"></i></button>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="row">
+        <div class="col-sm-12">
+          <table class="table table-hover table-bordered table-striped table-outline mb-0 nowrap"  width="100%" cellspacing="0">
+            <thead class="thead-default">
+              <tr>
+                <th class="text-center" colspan="7">banque name</th>
+                <th class="text-center">Tatal</th>
+                <th class="text-right">1 000 000</th>
+              </tr>
+              <tr>
+                <th class="text-center">No</th>
+                <th class="text-center">Nom</th>
+                <th class="text-center">NIC</th>
+                <th class="text-center">NI ou AI</th>
+                <th class="text-center">No réference banque</th>
+                <th class="text-center">Paiement</th>
+                <th class="text-center">Modul</th>
+                <th class="text-center">Type imposition</th>
+                <th class="text-center">Montant</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr>
+                  <td>1</td>
+                  <td><div>RWIMO EMILE</div></td>
+                  <td><div>18020190301771</div></td>
+                  <td><div>NI202202178875</div></td>
+                  <td><div>25214578525</div></td>
+                  <td><div>Impôt foncier de la parcelle n°PPV20190302681</div></td>
+                  <td><div>Impôt foncier</div></td>
+                  <td><div>Note d'imposition</div></td>
+                  <td><div>5 400</div></td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td><div>NTAKARUTIMANA FULGENCE</div></td>
+                  <td><div>18020190203160</div></td>
+                  <td><div>NI202202178874</div></td>
+                  <td><div>542145236</div></td>
+                  <td><div>Impôt foncier de la parcelle n°PPV20190203914</div></td>
+                  <td><div>Impôt foncier</div></td>
+                  <td><div>Note d'imposition</div></td>
+                  <td><div>5 400</div></td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td><div>GAHUNGU DESIRE</div></td>
+                  <td><div>18020190303197</div></td>
+                  <td><div>NI202201020017</div></td>
+                  <td><div>25214578525</div></td>
+                  <td><div>Carte municipale de transport n°AT20210400272, plaque n°: E2457A - Camion Benne</div></td>
+                  <td><div>Transport</div></td>
+                  <td><div>Note d'imposition</div></td>
+                  <td><div>5 400</div></td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td><div>KABURA PIERRE</div></td>
+                  <td><div>18020190301745</div></td>
+                  <td><div>AI202105000001</div></td>
+                  <td><div>25214578525</div></td>
+                  <td><div>Visite site touristique</div></td>
+                  <td><div>Accés site touristique</div></td>
+                  <td><div>Avis d'imposition</div></td>
+                  <td><div>5 400</div></td>
+                </tr>
+            </tbody>
+            <bfooter>
+              <tr><td colspan="8"><strong>Total</strong></td><td><div align="right"><strong>1 000 000</strong></div></td></tr>
+            </bfooter>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

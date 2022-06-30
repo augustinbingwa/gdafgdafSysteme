@@ -1,0 +1,32 @@
+{% load impot_filter %}
+
+<form method="post" action="{% url 'ni_vehicule_activite_update' form.instance.pk %}" class="js-entity-update-form">
+   {% csrf_token %}
+  <div class="modal-header">
+    <h4 class="modal-title"><i class="fa fa-credit-card-alt"></i>&nbsp;{% if form.instance.date_validate %} Informations de la note d'imposition {% else %} Modifier la note d'imposition {% endif %} - Activité municipale {% if form.instance.is_payed_externe %} <strong class="text-warning">EXTERNE</strong> {% endif %} {{ form.instance.note | show_note }}</h4>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+     {% include 'ni_vehicule_activite/includes/_ni_vehicule_activite_form.html' %}
+  </div>
+  <div class="modal-footer">
+    {% if not form.instance.date_validate %}
+      <button type="button" class="btn btn-success" onclick="Validate('{{ form.instance.pk }}', 'Êtes-vous sûr de vouloir valider cette note ?')"> <i class="fa fa-check"></i>&nbsp;Valider</button>
+      <button type="submit" class="btn btn-primary"> <i class="fa fa-save"></i>&nbsp;Enregistrer</button>
+    {% else %}
+      <span class='bg bg-primary' align="right">&nbsp;Note validée le {{ form.instance.date_validate }} &nbsp;</span>
+      {% if form.instance.is_payed %}
+        {% with obj_paie=form.instance|ni_get_paiement_object %}
+          <span class='bg bg-success' align="right">&nbsp;Note payée le {{ obj_paie.date_validate }}&nbsp;</span>
+        {%  endwith %}
+      {% elif form.instance.is_payed_externe %}
+        <span class='bg bg-success' align="right">&nbsp;Note payée EXTERNE = ZERO&nbsp;</span>
+      {% else %}
+        <span class='bg bg-danger' align="right">&nbsp;Non Payée&nbsp;</span>
+      {% endif %}
+    {% endif %}
+    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="{% if not form.instance.date_validate %} fa fa-undo {% else %} fa fa-close {% endif %}"></i>&nbsp;{% if not form.instance.date_validate %} Annuler {% else %} Fermer {% endif %} </button>
+  </div>
+</form>

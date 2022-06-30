@@ -1,0 +1,34 @@
+
+<form method="post" enctype="multipart/form-data" action="{% url 'avis_imposition_upload' obj.pk %}" class="js-entity-upload-form">
+   {% csrf_token %}
+  <div class="modal-header">
+    <h5 class="modal-title"><i class="fa fa-file-pdf-o"></i>&nbsp;{% if obj.date_validate is None %} Joindre {% else %} Visualiser ou Télécharger {% endif %} le bordereau de paiement de l'avis. Réf-<em>{{ obj.reference }}</em></h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="container">
+      <div class="form-group row">
+        <div class="{% if obj.date_validate %} col-sm-12 {% else %} col-sm-9 {% endif %}" style="border: 1px solid #c2cfd6;">  {% if obj.fichier_paiement.url is not None %} 
+            <a target="_blank" class="nav-link" href="{{ obj.fichier_paiement.url}}"><i class="fa fa-file-o"></i>&nbsp;<span class="text text-success">Bordereau</span> ({{ obj.fichier_paiement}})</a>                 
+          {% endif %}
+        </div>
+        <div class="{% if obj.date_validate %} col-sm-0 {% else %} col-sm-3 {% endif %}" id="upload_button">
+          <label>
+            <input id="id_fichier_paiement" type="file" class="" name="fichier_paiement" ngf-select ng-model="new_files" ng-change="fs.uploadFiles(new_files)" {% if obj.date_validate %} disabled: disabled {% endif %}>
+            {% if not obj.date_validate %}
+              <span class="btn btn-warning" title="Seléctioner le fichier"><i class="required_field">*</i>Choisir le bordereau...</span>
+            {% endif %}
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    {% if not obj.date_validate %} 
+      <button type="submit" class="btn btn-primary"> <i class="fa fa-save"></i>&nbsp;Enregistrer</button>
+    {% endif %}
+    <button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="{% if not obj.date_validate %} fa fa-undo {% else %} fa fa-close {% endif %}"></i>&nbsp;{% if not obj.date_validate %} Annuler {% else %} Fermer {% endif %} </
+  </div>
+</form>

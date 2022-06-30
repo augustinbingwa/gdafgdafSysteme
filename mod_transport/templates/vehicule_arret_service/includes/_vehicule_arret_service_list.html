@@ -1,0 +1,52 @@
+{% load transport_filter %}
+{% load helper_filter %}
+{% for obj in lst %}
+<tr>
+	<td class="text-center">{{ forloop.counter }}</td>
+	<td class="text-center">
+		<button type="button" title="{% if obj.date_validate is None%} Mettre à jour les informations {% else %} Visualiser les informations {% endif %}"
+			class="btn  btn-sm  {% if obj.date_validate is None %} btn-warning {% else %} btn-secondary {% endif %} js-update-entity"
+			data-url="{% url 'vehicule_arret_service_update' obj.id %}">
+			<span class="{% if obj.date_validate is None  %} fa fa-edit {% else %} fa fa-folder-open-o {% endif %}"></span><!--Edition-->
+		</button>
+		
+		<button type="button" title="{% if not obj.date_validate %} Supprimer cet arrêt {% endif %}"
+			{% if obj.date_validate is None %} enabled='enabled' {% else %} disabled='disabled' {% endif %}
+			class="btn {% if obj.date_validate is None %} btn-danger {% else %} btn-secondary {% endif %} btn-sm js-delete-entity"
+			data-url="{% url 'vehicule_arret_service_delete' obj.id %}">
+			<span class="fa fa-trash"></span> <!--Suppr-->
+		</button>		
+		
+		<button type="button" title="Pièces jointes lettre"
+			class="btn {% if not obj.fichier_formulaire_vehicule_arret %}btn-warning {% else %}btn-secondary {% endif %} btn-sm js-upload-entity"
+			data-url="{% url 'vehicule_arret_service_upload' obj.id %}">
+			<span class="fa fa-paperclip"></span> <!--Pièce jointe-->
+		</button>
+		<button type="button" title="Pièces jointes carte d'activite"
+			class="btn {% if not obj.fichier_cart_minispal %}btn-warning {% else %}btn-secondary {% endif %} btn-sm js-upload-entity"
+			data-url="{% url 'vehicule_carte_municipale_upload' obj.id %}">
+			<span class="fa fa-paperclip"></span> <!--Pièce jointe-->
+		</button>
+		{% if request.user|has_group:'STAFF_TRANSPORT' and obj.activite.vehicule.actif is False and obj.date_validate and obj.etat_reouverture is False %}
+			<button type="button" title="Reouverture d'activite" {% if obj.definitif is False %} enabled='enabled' {% else %} disabled='disabled' {% endif %}
+					class="btn {% if obj.definitif is False %} btn-primary {% else %}btn-secondary {% endif %}  btn-sm js-upload-entity"
+					data-url="{% url 'vehicule_reouverture_service' obj.id %}">
+				<span class="fa fa-reply"></span> <!--reouverture d'activite transport-->
+
+			</button>
+		{% endif %}
+	</td>
+	<td class="text-center"><div> {{ obj.activite }}</div></td>
+	<td><div> {{ obj.motif }}</div></td>
+	<td><div> {{ obj.date_ouverture }}</div></td>
+	<td><div> {{ obj.date_arret }}</div></td>
+	<td><div>{% if obj.definitif is True %} Definitif {% elif obj.definitif is False and obj.etat_reouverture is False %} Tempolaire {% elif obj.definitif is False and obj.etat_reouverture is True %}Reouvert<br><span class='bg bg-dark text-white'>&nbsp;{{ obj.activite.date_debut }}&nbsp;</span>{% endif %}</div></td>
+	<td>
+		<button type="button" title="{% if obj.note %} {{ obj.note }} {% else %} Créer une note {% endif %}"
+			class="btn btn-link js-update-entity"
+			data-url="{% url 'edit_note' obj.id obj.class_name obj.view_list_name %}">
+			{{ obj | show_mee:user }}
+		</button><!--Envoi et Lecture de la note-->
+	</td>
+</tr>
+{% endfor %}

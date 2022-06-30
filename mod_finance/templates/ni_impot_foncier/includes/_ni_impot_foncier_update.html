@@ -1,0 +1,27 @@
+{% load impot_filter %}
+
+<form method="post" action="{% url 'ni_impot_foncier_update' form.instance.pk %}" class="js-entity-update-form">
+   {% csrf_token %}
+  <div class="modal-header">
+    <h4 class="modal-title"><i class="fa fa-credit-card-alt"></i>&nbsp;{% if form.instance.date_validate %} Informations de la note d'imposition {% else %} Modifier la note d'imposition {% endif %} {{ form.instance.note | show_note }}</h4>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+     {% include 'ni_impot_foncier/includes/_ni_impot_foncier_form.html' %}
+  </div>
+  <div class="modal-footer">
+    {% if form.instance.date_validate %}
+      <span class='bg bg-primary' align="right">&nbsp;Note validée le {{ form.instance.date_validate }} &nbsp;</span>
+      {% if form.instance.is_payed %}
+        {% with obj_paie=form.instance|ni_get_paiement_object %}
+          <span class='bg bg-success' align="right">&nbsp;Note payée le {{ obj_paie.date_validate }}&nbsp;</span>
+        {%  endwith %}
+      {% else %}
+        <span class='bg bg-danger' align="right">&nbsp;Non Payée&nbsp;</span>
+      {% endif %}
+    {% endif %}
+    <button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="{% if not form.instance.date_validate %} fa fa-undo {% else %} fa fa-close {% endif %}"></i>&nbsp;{% if not form.instance.date_validate %} Annuler {% else %} Fermer {% endif %} </button> 
+  </div>
+</form>

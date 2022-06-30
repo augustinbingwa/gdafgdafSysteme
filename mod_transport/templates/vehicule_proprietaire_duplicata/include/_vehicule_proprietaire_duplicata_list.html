@@ -1,0 +1,66 @@
+{% load transport_filter %}
+
+{% for obj in lst %}
+<tr>
+	<td class="text-center">{{ forloop.counter }}</td>
+	<td class="text-center">
+		{% if obj.user_create == user %}
+			<button type="button" title="{% if obj.date_validate is None  %} Modifier les informations {% else %} Visualiser les informations {% endif %}"
+				class="btn {% if obj.date_validate is None %} btn-primary {% else %} btn-secondary {% endif %} btn-sm js-update-entity"
+				data-url="{% url 'vehicule_proprietaire_duplicata_update' obj.id %}">
+				<span class="{% if obj.date_validate is None  %} fa fa-edit {% else %} fa fa-folder-open-o {% endif %}"></span> <!--Modification-->
+			</button>
+		{% else %}
+			<button type="button" title="Visualiser les informations"
+				{% if obj.date_validate %} enabled='enabled' {% else %} disabled='disabled' {% endif %}	
+				class="btn btn-secondary btn-sm js-update-entity"
+				data-url="{% url 'vehicule_proprietaire_duplicata_update' obj.id %}">
+				<span class="fa fa-folder-open-o"></span> <!--Visualisation-->
+			</button>
+		{% endif %}
+
+		{% if obj.user_create == user %}
+			{% if obj.date_validate and obj|is_ai_payed %}
+				<!-- Si le nombre limilte d'impression n'est pas atteint : l'impression est toujours autorisée -->
+				{% if not obj|is_print_number_achieved %}
+					<button type="button" title="Imprimer le duplicata de la carte de propriétaire"
+						class="btn btn-success btn-sm js-update-entity"
+						data-url="{% url 'vehicule_proprietaire_duplicata_print' obj.id %}">
+						<span class="fa fa-print"></span> <!--Print : DUPLCIATA CARTE DE PROPRIETE : Afficher le bouton d'impression si le paiement est fait-->
+					</button>
+				{% else %}
+					<button type="button" title="Demander l'autorisation d'impression"
+						class="btn btn-warning btn-sm js-update-entity"
+						data-url="{% url 'vehicule_proprietaire_duplicata_print_authorization' obj.id %}">
+						<span class="fa fa-print"></span> <!--Print : Demande d'authorisation si on a dépassé le nombre limite-->
+					</button>
+				{% endif %}
+			{% else %}
+				<!--Pas d'impression si l'objet n'est pas encore validée ni payé -->
+				<button type="button" 
+					class="btn btn-secondary btn-sm" disabled="disabled">
+					<span class="fa fa-print"></span> 
+				</button>
+			{% endif %}
+		{% else %}
+			<!--Pas d'impression si l'objet n'est pas encore validée ni payé -->
+			<button type="button" 
+				class="btn btn-secondary btn-sm" disabled="disabled">
+				<span class="fa fa-print"></span> 
+			</button>
+		{% endif %}
+	</td>
+	<td><div align="center"> {{ obj | filter_status_validate }} {{ obj | ai_filter_status_payed }}</div></td>
+	<td><div class="text-center"><strong>{{ obj.vehicule_proprietaire.numero_carte }}</strong></div></td>
+	<td><div class="text-center"><strong>{{ obj.vehicule_proprietaire.vehicule.plaque }}</strong> - {{ obj.vehicule_proprietaire.vehicule.modele }} &nbsp; {{ obj.vehicule_proprietaire.vehicule.sous_categorie }}</div></td>
+	<td><div>{{ obj.vehicule_proprietaire.contribuable.nom }}<br><span class='bg bg-dark text-white'>&nbsp;{{ obj.vehicule_proprietaire.contribuable.matricule }}&nbsp;</span></div></td>
+	<td><div class="text-center"> {{ obj.date_print | date:'D, d M, Y' }}</div></td>
+	<td>
+		<button type="button" title="{% if obj.note %} {{ obj.note }} {% else %} Créer une note {% endif %}"
+			class="btn btn-link js-update-entity"
+			data-url="{% url 'edit_note' obj.id obj.class_name obj.view_list_name %}">
+			{{ obj | show_me:user }}
+		</button><!--Envoi et Lecture de la note-->
+	</td>
+</tr>
+{% endfor %}

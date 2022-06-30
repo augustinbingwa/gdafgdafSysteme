@@ -1,0 +1,18 @@
+{% load impot_filter %}
+
+<form method="post" action="{% url 'non_redevabilite_update' form.instance.pk %}" class="js-entity-update-form">
+   {% csrf_token %}
+  <div class="modal-header">
+    <h4 class="modal-title"><i class="fa fa-credit-card"></i>&nbsp;Modifier le non-redevabilité Réf-{{ form.instance.reference }}</h4>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+     {% include 'att_non_redevabilite/includes/_non_redevabilite_form.html' %}
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary"> <i class="fa fa-save"></i>&nbsp;Enregistrer</button> <!--S'affiche uniquement en mode adminsitratif ou autre-->
+    <button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-close"></i>&nbsp;Fermer</button>
+  </div>
+</form>

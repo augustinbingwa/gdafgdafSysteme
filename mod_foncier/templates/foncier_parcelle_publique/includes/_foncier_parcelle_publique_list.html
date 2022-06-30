@@ -1,0 +1,36 @@
+{% load foncier_filter %}
+
+{% for obj in lst %}
+<tr>
+	<td class="text-center">{{ forloop.counter }}</td>
+	<td class="text-center">
+		{% if obj.user_create == user %}
+			<button type="button" title="{% if obj.date_validate is None  %} Mettre à jour les informations {% else %} Visualiser les informations {% endif %}"
+				class="btn {% if obj.date_validate is None %} btn-primary {% else %} btn-secondary {% endif %} btn-sm js-update-entity"
+				data-url="{% url 'foncier_parcelle_publique_update' obj.id %}">
+				<span class="{% if obj.date_validate is None  %} fa fa-edit {% else %} fa fa-folder-open-o {% endif %}"></span> <!--Edition-->
+		</button>
+		{% else %}
+			<button type="button" title="Visualiser les informations"
+				{% if obj.date_validate %} enabled='enabled' {% else %} disabled='disabled' {% endif %}	
+				class="btn btn-secondary btn-sm js-update-entity"
+				data-url="{% url 'foncier_parcelle_publique_update' obj.id %}">
+				<span class="fa fa-folder-open-o"></span> <!--Visualisation-->
+			</button>
+		{% endif %}
+	</td>
+	<td><div align="center">{{ obj | filter_status_validate }}</div></td>
+	<td><div align="center"><strong>{{ obj.numero_parcelle }}</strong></div></td>
+	<td><div>{{ obj.adresse }} - {{ obj.numero_rueavenue }}</div></td>
+	<td><div>{{ obj.adresse_precise | default:'' }}</div></td>
+	<td><div align="center">{{ obj.occupee | foncier_bool_safe }}</div></td>
+	<td><div align="center">{{ obj.get_usage_display }}</div></td>
+	<td>
+		<button type="button" title="{% if obj.note %} {{ obj.note }} {% else %} Créer une note {% endif %}"
+			class="btn btn-link js-update-entity"
+			data-url="{% url 'edit_note' obj.id obj.class_name obj.view_list_name %}">
+			{{ obj | show_me:user }}
+		</button><!--Envoi et Lecture de la note-->
+	</td>
+</tr>
+{% endfor %}

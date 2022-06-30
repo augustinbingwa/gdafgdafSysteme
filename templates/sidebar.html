@@ -1,0 +1,32 @@
+<!--GESTION DES MENU-->
+{% load helper_filter %}
+
+{% csrf_token %}
+
+{% if user.is_superuser or request.user|has_group:'IT_ADMIN' or request.user|has_group:'IT_USERS' %}
+	{% include 'admin/sidebar_admin.html' %}
+{% else %}
+	{% if request.user|has_group:'MENU_CONTRIBUABLE' %}
+		{% include 'contribuable/sidebar_contribuable.html' %}
+	{% endif %}
+
+	{% if request.user|has_group:'MENU_TECHNIQUE' %}
+		{% include 'technique/sidebar_technique.html' %}
+	{% endif %}
+
+	{% if request.user|has_group:'MENU_COMMUNICATION' %}
+		{% include 'communication/sidebar_communication.html' %}
+	{% endif %}
+
+	{% if request.user|has_group:'MENU_IMPOSITION' %}
+		{% include 'imposition/sidebar_imposition.html' %}
+	{% endif %}
+
+	{% if request.user|has_group:'MENU_RECETTE' %}
+		{% include 'recette/sidebar_recette.html' %}
+	{% endif %}
+
+	{% if request.user|has_group:'MENU_TRANSPORT' %}
+		{% include 'transport/sidebar_transport.html' %}
+	{% endif %}
+{% endif %}

@@ -1,0 +1,59 @@
+{% load foncier_filter %}
+
+{% for obj in lst %}
+<tr>
+	<td class="text-center">{{ forloop.counter }}</td>
+	<td class="text-center" style="width: 100px">
+		{% if obj.user_create != user or obj.user_create == user%} 
+			<button type="button" title="{% if obj.date_validate is None  %} Modifier les informations de la parcelle {% else %} Visualiser les informations de la parcelle {% endif %}"
+				class="btn {% if obj.date_validate is None %} btn-primary {% else %} btn-secondary {% endif %} btn-sm js-update-entity"
+				data-url="{% url 'foncier_parcelle_update' obj.id %}">
+				<span class="{% if obj.date_validate is None  %} fa fa-edit {% else %} fa fa-folder-open-o {% endif %}"></span> <!--Modification-->
+			</button>
+		{% else %}
+			<button type="button" title="Visualiser les informations"
+				{% if obj.date_validate %} enabled='enabled' {% else %} disabled='disabled' {% endif %}	
+				class="btn btn-secondary btn-sm js-update-entity"
+				data-url="{% url 'foncier_parcelle_update' obj.id %}">
+				<span class="fa fa-folder-open-o"></span> <!--Visualisation-->
+			</button>
+		{% endif %}
+
+		<button type="button" title="{% if obj.date_validate and obj.fichier_declaration %} Visualiser la déclaration {% else %} Attacher la déclaration {% endif %}"
+			{% if not obj.date_validate and obj.user_create != user %} enabled='enabled' {% else %} enabled='enabled' {% endif %}
+			class="btn {% if not obj.date_validate %} {% if obj.fichier_declaration %} btn-warning {% else %} btn-info {% endif %} {% else %} btn-secondary {% endif %} btn-sm js-upload-entity"
+			data-url="{% url 'foncier_parcelle_upload' obj.id %}">
+			<span class="fa fa-paperclip"></span> <!--Upload-->
+		</button>
+		{% if user.is_superuser %} 
+			<button type="button" title="Enleve la validation"
+				{% if not obj.date_validate %} disabled='disabled' {% else %} enabled='enabled' {% endif %}
+				class="btn {% if not obj.date_validate %} btn-secondary {% else %} btn-danger {% endif %} btn-sm js-update-entity"
+				data-url="{% url 'foncier_parcelle_change_validation' obj.id %}">
+				<span class="fa fa-ban"></span>
+			</button>
+		{% endif %}
+
+        {% if user.is_superuser %} 
+	      <button type="button" title="Effectuer un transfert" {% if not obj.date_validate %} disabled='disabled' {% else %} enabled='enabled' {% endif %}
+	        class="btn btn-primary  
+	        btn-sm js-upload-entity"
+	        data-url="{% url 'parcelle_transfert' obj.id %}">
+	        <span class="fa fa-exchange"></span> 
+	      </button>
+	    {% endif %}
+	</td>
+	<td class="text-center"><div>{{ obj | filter_status_validate }}</div></td>
+	<td><div class="text-center"><strong>{{ obj.numero_parcelle }}</strong><br>{{ obj | get_last_imposition }}</div></td>
+	<td><div>{{ obj.contribuable.nom }}<br><span class='bg bg-dark text-white'>&nbsp;{{ obj.contribuable.matricule }}&nbsp;</span></div></td>
+	<td><div>{{ obj.adresse }} - {{ obj.numero_rueavenue }}{{ obj.numero_police | numero_police_is_none }}</div></td>
+	<td><div class="text-center"> {{ obj.accessibilite }}</div></td>
+	<td>
+		<button type="button" title="{% if obj.note %} {{ obj.note }} {% else %} Créer une note {% endif %}"
+			class="btn btn-link js-update-entity"
+			data-url="{% url 'edit_note' obj.id obj.class_name obj.view_list_name %}">
+			{{ obj | show_me:user }}
+		</button><!--Envoi et Lecture de la note-->
+	</td>
+</tr>
+{% endfor %}

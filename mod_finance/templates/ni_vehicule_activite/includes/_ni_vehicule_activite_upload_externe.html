@@ -1,0 +1,36 @@
+{% load parametrage_filter %}
+
+<form method="post" enctype="multipart/form-data" action="{% url 'ni_vehicule_activite_externe_upload' obj.pk %}" class="js-entity-upload-form">
+   {% csrf_token %}
+  <div class="modal-header">
+    <h5 class="modal-title"><i class="fa fa-file-pdf-o"></i>&nbsp;{% if not obj.paiement_externe_file %} Joindre le fichier pour {% else %} Visualiser ou Télécharger le fichier de {% endif %} la note n°<strong>{{ obj }}</strong> de l'activité municipale <strong class="text-warning">EXTERNE</strong> de la période <strong>{{ obj.periode.get_element_display }} {{ obj.annee }}</strong></h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="container">
+      <div class="form-group row">
+        <div class="{% if obj.paiement_externe_file %} col-sm-12 {% else %} col-sm-8 {% endif %}" style="border: 1px solid #c2cfd6;">
+            <a target="_blank" class="nav-link {% if not obj.paiement_externe_file %} disabled-element-normal {% endif %}" href="{{ obj.paiement_externe_file | get_file_upload_url }}">{{ obj.paiement_externe_file | get_file_upload:"Fichier carte municipale EXTERNE" }}</a>
+        </div>
+        <div class="{% if obj.paiement_externe_file %} col-sm-0 {% else %} col-sm-4 {% endif %}" id="upload_button">
+          <label>
+            <input id="id_paiement_externe_file" type="file" class="" name="paiement_externe_file" ngf-select ng-model="new_files" ng-change="fs.uploadFiles(new_files)" {% if obj.paiement_externe_file %} disabled: disabled {% endif %} onchange="getFileUploadName(this, 'paiement_externe_file_select');">
+            {% if not obj.paiement_externe_file %}
+              <span class="btn btn-warning" title="Seléctioner le fichier" >
+                <span class="span-upload-file" id="paiement_externe_file_select"><i class="required_field">*</i>&nbsp;Carte muncipale EXTERNE...</span>
+              </span>
+            {% endif %}
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    {% if not obj.paiement_externe_file %} 
+      <button type="submit" class="btn btn-primary"> <i class="fa fa-save"></i>&nbsp;Enregistrer</button>
+    {% endif %}
+    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-undo"></i>&nbsp;{% if obj.paiement_externe_file %} Fermer {% else %} Annuler {% endif %}</button>      
+  </div>
+</form>

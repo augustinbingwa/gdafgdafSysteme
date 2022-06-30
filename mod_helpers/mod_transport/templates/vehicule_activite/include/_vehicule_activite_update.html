@@ -1,0 +1,39 @@
+{% load transport_filter %}
+
+{% load helper_filter %}
+
+<form method="post" action="{% url 'vehicule_activite_update' form.instance.pk %}" class="js-entity-update-form">
+   {% csrf_token %}
+  <div class="modal-header">
+    <h4 class="modal-title"><i class="fa fa-taxi"></i>&nbsp;{% if form.instance.date_validate %} Informations de l'activité du véhicule/moto/vélo {% else %} Modifier les informations de l'activité du véhicule/moto/vélo {% endif %} {{ form.instance.note | show_note }}</h4>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+     {% include 'vehicule_activite/include/_vehicule_activite_form.html' %}
+  </div>
+  <div class="modal-footer">
+    {% if not form.instance.date_validate %}
+      {% if form.instance.fichier_carterose.url is not None and form.instance.fichier_autorisation.url is not None %}
+        <span class="alert-warning" style="width:100%; padding-left: 5px;"> <i class="fa fa-warning"></i>&nbsp;Informations en attente de validation</span>
+        <button type="button" class="btn btn-success" onclick="_Validate('{{ form.instance.pk }}', 'validate/', 'Êtes-vous sûr de vouloir valider ce formulaire?')"> <i class="fa fa-check"></i>&nbsp;Valider</button>
+      {% else %}
+        <span class="alert-warning" style="width:100%; padding-left: 5px;"><i class="fa fa-warning"></i>&nbsp;Pièces jointes manquantes (Carte rose et Autorisation commerciale)</span>
+      {% endif %}  
+      <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;Enregistrer</button>
+    {% else %}
+      {% if not form.instance.date_ecriture %}
+        <span class='bg bg-success' align="right">&nbsp;Validée {{ form.instance.date_validate }}&nbsp;</span>
+        <span class='bg bg-warning' align="right">&nbsp;Ecriture non générée&nbsp;</span>
+        {% if request.user|has_group:'ECRITURE' %} 
+          <button type="button" class="btn btn-danger" title="Générer les avis et notes de cette activité" onclick="_Ecriture('{{ form.instance.pk }}', 'ecriture/', 'Êtes-vous sûr de vouloir générer les avis et notes de cette activité? <br> Les élément suivants seront créés: <br>- Carte activité professionnelle, <br>- Avis Imposition de la carte, <br>- Note Imposition sur activité.')"><i class="fa fa-check"></i>&nbsp;Ecriture</button>
+        {% endif %}
+      {% else %}
+        <span class='bg bg-success' align="right">&nbsp;Validée le {{ form.instance.date_validate }}&nbsp;</span>
+        <span class='bg bg-info' align="right">&nbsp;Générée le {{ form.instance.date_ecriture }}&nbsp;</span>
+      {% endif %}
+    {% endif %}
+    <button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="{% if not form.instance.date_validate %} fa fa-undo {% else %} fa fa-close {% endif %}"></i>&nbsp;{% if not form.instance.date_validate %} Annuler {% else %} Fermer {% endif %} </button>
+  </div>
+</form>

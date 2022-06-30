@@ -1,0 +1,83 @@
+{% load impot_filter %}
+
+{% load helper_filter %}
+
+{% load humanize %} 
+
+{% load qr_code %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Quittance de l'avis</title>
+  <style type="text/css">
+    .titre {
+      font-family: tahoma, arial, sans-serif;
+      font-size:14px;
+      text-align: center;
+    }
+
+    .information {
+      font-family: tahoma, arial, sans-serif;
+      font-size:12px;
+    }
+    .data {
+      font-family: tahoma, arial, sans-serif;
+      font-size:12px;
+    }
+
+    .strong {
+      font-weight: bold;
+    }
+
+    .data_specific {
+      color: #000;
+    }
+  </style>   
+</head>
+<body>
+  <table align="center" border="0">
+    <tr>
+      <td  style="height: 75px;"></td> 
+    </tr>
+    <tr>
+      <td><div class="titre strong">Quittance de paiement {{ obj | get_titre_reporting }}</div></td>   
+    </tr>
+    <tr>
+      <td  style="height: 10px;"></td> 
+    </tr>
+  </table>
+
+  <table border="0">
+    <tr>
+      <td rowspan="5" style="width: 15%;">{% qr_from_text qr_data options=qr_options %}</td> 
+      <td style="width: 18%;"><div class="information strong">Référence:</div></td>
+      <td style="width: 70%;"><div class="data strong data_specific" style="color:red;">{{ obj.reference }}</div></td>
+    </tr>
+    <tr>
+      <td style="width: 15%;"><div class="information strong marge">Nom et prénom:</div></td>
+      <td style="width: 70%;"><div class="data">{% if obj.contribuable %} {{ obj.contribuable.nom }} - <strong>{{ obj.contribuable.matricule }}</strong> {% else %} {{ obj.nom }} {% endif %}</div></td>
+    </tr>
+    <tr>
+      <td style="width: 18%; vertical-align: top;"><div class="information strong marge">Mention:</div></td>
+      <td style="width: 70%; vertical-align: top;"><div class="data">{% if obj.entity %} {{ obj.libelle }} {% else %} {{ obj.taxe.libelle }} {% endif %}</div></td>
+    </tr>
+    <tr>
+      <td style="width: 18%;"><div class="information strong marge">Montant payé:</div></td>
+      <td style="width: 70%;"><div class="data strong" style="color:red;">{{ obj.montant_total | floatformat:0 | intcomma }} </div></td>
+    </tr>
+    <tr>
+      <td style="width: 18%;"><div class="information strong marge">Date:</div></td>
+      <td style="width: 70%;"><div class="data">{{ obj.date_print|date:"d/m/Y" }}</div></td>
+    </tr>
+    <tr>
+      <td colspan="3">
+        {% if not obj.entity %}<hr width="90%">
+          <div class="data" style="text-align: center;">{{ None|get_mairie_identification }}</div>
+        {% endif %}
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

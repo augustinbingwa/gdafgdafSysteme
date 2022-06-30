@@ -1,0 +1,25 @@
+{% if form.errors %}
+  <div class="alert alert-error">
+    <!-- ERREURS SUR LES CHAMPS DU FORMULAIRES -->     
+    {% for field in form %}
+      {% if field.errors %}
+        {% for error in field.errors %}
+          <div class="row">                
+            <div class="form-group col-sm-12" style="font-size: 14px">
+              - {{ field.label }} : &nbsp; <span style="color: blue;">{{ error|escape }}</span>
+            </div>
+          </div>      
+        {% endfor %}
+      {% endif %}
+    {% endfor %}
+    
+    <!-- AUTRES ERREURS CAPTURÉES -->
+    {% for error in form.non_field_errors %}
+      <div class="row">              
+        <div class="form-group col-sm-12" style="font-size: 14px">
+          - Autres : <span style="color: blue;">{{ error|escape }}</span>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}

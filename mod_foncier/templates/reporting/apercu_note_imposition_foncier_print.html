@@ -1,0 +1,213 @@
+{% load impot_filter %}
+
+{% load mathfilters %}
+
+{% load foncier_filter %}
+
+{% load helper_filter %}
+
+{% load humanize %} 
+
+{% load qr_code %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Note d'imposition</title>
+  <style type="text/css">
+    .entete {
+      font-family: tahoma, arial, sans-serif;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .titre {
+      font-family: tahoma, arial, sans-serif;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .information {
+      font-family: tahoma, arial, sans-serif;
+      font-size: 12px;
+    }
+    .data {
+      font-family: tahoma, arial, sans-serif;
+      font-size: 12px;
+    }
+
+    .strong {
+      font-weight: bold;
+    }
+
+    .data_specific {
+      color: #000;
+    }
+
+    .data_column {
+      text-align: right;
+      padding-right: 5px;
+    }
+
+    .marge {
+      padding-left: 10px;
+    }
+
+    .marge_image_left {
+      width: 80px;
+      text-align: left;
+    }
+
+    .marge_image_right {
+      width: 80px;
+      text-align: right;
+    }
+  </style>
+</head>
+<body class="brouillon">
+  <table align="center" border="0" width="90%">
+    <tr>
+      <td width="12%"><div class="marge_image_left"><img src="static/img/logo-pays.png"></div></td> 
+      <td width="76%" ><div class="entete">REPUBLIQUE DU BURUNDI <br> MINISTÈRE DE L'INTÉRIEUR, DU DÉVELOPPEMENT COMMUNAUTAIRE <br>ET DE LA SÉCURITÉ PUBLIQUE <br><br>MUNICIPALITÉ DE BUJUMBURA</div></td>  
+      <td width="12%"><div class="marge_image_right"><img src="static/img/logo-mairie.png"></div></td>
+    </tr>
+  </table>
+  <br>
+  <table align="center" border="1" width="45%">
+    <tr>
+      <td><div class="titre strong" style="padding-top: 10px;">Note d'imposition à l'Impôt Foncier<br><span style="color: red;">BROUILLON</span></div></td>  
+    </tr>
+  </table>
+  <br>
+  <table align="center" border="0">
+    <tr>
+      <td><div class="information strong marge">Nom/Raison sociale</div></td>
+      <td><div class="data">: {{ obj_entity.parcelle.contribuable.nom }} - <strong>{{ obj_entity.parcelle.contribuable.matricule }}</strong></div></td>
+    </tr>
+    <tr>
+      <td><div class="information strong marge">Adresse</div></td>
+      <td><div class="data">: {{ obj_entity.parcelle.contribuable.adresse|default:'Néant' }} {{ obj_entity.parcelle.contribuable.numero_rueavenue|default:'' }}, N° {{ obj_entity.parcelle.contribuable.numero_police|default:'' }}</strong></div></td>
+    </tr>
+    <tr>
+      <td valign="top"><div class="information strong marge">{{ obj_entity | get_entity_label }}</div></td>
+      <td><div class="data">{{ obj_entity | get_entity_reference }}</div></td>
+    </tr>
+    <tr>
+      <td style="width: 18%; vertical-align: top;"><div class="information strong marge">{{ obj_entity | get_entity_adresse_title }}</div></td>
+      <td style="width: 70%; vertical-align: top;"><div class="data">{{ obj_entity | get_entity_adresse_value }}</div></td>
+    </tr>
+    <tr>
+      <td><div class="information strong marge">Exercice</div></td>
+      <td><div class="data">: {{ obj_entity.annee }}</div></td>
+    </tr>
+    <tr>
+      <td><div class="information strong marge">Date de déclaration</div></td>
+      <td><div class="data">: {{ obj_entity.date_declaration }}</div></td>
+    </tr>
+    <tr>
+      <td colspan="2" style="height: 15px;"></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><div class="information strong marge">Référence parcelle</div></td>
+      <td><div class="data">: <strong>{{ obj_entity.parcelle }} - <em style="color:  #0b991e ;">{{ obj_entity.parcelle.accessibilite }} - {{ obj_entity.impot_non_batie.tnb_categorie }}</em></strong></div></td>
+    </tr>
+    <tr>
+      <td><div class="information strong marge">Adresse parcelle</div></td>
+      <td><div class="data">: {{ obj_entity.parcelle.adresse }} - {{ obj_entity.parcelle.numero_rueavenue }}, N° {{ obj_entity.parcelle.numero_police|default:'' }}</strong></div></td>
+    </tr>
+  </table>
+  <br>
+  <table border="1" width="100%" align="center">
+    <thead>
+      <tr valign="middle" style="height: 30px; padding-top: 5px;" class="information strong marge">
+        <th  colspan="3" align="center">PROPRIÉTÉS - NON BÂTIES</th>
+        <th  colspan="4" align="center">PROPRIÉTÉS - BÂTIES</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr valign="middle" style="height: 30px; padding-top: 5px;" class="information strong marge">
+        <td style="padding-left: 8px;" width="8%">Taux</td>
+        <td style="padding-left: 5px;" width="12%"><div>Surface(m²)</div></td>
+        <td style="padding-left: 10px;" width="11%"><div>Total</div></td>
+        <td style="padding-left: 45px;" width="38%"><div>Caractéristiques</div></td>
+        <td style="padding-left: 8px;" width="8%"><div>Taux</div></td>
+        <td style="padding-left: 3px;" width="12%"><div>Surfaces(m²)</div></td>
+        <td style="padding-left: 12px;" width="11%"><div>Total</div></td>
+      </tr>
+      {% for objCara in lstCara %}
+        <tr valign="middle" style="height: 30px; padding-top: 5px;" class="data">
+          <td><div class="data_column">{% if forloop.first %}{{ obj_entity.impot_non_batie.impot }}{% endif %}</div></td>
+          <td><div class="data_column">{% if forloop.first %}{{ obj_entity.superficie_non_batie }}{% endif %}</div></td>
+          <td><div class="data_column strong">{% if forloop.first %}{{ obj_entity | get_montant_tnb | intcomma }}{% endif %}</div></td>
+          <td style="padding-left: 5px; padding-right: 5px;"><div style="white-space: nowrap; font-size: 50px;"><strong>{{ objCara.impot_batie.categorie }} - {{ objCara.impot_batie.type_confort }}</strong></div></td>
+          <td><div class="data_column">{{ objCara.impot_batie.impot }}</div></td>
+          <td><div class="data_column">{{ objCara.superficie_batie }}</div></td>
+          <td><div class="data_column strong">{{ objCara.superficie_batie | mul:objCara.impot_batie.impot | floatformat:"0" | intcomma }}</div></td>
+        </tr>
+      {% empty %}
+        <tr valign="middle" style="height: 30px; padding-top: 5px;" class="data">
+          <td><div class="data_column">{{ obj_entity.impot_non_batie.impot }}</div></td>
+          <td><div class="data_column">{{ obj_entity.superficie_non_batie }}</div></td>
+          <td><div class="data_column strong">{{ obj_entity | get_montant_tnb | intcomma }}</div></td>
+          <td style="padding-left: 5px;"><div><em>Pas de bâtiment</em></div></td>
+          <td><div class="data_column">0</div></td>
+          <td><div class="data_column">0</div></td>
+          <td><div class="data_column strong">0</div></td>
+        </tr>
+      {% endfor %}
+      
+      {% with pb=lstCara|get_total_batie pnb=obj_entity|get_montant_tnb acc=obj_entity|get_montant_accroissement %}
+        <tr valign="middle" style="height: 30px; padding-top: 5px;" class="information strong marge">
+          <td colspan="2"><div>Totaux</div></td>
+          <td><div class="data_column">{{ pnb | floatformat:"0" | intcomma }}</div></td>
+          <td colspan="3"></td>
+          <td><div class="data_column">{{ pb | floatformat:"0" | intcomma }}</div></td>
+        </tr>
+        <tr valign="middle" style="height: 30px; padding-top: 5px;" class="information strong marge">
+          <td colspan="6"><div>Total des terrains bâtis et non bâtis</div></td>
+          <td><div class="data_column">{{ pnb | floatformat:"0" | add:pb  | intcomma }}</div></td>
+        </tr>
+        <tr valign="middle" style="height: 30px; padding-top: 5px;" class="information strong marge">
+          <td colspan="6"><div>Accroissement ( taux = {{ obj_entity | get_taux_accroissement }}%)</div></td>
+          <td><div class="data_column">{{ acc | floatformat:"0" | intcomma }}</div></td>
+        </tr>
+      {% endwith %}
+      <tr valign="middle" style="height: 30px; padding-top: 5px;" class="information strong marge">
+        <td colspan="6"><div>Total à payer</div></td>
+        <td><div class="data_column" style="color:  #0b991e ;">{{ obj_entity | get_aperçu_montant_total_note_imposition | floatformat:"0" | intcomma }}</div></td>
+      </tr>
+    </tbody>
+  </table>
+  <br>
+  <table width="90%" align="center">
+    <tr>
+      <td><div class="information marge">{{ obj_entity | get_aperçu_montant_total_note_imposition | int_to_letter }}</div></td>
+    </tr>
+    <tr>
+      <td style="height: 15px;"></td>
+    </tr>
+    <tr>
+      <td><div class="information marge" style="color: red;">Ce montant doit être payé avant le <strong>30 mars</strong>; sinon une pénalité de <strong>10%</strong> et <strong>1%</strong> par mois de retard sera appliquée.</div></td>
+    </tr>
+    <tr>
+      <td style="height: 15px;"></td>
+    </tr>
+    <tr>
+      <td><div class="information strong marge">Visa du vérificateur</div></td>
+    </tr>
+    <tr>
+      <td style="height: 75px;" align="center"><img src="static/img/brouillon.png" alt=""></td>
+    </tr>
+    <tr>
+      <td><div class="information strong marge">Ce brouillon a été imprimé le, {% now "d F Y" %} par <em>{{ user.get_full_name  }}</em></div></td>
+    </tr>
+  </table>
+  <hr width="90%">
+  <div class="data" style="text-align: center;">{{ None|get_mairie_identification }}</div>
+  <table>
+    <tr>
+      <td align="center"><img src="static/img/brouillon.png" alt=""></td>
+    </tr>
+  </table>
+</body> 

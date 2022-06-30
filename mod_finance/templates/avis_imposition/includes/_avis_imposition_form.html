@@ -1,0 +1,130 @@
+{% block javascript %}
+  <script type="text/javascript">
+    $(document).ready(function(){
+      //Autocompletion du contribuable ou propriétaire du véhicule
+      $( "#id_auto_contribuable" ).autocomplete({
+        source: "/crm/contribuable/autocomplete/",
+        minLength : 3,
+        appendTo: idModalEntity,
+        select: function(event, ui) {
+          event.preventDefault();
+          $(this).val(ui.item.label); 
+          $("#id_contribuable").val(ui.item.value);               
+        },
+        focus: function(event, ui) {
+          event.preventDefault();                    
+          $(this).val(ui.item.label);
+        }
+      });
+
+      //$( "#id_taxe" ).prop( "disabled", true );
+    });
+
+    //Mettre le numéro de chassi en majiscule
+    To_Majiscule('#id_nom');
+
+    {% if form.instance.date_validate %}
+      $('#id_taxe').addClass("disabled-element"); //désativer le DIV container du combo
+    {% else %}
+      {% if form.instance.entity %}
+        $('#id_taxe').addClass("disabled-element"); //désativer le DIV container du combo
+      {% else %}
+        $('#id_taxe').removeClass("disabled-element"); //activer le DIV container du combo
+      {% endif %}
+    {% endif %}
+  </script>
+{% endblock %}
+
+{% load widget_tweaks %}
+
+<div class="container"> 
+  <div class="row"> 
+    <div class="form-group col-sm-4">
+      <i class="required_field">*</i>
+      <label for="{{ form.reference.id_for_label }}">{{ form.reference.label_tag }}</label>
+      {% render_field form.reference class+="form-control" %}
+      {% if form.reference.help_text %}
+        <p class="help-inline"><small><em class="help-inline-ext">[{{ form.reference.help_text }}]</em></small></p>
+      {% endif %}
+    </div>
+    <div class="form-group col-sm-8">
+      <i class="required_field">*</i>
+      {% if form.taxe_filter.value == 2 or form.taxe_filter.value == '2' %} 
+        <!--AVIS FINANCIERS avec CONTRIBUABLE--> 
+        <label for="{{ form.contribuable.id_for_label }}">{{ form.contribuable.label_tag }}</label>  
+        <input type="text" name="auto_contribuable" placeholder="Chercher le contribuable..." class="form-control"
+          id="id_auto_contribuable" value="{{ form.instance.contribuable | default:'' }}"
+          {% if form.taxe_filter.value == 2 or form.taxe_filter.value == '2' %} disabled="disabled" {% endif %} />
+        <input type="hidden" name="contribuable" class="form-control" required="" id="id_contribuable" value="{{form.instance.contribuable.id}}"
+        <p class="help-inline"><small><em class="help-inline-ext">[{{ form.contribuable.help_text }}]</em></small></p>
+      {% else %}
+        <!--ADMINISTRATIF / EXCEPTIONNELLE / TOURISTIQUE avec Nom du bénéficiaire seulement--> 
+        <label for="{{ form.nom.id_for_label }}">{{ form.nom.label_tag }}</label>
+        {% render_field form.nom class+="form-control" %}
+        {% if form.nom.help_text %}
+          <p class="help-inline"><small><em class="help-inline-ext">[{{ form.nom.help_text }}]</em></small></p>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group col-sm-12">
+      <i class="required_field">*</i>
+      <label for="{{ form.taxe.id_for_label }}">{{ form.taxe.label_tag }}</label>
+      {% render_field form.taxe class+="form-control" %}
+      {% if form.taxe.help_text %}
+        <p class="help-inline"><small><em class="help-inline-ext">[{{ form.taxe.help_text }}]</em></small></p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group col-sm-4">
+      <i class="required_field">*</i>
+      <label for="{{ form.nombre_copie.id_for_label }}">{{ form.nombre_copie.label_tag }}</label>      
+      {% render_field form.nombre_copie class+="form-control" %}
+      {% if form.nombre_copie.help_text %}
+        <p class="help-inline"><small><em class="help-inline-ext">[{{ form.nombre_copie.help_text }}]</em></small></p>
+      {% endif %}
+    </div>
+    <div class="form-group col-sm-3">
+      <i class="required_field">*</i>
+      <label for="{{ form.taxe_montant.id_for_label }}">{{ form.taxe_montant.label_tag }}</label>
+      
+      {% render_field form.taxe_montant class+="form-control" %}
+      
+      {% if form.taxe_montant.help_text %}
+        <p class="help-inline"><small><em class="help-inline-ext">[{{ form.taxe_montant.help_text }}]</em></small></p>
+      {% endif %}
+    </div>
+    <div class="form-group col-sm-3">
+      <i class="required_field">*</i>
+      <label for="{{ form.montant_total.id_for_label }}">{{ form.montant_total.label_tag }}</label>
+      {% render_field form.montant_total class+="form-control" %}
+      {% if form.montant_total.help_text %}
+        <p class="help-inline"><small><em class="help-inline-ext">[{{ form.montant_total.help_text }}]</em></small></p>
+      {% endif %}
+    </div>
+    <div class="form-group col-sm-2">
+      <i class="required_field">*</i>
+      <label for="{{ form.validite.id_for_label }}">{{ form.validite.label_tag }}</label>
+      {% render_field form.validite class+="form-control" %}
+
+      {% if form.validite.help_text %}
+        <p class="help-inline"><small><em class="help-inline-ext">[{{ form.validite.help_text }}]</em></small></p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="row"> 
+    <div class="form-group col-sm-12">
+      <i class="required_field">*</i>
+      <label for="{{ form.libelle.id_for_label }}">{{ form.libelle.label_tag }}</label>
+      {% render_field form.libelle class+="form-control" %}
+      {% if form.libelle.help_text %}
+        <p class="help-inline"><small><em class="help-inline-ext">[{{ form.libelle.help_text }}]</em></small></p>
+      {% endif %}
+    </div>
+  </div>
+</div>

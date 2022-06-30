@@ -1,0 +1,151 @@
+
+{% load contribuable_filter %}
+
+{% load activite_filter %}
+
+{% load impot_filter %}
+
+{% load transport_filter %}
+
+{% load humanize %}
+
+{% load mathfilters %}
+
+<div class="row">
+    <div class="col-sm-6 col-lg-2">
+        <div class="card text-white bg-success">
+            <div class="card-body pb-0">
+                <i class="icon-people"></i>&nbsp;<span class="font-weight-bold">CONTRIBUABLES</span>
+                <div class="btn-group float-right">
+                    <button type="button" class="btn btn-transparent dropdown-toggle p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="icon-settings"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="{% url 'physique_list' %}">Personnes Physiques</a>
+                        <a class="dropdown-item" href="{% url 'morale_list' %}">Personnes Morales</a>
+                    </div>
+                </div>
+                <p>
+                    <h4 class="mb-0">{{ 0 | nombre_contribuables }}</h4><p>Enregistrés</p>
+                    <h4 class="mb-0">{{ 1 | nombre_contribuables }}</h4><p>Personnes physiques</p>
+                    <h4 class="mb-0">{{ 2 | nombre_contribuables }}</h4><p>Personne morales</p>
+                    <h4 class="mb-0">{{ 0  }}</h4><p>Dans espace publique</p>
+                </p>
+            </div>
+        </div>
+    </div>
+    <!--/.col-->
+
+    <div class="col-sm-6 col-lg-2">
+        <div class="card text-white bg-primary">
+            <div class="card-body pb-0">
+                <i class="fa fa-map-marker"></i>&nbsp;<span class="font-weight-bold">PARCELLES PUBLIQUES</span>
+                <div class="btn-group float-right">
+                    <button type="button" class="btn btn-transparent dropdown-toggle p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="icon-settings"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="{% url 'allocation_espace_publique_list' %}">Allocation espace publique</a>
+                    </div>
+                </div>
+                <p>
+                    <h4 class="mb-0">{{ 0  }}</h4><p>Enregistrées</p>
+                    <h4 class="mb-0">{{ 0  }}</h4><p>Occupées</p>
+                    <h4 class="mb-0">{{ 0  }}</h4><p>Disponibles</p>
+                </p>
+            </div>
+            <div class="chart-wrapper px-3" style="height:60px;">
+                <canvas id="card-chart1" class="chart" height="60px"></canvas>
+            </div>
+        </div>
+    </div>
+    <!--/.col-->
+
+    <div class="col-sm-6 col-lg-2">
+        <div class="card text-white bg-info">
+            <div class="card-body pb-0">
+                <i class="fa fa-map-marker"></i>&nbsp;<span class="font-weight-bold">KIOSQUES</span>
+                <p>
+                    <h4 class="mb-0">{{ 0  }}</h4><p>Enregitrés</p>
+                </p>
+            </div>
+            <div class="chart-wrapper px-3" style="height:180px;">
+                <canvas id="card-chart1" class="chart" height="60px"></canvas>
+            </div>
+        </div>
+    </div>
+    <!--/.col-->
+
+    <div class="col-sm-6 col-lg-2">
+        <div class="card text-white bg-secondary">
+            <div class="card-body pb-0">
+                <i class="fa fa-map-marker"></i>&nbsp;<span class="font-weight-bold">PANNEAU PUBLICITAIRES</span>
+                <p>
+                    <h4 class="mb-0">{{ 0  }}</h4><p>Enregitrés</p>
+                </p>
+            </div>
+            <div class="chart-wrapper px-3" style="height:180px;">
+                <canvas id="card-chart1" class="chart" height="60px"></canvas>
+            </div>
+        </div>
+    </div>
+    <!--/.col-->
+
+    <div class="col-sm-6 col-lg-2">
+        <div class="card text-dark bg-warning">
+            <div class="card-body pb-0">
+                <i class="fa fa-credit-card-alt"></i>&nbsp;<span class="font-weight-bold">NOTES D'IMPOSITION</span>
+                <div class="btn-group float-right">
+                    <button type="button" class="btn btn-transparent dropdown-toggle p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="icon-settings"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="{% url 'ni_allocation_espace_publique_list' %}">Allocation espace</a>
+                    </div>
+                </div>
+                <p>
+                    <h4 class="mb-0">{{ 0 }}</h4><p>Enregistrées</p>
+                    <h4 class="mb-0">{{ 0 }}</h4><p>Payées</p>
+                    <h4 class="mb-0">{{ 0 }}</h4><p>Non payées</p>
+                </p>
+            </div>
+            <div class="chart-wrapper px-3" style="height:60px;">
+                <canvas id="card-chart1" class="chart" height="60px"></canvas>
+            </div>      
+        </div>
+    </div>
+    <!--/.col-->
+</div>
+
+<!--/.row-->
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-5">
+                <h4 class="card-title mb-0">Traffic</h4>
+                <div class="small text-muted">du {% now "d-m-Y" %}</div>
+            </div>
+            <!--/.col-->
+            <div class="col-sm-7 hidden-sm-down">
+                <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
+                    <div class="btn-group mr-3" data-toggle="buttons" aria-label="First group">
+                        <label class="btn btn-outline-secondary active">
+                            <input type="radio" name="options" id="option1" onchange="">{% now "d" %}
+                        </label>
+                        <label class="btn btn-outline-secondary">
+                            <input type="radio" name="options" id="option2" onchange="">{% now "m" %}
+                        </label>
+                        <label class="btn btn-outline-secondary">
+                            <input type="radio" name="options" id="option3" onchange="">{% now "Y" %}
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <!--/.col-->
+        </div>
+        <!--/.row-->
+
+            
+       
+    </div>
+</div>

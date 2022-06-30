@@ -1,0 +1,110 @@
+{% block javascript %}
+  <script type="text/javascript">
+    $(document).ready(function(){
+      $( "#id_auto_vehicule" ).autocomplete({
+        source: "/transport/vehicule_valide/autocomplete/",
+        minLength : 3,
+        appendTo: idModalEntity,
+        select: function(event, ui) {
+          event.preventDefault();
+          $(this).val(ui.item.label); 
+          $("#id_vehicule").val(ui.item.value);
+
+          //Afficher le contribuable au moment de la seléction du véhicule
+          //Le contribuable peut changer (mutation)
+          $("#id_contribuable").val(ui.item.contribuable_id);
+          $("#id_auto_contribuable").val(ui.item.contribuable);
+          $("#id_chassis").val(ui.item.chassis);
+        },
+        focus: function(event, ui) {
+          event.preventDefault();                    
+          $(this).val(ui.item.label);
+        }
+      });
+
+      //Autocompletion du contribuable ou propriétaire du véhicule
+      $( "#id_auto_contribuable" ).autocomplete({
+        source: "/crm/contribuable/autocomplete/",
+        minLength : 3,
+        appendTo: idModalEntity,
+        select: function(event, ui) {
+          event.preventDefault();
+          $(this).val(ui.item.label); 
+          $("#id_contribuable").val(ui.item.value);               
+        },
+        focus: function(event, ui) {
+          event.preventDefault();                    
+          $(this).val(ui.item.label);
+        }
+      });
+    });
+
+    //Mettre le numéro de chassi en majiscule
+    To_Majiscule('#id_chassis');
+
+    //Date picker : date début effective (date début de l'activité)
+    Helpers.DatePicker('id_date_debut');
+
+  </script>
+{% endblock %}
+
+{% load widget_tweaks %}
+
+{% load transport_filter %}
+
+<div class="container">
+  <div class="row">
+    <div class="form-group col-sm-4">
+      <i class="required_field">*</i>
+      <label for="{{ form.numero_activite.id_for_label }}">{{ form.numero_activite.label_tag }}</label> 
+      {% render_field form.numero_activite class+="form-control" %}
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.numero_activite.help_text }}]</em></small></p>
+    </div>
+
+    <div class="form-group col-sm-4">
+      <i class="required_field">*</i>
+      <label for="{{ form.date_debut.id_for_label }}">{{ form.date_debut.label_tag }}</label>
+      {% render_field form.date_debut class+="form-control" %}
+      {% if form.date_debut.help_text %}
+        <p class="help-inline"><small><em class="help-inline-ext">[{{ form.date_debut.help_text }}]</em></small></p>
+      {% endif %}
+    </div>
+
+    <div class="form-group col-sm-4">
+      <label for="{{ form.solde_depart.id_for_label }}">{{ form.solde_depart.label_tag }}</label>
+      {% render_field form.solde_depart class+="form-control" %}
+      {% if form.solde_depart.help_text %}
+        <p class="help-inline"><small><em class="help-inline-ext">[{{ form.solde_depart.help_text }}]</em></small></p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group col-sm-12">
+      <i class="required_field">*</i>
+      <label for="{{ form.vehicule.id_for_label }}">{{ form.vehicule.label_tag }}</label>  
+      <input type="text" name="auto_vehicule" placeholder="Chercher le véhicule : plaque-marque-modèle-chassis..." class="form-control" id="id_auto_vehicule" value="{{form.instance.vehicule | get_info_vehicule }}" {% if form.instance.date_validate %} disabled="disabled" {% endif %} />
+      <input type="hidden" name="vehicule" class="form-control" required="" id="id_vehicule" value="{{form.instance.vehicule.id}}" />
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.vehicule.help_text }}]</em></small></p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group col-sm-4">
+      <i class="required_field">*</i>
+      <label for="{{ form.chassis.id_for_label }}">{{ form.chassis.label_tag }}</label>
+      {% render_field form.chassis  class+="form-control" %}
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.chassis.help_text }}]</em></small></p>
+    </div>
+
+    <div class="form-group col-sm-8">
+      <i class="required_field">*</i>
+      <label for="{{ form.contribuable.id_for_label }}">{{ form.contribuable.label_tag }}</label>  
+      <input type="text" name="auto_contribuable" placeholder="Chercher le propriétaire..." class="form-control" 
+        id="id_auto_contribuable" value="{{form.instance.contribuable}}"
+        {% if form.instance.date_validate %} disabled="disabled" {% endif %} />
+      <input type="hidden" name="contribuable" class="form-control" required="" id="id_contribuable" value="{{form.instance.contribuable.id}}"
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.contribuable.help_text }}]</em></small></p>
+    </div>
+  </div>
+</div>

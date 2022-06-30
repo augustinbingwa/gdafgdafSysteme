@@ -1,0 +1,96 @@
+{% load humanize %}
+
+{% load mathfilters %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Recapitulatif journalier des montants</title>
+  <style type="text/css">
+    @page { 
+      size: letter landscape;
+      margin-top: 0.2cm; 
+      padding-left: 5px;
+      padding-right: 5px;
+    }
+
+    .entete {
+      font-family: tahoma, arial, sans-serif;
+      font-size:12px;
+      text-align: center;
+    }
+
+    .data {
+      font-family: tahoma, arial, sans-serif;
+      font-size:12px;
+    }
+
+    .strong {
+      font-weight: bold;
+    }
+
+    .table_title {
+      font-family: tahoma, arial, sans-serif;
+      padding-top: 8px;
+      text-align: center;
+    }
+
+    .table_data_right {
+      font-family: tahoma, arial, sans-serif;
+      padding-top: 4px;
+      padding-right: 4px;
+      text-align: right;
+    }
+
+    .table_data_center {
+      font-family: tahoma, arial, sans-serif;
+      padding-top: 4px;
+      text-align: center; 
+    }
+  </style>   
+</head>
+<body>
+  <table align="center" width="100%">
+    <tr>
+      <td width="30%"><h2>MAIRIE DE BUJUMBURA<br>GDAF<br>ETATS STATISTIQUES</h2></td>
+      <td><div class="entete strong" style="border: solid 1px #000; padding-top:10px;">RECAPITULATIF JOURNALIER DES MONTANTS IMPOSÉS PAR TYPE D'IMPÔT ET TAXES - {{ mois }} {{ recap_journalier_montant_annee }}</div></td>
+    </tr>
+  </table>
+  <table align="center"  border="1">
+    <thead>
+      <tr>
+        <th><div class="data strong table_title">Date</div></th>
+        <th><div class="data strong table_title">Foncier</div></th>
+        <th><div class="data strong table_title">Standard</div></th>
+        <th><div class="data strong table_title">Marché</div></th>
+        <th><div class="data strong table_title">Place-Marché</div></th>
+        <th><div class="data strong table_title">Transport</div></th>
+        <th><div class="data strong table_title">Stationnement</div></th>
+        <th><div class="data strong table_title">Propriété</div></th>
+        <th><div class="data strong table_title">Publicité</div></th>
+        <th><div class="data strong table_title">Panneau</div></th>
+        <th><div class="data strong table_title">Espace-Pub</div></th>
+        <th><div class="data strong table_title">Total</div></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for obj in lst %}
+        <tr>
+          <td class="table_data_center {% if forloop.counter == count %} strong {% endif %}">{{ obj.date }}</div></td>
+          <td class="table_data_right {% if forloop.counter == count %} strong {% endif %}">{{ obj.mt_foncier | floatformat:"0" | intcomma  }}</div></td>
+          <td class="table_data_right {% if forloop.counter == count %} strong {% endif %}">{{ obj.mt_standard | floatformat:"0" | intcomma  }}</div></td>
+          <td class="table_data_right {% if forloop.counter == count %} strong {% endif %}">{{ obj.mt_marche | floatformat:"0" | intcomma }}</div></td>
+          <td class="table_data_right {% if forloop.counter == count %} strong {% endif %}">{{ obj.mt_place_marche | floatformat:"0" | intcomma }}</div></td>
+          <td class="table_data_right {% if forloop.counter == count %} strong {% endif %}">{{ obj.mt_transport | floatformat:"0" | intcomma }}</div></td>
+          <td class="table_data_right {% if forloop.counter == count %} strong {% endif %}">{{ obj.mt_stationnement | floatformat:"0" | intcomma }}</div></td>
+          <td class="table_data_right {% if forloop.counter == count %} strong {% endif %}">{{ obj.mt_propriete | floatformat:"0" | intcomma }}</div></td>
+          <td class="table_data_right {% if forloop.counter == count %} strong {% endif %}">{{ obj.mt_publicite | floatformat:"0" | intcomma }}</div></td>
+          <td class="table_data_right {% if forloop.counter == count %} strong {% endif %}">{{ obj.mt_panneau | floatformat:"0" | intcomma }}</div></td>
+          <td class="table_data_right {% if forloop.counter == count %} strong {% endif %}">{{ obj.mt_espace_pub | floatformat:"0" | intcomma }}</div></td>
+          <td class="table_data_right strong">{{ obj.mt_foncier | add:obj.mt_standard | add:obj.mt_marche |  add:obj.mt_place_marche | add:obj.mt_transport | add:obj.mt_stationnement | add:obj.mt_propriete | add:obj.mt_publicite | add:obj.mt_panneau | add:obj.mt_espace_pub | floatformat:"0" | intcomma }}</div></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body> 

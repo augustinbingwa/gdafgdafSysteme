@@ -1,0 +1,102 @@
+{% load tz %}
+
+{% load impot_filter %}
+
+{% load helper_filter %}
+
+{% load humanize %} 
+
+{% for obj in lst %}
+	<tr>
+		<td class="text-center">{{ forloop.counter }}</td>
+		<td class="text-center">
+			{% if obj.user_create == user %}
+				<button type="button" title="{% if obj.date_validate is None %} Editer {% else %} Visualiser {% endif %} la note"
+					class="btn {% if not obj.date_validate %} btn-primary {% else %} btn-secondary {% endif %} btn-sm js-update-entity"
+					data-url="{% url 'ni_droit_stationnement_update' obj.id %}">
+					<span class="{% if obj.date_validate is None  %} fa fa-edit {% else %} fa fa-folder-open-o {% endif %}"></span> <!--Edition-->
+				</button>
+			{% else %}
+				<button type="button" title="Visualiser la note"
+					{% if obj.date_validate %} enabled='enabled' {% else %} disabled='disabled' {% endif %}	
+					class="btn btn-secondary btn-sm js-update-entity"
+					data-url="{% url 'ni_droit_stationnement_update' obj.id %}">
+					<span class="fa fa-folder-open-o"></span> <!--Visualisation-->
+				</button>
+			{% endif %}
+		
+			{% if request.user|has_group:'MENU_RECETTE' %}
+				<button type="button" title="{% if not obj.is_payed %} Suivre le payement {% endif %}"
+					class="btn {% if obj.taxe_montant_paye != obj.taxe_montant %} btn-warning {% else %} btn-secondary {% endif %} btn-sm"
+					onclick="location.href='{% url 'note_imposition_paiement_list' obj.id %}'">
+					<span class="fa fa-dollar"></span> <!--Suivre le paiement-->
+				</button>
+			{% endif %}
+
+			{% if user.is_superuser %}
+				<button type="button" title="Suivre le payement"
+					class="btn btn-danger btn-sm"
+					onclick="location.href='{% url 'note_imposition_paiement_list' obj.id %}'">
+					<span class="fa fa-dollar"></span> <!--Suivre le paiement-->
+				</button>
+
+				<button type="button" title="Imprimer la quittance par ADMIN"
+					class="btn btn-danger btn-sm js-update-entity"
+					data-url="{% url 'ni_quittance_print' obj.id %}">
+					<span class="fa fa-print"></span>
+					<!--Impression de la quittance de la note validée et payée-->
+				</button>
+			{% endif %}
+
+			{% if obj.is_payed %}
+				<!-- Si le nombre limite d'impression n'est pas atteint : l'impression est toujours autorisée -->
+				{% if not obj|is_print_number_achieved %}
+					<!-- Si une note Activité Trasport n'est pas encore payée alors envoyer un message d'erreur -> Il faut payer L'activité municipale avant d'imprimer la quittance de stationnement -->
+					{% if obj|is_ni_vehicule_activite_payed %}
+						<button type="button" title="Imprimer la quittance"
+							class="btn btn-success btn-sm js-update-entity"
+							data-url="{% url 'ni_quittance_print' obj.id %}"
+							{% if not request.user|has_group:'MENU_RECETTE' %} disabled='disabled' {% endif %}>
+							<span class="fa fa-print"></span>
+							<!--Impression de la quittance de la note validée et payée-->
+						</button>
+					{% else %}
+						<button type="button" title="ATTENTION !!! Veuillez payer la note n°{{ obj|get_ni_vehicule_activite }} de l'activité municipale n°{{ obj|get_obj_vehicule_activite_by_note }} avant d'imprimer la quittance." 
+							class="btn btn-danger btn-sm js-update-entity"
+							data-url="{% url 'ni_droit_stationnement_quittance_print_error' obj.id %}">
+							<span class="fa fa-thumbs-down"></span>
+							<!--Message d'erreur quittance-->
+						</button>
+					{% endif %}
+				 {% elif user.is_superuser and obj|is_print_number_achieved %}
+					<button type="button" title="Autorisation d'impression"
+						class="btn btn-warning btn-sm js-update-entity"
+						data-url="{% url 'ni_impot_foncier_authorisation' obj.id %}">
+						<span class="fa fa-print"></span>
+						<!--Print : Demande d'authorisation si on a dépassé le nombre limite-->
+					</button>	
+			    {% else %}
+					<button type="button" title="Demander l'autorisation d'impression"
+						class="btn btn-warning btn-sm js-update-entity"
+						data-url="{% url 'ni_quittance_print_authorization' obj.id %}"
+						{% if not request.user|has_group:'MENU_RECETTE' %} disabled='disabled' {% endif %}>
+						<span class="fa fa-print"></span>
+						<!--Print : Demande d'authorisation si on a dépassé le nombre limite-->
+					</button>
+				{% endif %}
+			{% else %}
+				<a href="{% url 'ni_print_pdf' obj.id %}" target="_blank" class="btn btn-primary btn-sm" title="Imprimer la note"><span class="fa fa-print"></span></a>
+				<!--Impression de la note à payer-->
+			{% endif %}
+		</td>
+		<td><div align="center">{{ obj | ni_status_paiement }}</div></td>
+		<td><div align="center"><strong>{{ obj.reference }}</strong></div></td>
+		<td><div> {{ obj | get_libelle_note_imposition }}</div></td>
+		<td><div>{{ obj.contribuable.nom }}<br><span class='bg bg-dark text-white'>&nbsp;{{ obj.contribuable.matricule }}&nbsp;</span></div></td>
+		<td><div align="center">{{ obj.periode.get_element_display }} - {{ obj.annee }} </div></td>
+		<td><div align="center">{{ obj.date_create | date:"d/m/Y" }}</div></td>
+		<td><div align="right">{{ obj.taxe_montant | floatformat:0 | intcomma }}</div></td>
+		<td><div align="right"><strong>{{ obj.taxe_montant_paye | floatformat:0 | intcomma }}</strong></div></td>
+		<td>{{ obj | show_me:user }}</td>
+	</tr>
+{% endfor %}

@@ -1,0 +1,116 @@
+{% load contribuable_filter %}
+
+{% load activite_filter %}
+
+{% load impot_filter %}
+
+{% load foncier_filter %}
+
+{% load helper_filter %}
+
+{% load humanize %}
+
+{% load mathfilters %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Résumé des modules</title>
+  <style type="text/css">
+    @page { 
+      size: letter landscape;
+      margin-top: 1cm; 
+      padding-left: 5px;
+      padding-right: 5px;
+    }
+
+    .entete {
+      font-family: tahoma, arial, sans-serif;
+      font-size:14px;
+      text-align: center;
+    }
+
+    .titre {
+      font-family: tahoma, arial, sans-serif;
+      font-size:14px;
+      text-align: center;
+    }
+
+    .data {
+      font-family: tahoma, arial, sans-serif;
+      font-size:12px;
+    }
+
+    .strong {
+      font-weight: bold;
+    }
+
+    .table_title {
+      font-family: tahoma, arial, sans-serif;
+      font-size:12px;
+      padding-top: 5px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .table_data_left {
+      font-family: tahoma, arial, sans-serif;
+      font-size:11px;
+      padding-top: 4px;
+      padding-left: 4px;
+      text-align: left; 
+    }
+
+    .table_data_right {
+      font-family: tahoma, arial, sans-serif;
+      font-size:11px;
+      padding-top: 4px;
+      padding-right: 4px;
+      text-align: right;
+    }
+    
+  </style>   
+</head>
+<body>
+  <table align="center" border="1" width="30%">
+    <h2>MAIRIE DE BUJUMBURA<br>GDAF<br>ETATS STATISTIQUES</h2>
+    <tr>
+      <td style="padding-top: 5px;"><div class="entete strong">RÉSUMÉ DES MODULES<br>Période du <span style="color: #20a8d8;">{{ module_resume_du }}</span> 
+    au <span style="color: #20a8d8;">{{ module_resume_au }}</span></div></td>  
+    </tr>
+  </table>
+  <br>
+  <table border="1" >
+    <thead>
+      <tr>
+        <th class="table_title">Modules</th>
+        <th class="table_title">Déclarants</th>
+        <th class="table_title">Physiques</th>
+        <th class="table_title">Morales</th>
+        <th class="table_title">Notes imposées</th>
+        <th class="table_title">Notes Payées</th>
+        <th class="table_title">Notes Impayées</th>
+        <th class="table_title">Total Imposé</th>
+        <th class="table_title">Total Recette</th>
+        <th class="table_title">Total Impayé</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for obj in lst %}
+        <tr>
+          <td class="table_data_left strong" width="110" style="height: 45px; {% if forloop.counter == count %} color:#20a8d8; {% else %} color:#000; {% endif %}">{{ obj.module }}</td>
+          <td class="table_data_right {% if forloop.counter == count %} strong {% endif %}" width="70">{{ obj.nbr_declarant | floatformat:"0" | intcomma  }}</td>
+          <td class="table_data_right {% if forloop.counter == count %} strong {% endif %}" width="70">{{ obj.nbr_phyique | floatformat:"0" | intcomma  }}</td>
+          <td class="table_data_right {% if forloop.counter == count %} strong {% endif %}" width="70">{{ obj.nbr_morale | floatformat:"0" | intcomma  }}</td>
+          <td class="table_data_right {% if forloop.counter == count %} strong {% endif %}" width="80">{{ obj.nbr_note_imposee | floatformat:"0" | intcomma }}</td>
+          <td class="table_data_right {% if forloop.counter == count %} strong {% endif %}" width="80">{{ obj.nbr_recette | floatformat:"0" | intcomma }}</td>
+          <td class="table_data_right {% if forloop.counter == count %} strong {% endif %}" width="80">{{ obj.nbr_note_impayee | floatformat:"0" | intcomma }}</td>
+          <td class="table_data_right {% if forloop.counter == count %} strong {% endif %}" width="100" style="color: #267F00;">{{ obj.total_imposee | floatformat:"0" | intcomma }}</td>
+          <td class="table_data_right {% if forloop.counter == count %} strong {% endif %}" width="100" style="color: #004A7F;">{{ obj.total_recette | floatformat:"0" | intcomma }}</td>
+          <td class="table_data_right {% if forloop.counter == count %} strong {% endif %}" width="100" style="color: #FF1B00;">{{ obj.total_impayee | floatformat:"0" | intcomma }}</td>
+        </tr>
+      {% endfor %}  
+    </tbody>
+  </table>
+</body>

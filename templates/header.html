@@ -1,0 +1,57 @@
+{% load static %}
+
+{% load helper_filter %}
+
+{% load humanize %}
+
+<header class="app-header navbar">
+        <button class="navbar-toggler mobile-sidebar-toggler d-lg-none mr-auto text-primary" type="button">☰</button>
+        <a class="navbar-brand" href="#"></a>
+        <button class="navbar-toggler sidebar-toggler d-md-down-none text-primary" type="button">☰</button>
+ 
+        <ul class="nav navbar-nav d-md-down-none">
+            <li class="nav-item hidden-sm-down">
+                <a href="#" class="nav-link nav-link-expand text-primary"><i class="fa fa-expand"></i></a>
+            </li>
+            <li class="nav-item px-3">
+                <a class="nav-link text-primary" href="{% url 'home' %}">Mon tableau de bord</a>
+            </li>      
+            <li class="nav-item px-3 text-secondary">
+                Bujumbura, {% now "d F Y" %} &nbsp; &nbsp;
+            </li>           
+        </ul>
+        <ul class="nav navbar-nav ml-auto">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle text-primary" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                    <span class="d-md-down-none text-primary">
+                        <img src="{{ user | get_user_avatar }}" class="photo_profile"/> {{ user | get_user_current_group }} - {{ user | capfirst }} 
+                    </span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <div class="dropdown-header text-center">
+                        <strong>Outils</strong>
+                    </div>
+                    <a class="dropdown-item" href="{% url 'home' %}"><i class="fa fa-dashboard"></i>Tableau de bord</a>
+                    <div class="dropdown-header text-center">
+                        <strong>Administration</strong>
+                    </div>
+                    {% if user.is_superuser %}
+                        <a class="dropdown-item" href="{% url 'index_admin' %}"><i class="fa fa-wrench"></i>Paramétrage</a>
+                        <div class="dropdown-header text-center">
+                            <strong>Configuration</strong>
+                        </div>
+                    {% endif %}
+                    <button type="button" title="Affiche mon profil" id="idProfileMenu" 
+                        class="dropdown-item js-update-entity"
+                        data-url="{% url 'show_user_profile' %}">
+                        <i class="fa fa-user"></i>Mon profil
+                    </button>
+                    <a class="dropdown-item" href="/logout"><i class="fa fa-lock"></i>Déconnexion</a>
+                </div>
+            </li>
+        </ul>
+        <button class="navbar-toggler aside-menu-toggler" type="button" title="Suivre les notifications">
+            <!--☰-->
+            <i class="fa fa-commenting" style="color: yellow"></i>
+        </button>
+    </header>

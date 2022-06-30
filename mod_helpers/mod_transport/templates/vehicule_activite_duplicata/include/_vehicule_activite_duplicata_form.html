@@ -1,0 +1,40 @@
+{% block javascript %}
+  <script type="text/javascript">
+    //Autocompletion des cartes des véhicules qui exercent des activités de transport rémunéré)
+    $(document).ready(function(){
+      $( "#id_auto_vehicule_activite" ).autocomplete({
+        source: "/transport/vehicule_activite/autocomplete/",
+        minLength : 3,
+        appendTo: idModalEntity,
+        select: function(event, ui) {
+          event.preventDefault();
+          $(this).val(ui.item.label); 
+          $("#id_vehicule_activite").val(ui.item.value);
+        },
+        focus: function(event, ui) {
+          event.preventDefault();                    
+          $(this).val(ui.item.label);
+        }
+      });
+    });
+  </script>
+{% endblock %}
+
+{% load widget_tweaks %}
+
+<div class="container"> 
+  <div class="row">
+    <div class="form-group col-sm-12">
+      <i class="required_field">*</i>
+      <label for="{{ form.vehicule_activite.id_for_label }}">{{ form.vehicule_activite.label_tag }}</label>  
+      <input type="text" name="auto_vehicule_activite" placeholder="Chercher le véhicule par numéro ativité, plaque, chassis" 
+      class="form-control" id="id_auto_vehicule_activite" 
+      {% if form.instance.vehicule_activite  %}
+        value="{{ form.instance.vehicule_activite }} - {{ form.instance.vehicule_activite.vehicule.plaque }} ({{ form.instance.vehicule_activite.vehicule.modele }}) - {{ form.instance.vehicule_activite.vehicule.sous_categorie.nom }} - {{ form.instance.vehicule_activite.contribuable.nom }}" 
+      {% endif %}
+      {% if form.instance.date_validate %} disabled="disabled" {% endif %}/>
+      <input type="hidden" name="vehicule_activite" class="form-control" required="" id="id_vehicule_activite" value="{{ form.instance.vehicule_activite.id }}" />
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.vehicule_activite.help_text }}]</em></small></p>
+    </div>
+  </div>
+</div>

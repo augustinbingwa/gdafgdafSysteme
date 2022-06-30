@@ -1,0 +1,267 @@
+{% load contribuable_filter %}
+
+{% load activite_filter %}
+
+{% load impot_filter %}
+
+{% load transport_filter %}
+
+{% load humanize %}
+
+{% load mathfilters %}
+
+<div class="row">
+    <div class="col-sm-6 col-lg-2">
+        <div class="card text-white bg-success">
+            <div class="card-body pb-0">
+                <i class="icon-people"></i>&nbsp;<span class="font-weight-bold">CONTRIBUABLES</span>
+                <div class="btn-group float-right">
+                    <button type="button" class="btn btn-transparent dropdown-toggle p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="icon-settings"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="{% url 'physique_list' %}">Personnes Physiques</a>
+                        <a class="dropdown-item" href="{% url 'morale_list' %}">Personnes Morales</a>
+                    </div>
+                </div>
+                <p>
+                    <h4 class="mb-0">{{ 0 | nombre_contribuables }}</h4><p>Enregistrés</p>
+                    <h4 class="mb-0">{{ 1 | nombre_contribuables }}</h4><p>Personnes physiques</p>
+                    <h4 class="mb-0">{{ 2 | nombre_contribuables }}</h4><p>Personne morales</p>
+                    <h4 class="mb-0">{{ 3 | nombre_contribuables }}</h4><p>Dans transport</p>
+                </p>
+            </div>
+        </div>
+    </div>
+    <!--/.col-->
+
+    <div class="col-sm-6 col-lg-2">
+        <div class="card text-white bg-primary">
+            <div class="card-body pb-0">
+                <i class="fa fa-car"></i>&nbsp;<span class="font-weight-bold">VÉHICULE-MOTO-VÉLO</span>
+                <div class="btn-group float-right">
+                    <button type="button" class="btn btn-transparent dropdown-toggle p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="icon-settings"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="{% url 'vehicule_list' %}">Véhicules/Moto/Vélos</a>
+                    </div>
+                </div>
+                <p>
+                    <h4 class="mb-0">{{ 0 | nombre_vehicule }}</h4><p>Enregistrés</p>
+                    <h4 class="mb-0">{{ 0 | nombre_vehicule:0 }}</h4><p>Privés</p>
+                    <h4 class="mb-0">{{ 0 | nombre_vehicule:1 }}</h4><p>Rémunérés</p>
+                </p>
+            </div>
+            <div class="chart-wrapper px-3" style="height:60px;">
+                <canvas id="card-chart1" class="chart" height="60px"></canvas>
+            </div>
+        </div>
+    </div>
+    <!--/.col-->
+
+    <div class="col-sm-6 col-lg-2">
+        <div class="card text-white bg-info">
+            <div class="card-body pb-0">
+                <i class="fa fa-image"></i>&nbsp;<span class="font-weight-bold">CARTES</span>
+                <div class="btn-group float-right">
+                    <button type="button" class="btn btn-transparent dropdown-toggle p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="icon-settings"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="{% url 'vehicule_proprietaire_list' %}">Carte de propriété</a>
+                        <a class="dropdown-item" href="{% url 'vehicule_activite_list' %}">Cartes professionnelles</a>
+                    </div>
+                </div>
+                <p>
+                    <h4 class="mb-0">{{ 0 | nombre_carte }}</h4><p>Validées / Total</p>
+                    <h4 class="mb-0">{{ 0 | nombre_carte:0 }}</h4><p>Propriétés validées / Total</p>
+                    <h4 class="mb-0">{{ 0 | nombre_carte:1 }}</h4><p>Professionnelles validées / Total</p>
+                </p>
+            </div>
+            <div class="chart-wrapper px-3" style="height:60px;">
+                <canvas id="card-chart1" class="chart" height="60px"></canvas>
+            </div>
+        </div>
+    </div>
+    <!--/.col-->
+
+    <div class="col-sm-6 col-lg-2">
+        <div class="card text-white bg-secondary">
+            <div class="card-body pb-0">
+                <i class="fa fa-copy"></i>&nbsp;<span class="font-weight-bold">DUPLICATA</span>
+                <div class="btn-group float-right">
+                    <button type="button" class="btn btn-transparent dropdown-toggle p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="icon-settings"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="{% url 'vehicule_proprietaire_duplicata_list' %}">Duplicata des cartes de propriétés</a>
+                        <a class="dropdown-item" href="{% url 'vehicule_activite_duplicata_list' %}">Duplicata des cartes professionnelles</a>
+                    </div>
+                </div>
+                <p>
+                    <h4 class="mb-0">{{ 0 | nombre_carte_duplicata }}</h4><p>Délivrés</p>
+                    <h4 class="mb-0">{{ 0 | nombre_carte_duplicata:0 }}</h4><p>Cartes de propriété</p>
+                    <h4 class="mb-0">{{ 0 | nombre_carte_duplicata:1 }}</h4><p>Cartes professionnelles</p>
+                </p>
+            </div>
+            <div class="chart-wrapper px-3" style="height:60px;">
+                <canvas id="card-chart1" class="chart" height="60px"></canvas>
+            </div>
+        </div>
+    </div>
+    <!--/.col-->
+
+    <div class="col-sm-6 col-lg-2">
+        <div class="card text-white bg-dark">
+            <div class="card-body pb-0">
+                <i class="fa fa-credit-card-alt"></i>&nbsp;<span class="font-weight-bold">AVIS D'IMPOSITION</span>
+                <div class="btn-group float-right">
+                    <button type="button" class="btn btn-transparent dropdown-toggle p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="icon-settings"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="{% url 'avis_imposition_list' 13 %}">Avis de transport rémunéré</a>
+                    </div>
+                </div>
+                <p>
+                    <h4 class="mb-0">{{ -1 | nombre_ai_transport }}</h4><p>Enregistrés</p>
+                    <h4 class="mb-0">{{ 0 | nombre_ai_transport }} / {{ 1 | nombre_ai_transport }}</h4><p>Cartes de propriété / Duplicata</p>
+                    <h4 class="mb-0">{{ 2 | nombre_ai_transport }} / {{ 3 | nombre_ai_transport }}</h4><p>Cartes professionnelles/ Duplicata</p>
+                </p>
+            </div>
+            <div class="chart-wrapper px-3" style="height:60px;">
+                <canvas id="card-chart1" class="chart" height="60px"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-lg-2">
+        <div class="card text-dark bg-warning">
+            <div class="card-body pb-0">
+                <i class="fa fa-credit-card-alt"></i>&nbsp;<span class="font-weight-bold">NOTES D'IMPOSITION</span>
+                <div class="btn-group float-right">
+                    <button type="button" class="btn btn-transparent dropdown-toggle p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="icon-settings"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="{% url 'ni_vehicule_proprietaire_list' %}">Taxes sur la propriété</a>
+                        <a class="dropdown-item" href="{% url 'ni_vehicule_activite_list' %}">Taxes activités municipales</a>
+                        <a class="dropdown-item" href="{% url 'ni_droit_stationnement_list' %}">Droit de stationnement</a>
+                    </div>
+                </div>
+                <p>
+                    <h4 class="mb-0">{{ -1 | nombre_ni_transport }}</h4><p>Enregistrées</p>
+                    <h4 class="mb-0">{{ 0 | nombre_ni_transport }}</h4><p>Taxes sur la propriété</p>
+                    <h4 class="mb-0">{{ 1 | nombre_ni_transport }}</h4><p>Taxes sur activités</p>
+                    <h4 class="mb-0">{{ 2 | nombre_ni_transport }}</h4><p>Droit de stationnement</p>
+                </p>
+            </div>
+        </div>
+    </div>
+    <!--/.col-->
+</div>
+
+<!--/.row-->
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-5">
+                <h4 class="card-title mb-0">Traffic</h4>
+                <div class="small text-muted">du {% now "d-m-Y" %}</div>
+            </div>
+            <!--/.col-->
+            <div class="col-sm-7 hidden-sm-down">
+                <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
+                    <div class="btn-group mr-3" data-toggle="buttons" aria-label="First group">
+                        <label class="btn btn-outline-secondary active">
+                            <input type="radio" name="options" id="option1" onchange="">{% now "d" %}
+                        </label>
+                        <label class="btn btn-outline-secondary">
+                            <input type="radio" name="options" id="option2" onchange="">{% now "m" %}
+                        </label>
+                        <label class="btn btn-outline-secondary">
+                            <input type="radio" name="options" id="option3" onchange="">{% now "Y" %}
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <!--/.col-->
+        </div>
+        <!--/.row-->
+
+        {% with ai_V0_np=13|ai_recette_entity_not_payed ai_V10_np=17|ai_recette_entity_not_payed ai_V1_np=11|ai_recette_entity_not_payed ai_V11_np=16|ai_recette_entity_not_payed ai_V0_p=13|ai_recette_entity_payed ai_V10_p=17|ai_recette_entity_payed ai_V1_p=11|ai_recette_entity_payed ai_V11_p=16|ai_recette_entity_payed ni_V0_np=13|ni_recette_entity_not_payed ni_V1_np=11|ni_recette_entity_not_payed ni_V2_np=12|ni_recette_entity_not_payed ni_V0_p=13|ni_recette_entity_payed ni_V1_p=11|ni_recette_entity_payed ni_V2_p=12|ni_recette_entity_payed prev_ni_V0_np=13|ni_recette_entity_not_payed prev_ni_V1_np=11|ni_recette_entity_not_payed prev_ni_V2_np=12|ni_recette_entity_not_payed prev_ni_V0_p=13|ni_recette_entity_payed prev_ni_V1_p=11|ni_recette_entity_payed prev_ni_V2_p=12|ni_recette_entity_payed %}
+            <div class="chart-wrapper">
+                <table class="table table-hover table-bordered table-striped table-outline nowrap" id="tableau-bord" width="100%" cellspacing="0"> 
+                    <thead class="thead-default">
+                        <tr>              
+                            <th class='text-center'></th>
+                            <th class='text-center'>Avis NON payés</th>
+                            <th class='text-center'>Avis payés</th>
+                            <th class='text-center'>Notes NON payées</th>
+                            <th class="text-center">Notes payées</th>
+                            <th class="text-center">Avis et Notes NON payés</th>
+                            <th class="text-center">Avis et Notes payés</th>
+                            <th class='text-center'>Prévisions des Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>              
+                            <td class='text-left'><strong>1. Taxes sur la propriété</strong></td>
+                            <td class='text-right'>{{ ai_V0_np | addition:ai_V10_np | intcomma }}</td>
+                            <td class='text-right'>{{ ai_V0_p  | addition:ai_V10_p| intcomma }}</td>
+
+                            <td class='text-right'>{{ ni_V0_np | intcomma }}</td> 
+                            <td class="text-right">{{ ni_V0_p  | intcomma }}</td>   
+
+                            <td class="text-right">{{ ai_V0_np | addition:ai_V10_np |addition:ni_V0_np | intcomma }}</td>
+                            <td class="text-right">{{ ai_V0_p | addition:ai_V10_p |addition:ni_V0_p | intcomma }}</td>
+                            <td class="text-right"><strong>{{ prev_ni_V0_np | addition:prev_ni_V0_p | intcomma }}</strong></td>
+                        </tr>
+                        <tr>              
+                            <td class='text-left'><strong>2. Activités de transports rémunérés</strong></td>
+                            <td class='text-right'>{{ ai_V1_np | addition:ai_V11_np | intcomma }}</td>
+                            <td class='text-right'>{{ ai_V1_p  | addition:ai_V11_p | intcomma }}</td>
+
+                            <td class='text-right'>{{ ni_V1_np | intcomma }}</td>
+                            <td class="text-right">{{ ni_V1_p  | intcomma }}</td> 
+
+                            <td class="text-right">{{ ai_V1_np | addition:ai_V11_np | addition:ni_V1_np | intcomma }}</td>
+                            <td class="text-right">{{ ai_V1_p | addition:ai_V11_p | addition:ni_V1_p | intcomma }}</td>
+                            <td class="text-right"><strong>{{ prev_ni_V1_np | addition:prev_ni_V1_p | intcomma }}</strong></td>
+                        </tr>
+                        <tr>              
+                            <td class='text-left'><strong>3. Droit de stationnement</strong></td>
+                            <td class='text-right'>{{ 0 | intcomma }}</td>
+                            <td class='text-right'>{{ 0 | intcomma }}</td>
+
+                            <td class='text-right'>{{ ni_V2_np | intcomma }}</td>
+                            <td class="text-right">{{ ni_V2_p  | intcomma }}</td>
+
+                            <td class="text-right">{{ ni_V2_np | intcomma }}</td>
+                            <td class="text-right">{{ ni_V2_p | intcomma }}</td>
+                            <td class="text-right"><strong>{{ prev_ni_V2_np | addition:prev_ni_V2_p | intcomma }}</strong></td>
+                        </tr>
+                        <tr>              
+                            <td class='text-left'><strong>TOTAUX</strong></td>
+                            
+                            <td class='text-right'><strong>{{ ai_V0_np | addition:ai_V10_np | addition:ai_V1_np | addition:ai_V11_np | intcomma }}</strong></td>
+                            
+                            <td class='text-right'><strong>{{ ai_V0_p | addition:ai_V10_p | addition:ai_V1_p | addition:ai_V11_p  | intcomma }}</strong></td>
+                            
+                            <td class='text-right'><strong>{{ ni_V0_np | addition:ni_V1_np | addition:ni_V2_np | intcomma }}</strong></td>
+                            
+                            <td class="text-right"><strong>{{ ni_V0_p  | addition:ni_V1_p  | addition:ni_V2_p  | intcomma }}</strong></td>             
+                            
+                            <td class="text-right"><strong>{{ ai_V0_np | addition:ai_V10_np | addition:ai_V1_np | addition:ai_V11_np | addition:ni_V0_np | addition:ni_V1_np | addition:ni_V2_np | intcomma }}</strong></td>
+                            
+                            <td class="text-right"><strong>{{ ai_V0_p | addition:ai_V10_p | addition:ai_V1_p | addition:ai_V11_p | addition:ni_V0_p | addition:ni_V1_p | addition:ni_V2_p | intcomma }}</strong></td>
+
+                            <td class="text-right"><strong style="color:red;">{{ prev_ni_V0_np | addition:prev_ni_V1_np | addition:prev_ni_V2_np | addition:prev_ni_V0_p | addition:prev_ni_V1_p | addition:prev_ni_V2_p | intcomma }}</strong></td>
+                        </tr>
+                    </tbody>
+                </table> 
+            </div>
+        {% endwith %}
+    </div>
+</div>

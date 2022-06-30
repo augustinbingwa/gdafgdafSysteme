@@ -1,0 +1,21 @@
+{% load widget_tweaks %}
+<div class="container"> 
+  <div class="row"> 
+    <div class="form-group col-sm-4">
+      <label for="{{ form.activite.id_for_label }}">{{ form.activite.label_tag }}</label>
+      <input type="text" name="numero_activite" class="form-control" required="" id="id_numero_activite" value="{{form.numero_activite}}" disabled="disabled"/>
+      <input type="hidden" name="activite" class="form-control" required="" id="id_activite" value="{{form.activite_id}}"/>
+      {% if form.activite.help_text %}
+        <p class="help-inline"><small><em class="help-inline-ext">[{{ form.activite.help_text }}]</em></small></p>
+      {% endif %}
+    </div>
+
+    <div class="form-group col-sm-8">
+      <label for="{{ form.motif.id_for_label }}">{{ form.motif.label_tag }}</label>
+      {% render_field form.motif  class+="form-control" %}
+      {% if form.motif.help_text %}
+        <p class="help-inline"><small><em class="help-inline-ext">[{{ form.motif.help_text }}]</em></small></p>
+      {% endif %}
+    </div>
+  </div>  
+</div>
