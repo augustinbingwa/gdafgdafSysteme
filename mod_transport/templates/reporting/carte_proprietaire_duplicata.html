@@ -1,0 +1,186 @@
+{% load transport_filter %}
+
+{% load parametrage_filter %}
+
+{% load qr_code %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Carte de propriété duplicata</title>
+  <style type="text/css">
+    /*MARGE SUPERIEUR !!! IMPORTANT !!!*/
+    @page { 
+      margin: 0; 
+      padding-left: 0px;
+      padding-top: 42px;
+    }
+    
+    .information {
+      font-family: tahoma, arial, sans-serif;
+      font-size:10px;
+    }
+    .data {
+      font-family: tahoma, arial, sans-serif;
+      font-size:10px;
+    }
+
+    .strong {
+      font-weight: bold;
+    }
+
+    .data_numero {
+      font-family: tahoma, arial, sans-serif;
+      font-size:10px;
+      font-weight: bold;
+      color: #BE560C;
+      padding-left: 25px;
+    }
+
+    .data_specific {
+      color: #BE560C;
+    }
+
+    .marge {
+      padding-left: 10px;
+    }
+
+    .marge_numero_carte {
+      padding-left: 35px;
+    }
+
+    .image_qr_left {
+      text-align: left;
+    }
+
+    .image_qr_right {
+      text-align: left;
+    }
+
+    .image_left {
+      padding-right: 20px;
+      text-align: right;
+    }
+
+    .image_right {
+      padding-right: 10px;
+      text-align: right;
+    }
+  </style>   
+</head>
+<body> 
+  <table border="0" >
+    <tr>
+      <td width="100px"></td> 
+      <td width="177px"><div class="data_numero">{{ obj.vehicule_proprietaire.numero_carte }}</div></td>  
+      <td width="100px"></td>
+      <td width="175px"><div class="data_numero marge_numero_carte">{{ obj.vehicule_proprietaire.numero_carte }}</div></td>  
+    </tr>
+    <tr>
+      <td colspan="4" style="height: 10px;"></td> 
+    </tr>
+    <tr>
+      <td><div class="image_qr_left">{% qr_from_text qr_data options=qr_options %}</div></td> 
+      <td><div class="image_left"><img src="{{ photo_url }}" width="120px" height="100px"></div></td> 
+      <td><div class="image_qr_right">{% qr_from_text qr_data options=qr_options %}</div></td>
+      <td><div class="image_right"><img src="{{ photo_url }}" width="120px" height="100px"></div></td>
+    </tr>
+    <tr>
+      <td colspan="2"><div class="information strong marge" style="color: grey;">{{ obj.numero_carte_physique }}</div></td>
+      <td colspan="2"><div class="information strong marge" style="color: grey;">{{ obj.numero_carte_physique }}</div></td>
+    </tr>
+    <tr>
+      <td colspan="4" style="height: 10px;"></td> 
+    </tr>
+    <tr>
+      <td><div class="information strong marge">NIC:</div></td>
+      <td><div class="data strong data_specific">{{ obj.vehicule_proprietaire.contribuable.matricule }}</div></td>
+      <td><div class="information strong marge">NIC:</div></td>
+      <td><div class="data strong data_specific">{{ obj.vehicule_proprietaire.contribuable.matricule }}</div></td>
+    </tr>
+    <tr>
+      <td valign="top"><div class="information strong marge">Nom et prénom:</div></td>
+      <td><div class="data strong data_specific">{{ obj.vehicule_proprietaire.contribuable.nom }}</div></td>
+      <td valign="top"><div class="information strong marge">Nom et prénom:</div></td>
+      <td><div class="data strong data_specific">{{ obj.vehicule_proprietaire.contribuable.nom }}</div></td>
+    </tr>
+     <tr>
+      <td><div class="information strong marge">Téléphone:</div></td>
+      <td><div class="data">{{ obj.vehicule_proprietaire.contribuable.tel|filter_value_none }}</div></td>
+      <td><div class="information strong marge">Téléphone:</div></td>
+      <td><div class="data">{{ obj.vehicule_proprietaire.contribuable.tel|filter_value_none }}</div></td>
+    </tr>
+    <tr>
+      <td colspan="4" style="height: 10px;"></td> 
+    </tr>
+    <tr>
+      <td><div class="information strong marge">Commune:</div></td>
+      <td><div class="data">{{ obj.vehicule_proprietaire.contribuable.adresse.zone.commune.nom }}</div></td>
+      <td><div class="information strong marge">Commune:</div></td>
+      <td><div class="data">{{ obj.vehicule_proprietaire.contribuable.adresse.zone.commune.nom }}</div></td>
+    </tr>
+    <tr>
+      <td><div class="information strong marge">Zone:</div></td>
+      <td><div class="data">{{ obj.vehicule_proprietaire.contribuable.adresse.zone.nom }}</div></td>
+      <td><div class="information strong marge">Zone:</div></td>
+      <td><div class="data">{{ obj.vehicule_proprietaire.contribuable.adresse.zone.nom }}</div></td>
+    </tr>
+    <tr>
+      <td><div class="information strong marge">Quartier:</div></td>
+      <td><div class="data">{{ obj.vehicule_proprietaire.contribuable.adresse.nom }}</div></td>
+      <td><div class="information strong marge">Quartier:</div></td>
+      <td><div class="data">{{ obj.vehicule_proprietaire.contribuable.adresse.nom }}</div></td>
+    </tr>
+    <tr>
+      <td><div class="informationstrong  marge">Rue/Avenue:</div></td>
+      <td><div class="data">{{ obj.vehicule_proprietaire.contribuable.numero_rueavenue | default:'' }}{{ obj.contribuable.numero_police | get_numero_police }}</div></td>
+      <td><div class="information strong">Rue/Avenue:</div></td>
+      <td><div class="data">{{ obj.vehicule_proprietaire.contribuable.numero_rueavenue | default:'' }}{{ obj.contribuable.numero_police  | get_numero_police }}</div></td>
+    </tr>
+    <tr>
+      <td colspan="4" style="height: 10px;"></td> 
+    </tr>
+    <tr>
+      <td><div class="information strong marge">Marque/Modèle:</div></td>
+      <td><div class="data">{{ obj.vehicule_proprietaire.vehicule.modele }}</div></td>
+      <td><div class="information strong">Marque/Modèle:</div></td>
+      <td><div class="data">{{ obj.vehicule_proprietaire.vehicule.modele }}</div></td>
+    </tr>
+    <tr>
+      <td><div class="information strong marge">Plaque:</div></td>
+      <td><div class="data">{{ obj.vehicule_proprietaire.vehicule.plaque }}</div></td>
+      <td><div class="information strong marge">Plaque:</div></td>
+      <td><div class="data">{{ obj.vehicule_proprietaire.vehicule.plaque }}</div></td>
+    </tr>
+    <tr>
+      <td><div class="information strong marge">N° cadre:</div></td>
+      <td><div class="data">{{ obj.vehicule_proprietaire.vehicule.chassis }}</div></td>
+      <td><div class="information strong marge">N° cadre:</div></td>
+      <td><div class="data">{{ obj.vehicule_proprietaire.vehicule.chassis }}</div></td>
+    </tr>
+    <tr>
+      <td><div class="information strong marge">Type:</div></td>
+      <td><div class="data strong" style="color:red;">{{ obj.vehicule_proprietaire.vehicule.sous_categorie.nom }}</div></td>
+      <td><div class="information strong marge">Type:</div></td>
+      <td><div class="data strong" style="color:red;">{{ obj.vehicule_proprietaire.vehicule.sous_categorie.nom }}</div></td>
+    </tr>
+    <tr>
+      <td><div class="information strong marge" style="color:red;">Duplicata du:</div></td>
+      <td><div class="data" style="color:red;">{{ obj.vehicule_proprietaire.date_validate|date:"d/m/Y" }}</div></td>
+      <td><div class="information marge" style="color:red;">Duplicata du:</div></td>
+      <td><div class="data" style="color:red;">{{ obj.vehicule_proprietaire.date_validate|date:"d/m/Y" }}</div></td>
+    </tr>
+    <tr>
+      <td><div class="information strong marge">Validée/délivrée:</div></td>
+      <td><div class="data">Le Chef du Département du Transport</div></td>
+      <td><div class="information strong marge">Validée/délivrée:</div></td>
+      <td><div class="data">Le Chef du Département du Transport</div></td>
+    </tr>
+    <tr>
+      <td colspan="2"><div class="information strong marge"><span>{{ obj | get_entity_nb }}</span></div></td>
+      <td colspan="2"><div class="information strong marge"><span>{{ obj | get_entity_nb }}</span></div></td>      
+    </tr>
+  </table>
+</body>
+</html>

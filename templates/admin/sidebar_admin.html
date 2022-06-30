@@ -1,0 +1,222 @@
+{% load static %}
+
+<div class="sidebar">
+    <nav class="sidebar-nav">
+        <ul class="nav">
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-dashboard text-white"></i>Tableaux de bord</a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'dashboard_contribuable' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Contribuable</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'dashboard_communication' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Communication</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'dashboard_imposition' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Imposition</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'dashboard_recette' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Recette</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'dashboard_technique' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Technique</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'dashboard_transport' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Transport</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-people text-white"></i>Contribuable</a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'physique_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Physique</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'morale_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Morale</a>
+                    </li>                   
+                </ul>
+            </li>
+            
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-files-o text-white"></i>Activités</a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'activite_standard_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Standard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'activite_marche_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Marché</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'allocation_place_marche_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Allocation de place</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'activite_exceptionnelle_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Exceptionnelle</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'visite_site_touristique_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Site touristique</a>
+                    </li> 
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'allocation_panneau_publicitaire_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Panneau publicitaire</a>
+                    </li> 
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'publicite_mur_cloture_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Publicité mur-clôture</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'activite_arret_service_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Arrêt des activités</a>
+                    </li> 
+                </ul>
+            </li>
+            
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-credit-card text-white"></i>Avis d'imposition</a>
+               <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <!-- mod_parametrage.enums.choix_taxe_filter.TAXE_BASE_ACTIVITE : STANDARD/MARCHE-->
+                        <a class="nav-link" href="{% url 'avis_imposition_list' TAXE_BASE_ACTIVITE %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Standard/Marché</a>
+                    </li>
+                    <li class="nav-item">
+                        <!-- mod_parametrage.enums.choix_taxe_filter.TAXE_ACTIVITE_EXCEPTIONNELLE -->
+                        <a class="nav-link" href="{% url 'avis_imposition_list' TAXE_ACTIVITE_EXCEPTIONNELLE %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Exceptionnelle</a>
+                    </li>
+                    <li class="nav-item">
+                        <!-- mod_parametrage.enums.choix_taxe_filter.TAXE_VISITE_SITE_TOURISTIQUE -->
+                        <a class="nav-link" href="{% url 'avis_imposition_list' TAXE_VISITE_SITE_TOURISTIQUE %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Acces site touristique</a>
+                    </li>
+                    <li class="nav-item">
+                        <!-- mod_parametrage.enums.choix_taxe_filter.TAXE_AI_DOCUMENT_FINANCIER -->
+                        <a class="nav-link" href="{% url 'avis_imposition_list' TAXE_AI_DOCUMENT_FINANCIER %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Transports</a>
+                    </li>
+                    <li class="nav-item">
+                        <!-- mod_parametrage.enums.choix_taxe_filter.TAXE_AI_ADMINISTRATIF -->
+                        <a class="nav-link" href="{% url 'avis_imposition_list' TAXE_AI_ADMINISTRATIF %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Administratif</a>
+                    </li>
+                    <li class="nav-item">
+                        <!-- mod_parametrage.enums.choix_taxe_filter.TAXE_AI_AUTRE -->
+                        <a class="nav-link" href="{% url 'avis_imposition_list' TAXE_AI_AUTRE %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Autres</a>
+                    </li>            
+                </ul>
+            </li>                 
+            
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-car text-white"></i>Transport</a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'vehicule_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Véhicules/Moto/Vélos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'vehicule_proprietaire_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Cartes de propriété</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'vehicule_proprietaire_duplicata_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Duplicata</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'vehicule_activite_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Cartes municipales</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'vehicule_activite_duplicata_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Duplicata</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'vehicule_stationnement_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Droits stationnement</a>
+                    </li>
+                </ul>
+            </li>
+           
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-map-signs text-white"></i>Impôt foncier</a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'foncier_parcelle_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Parcelle privée</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'foncier_expertise_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Déclaration</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'foncier_parcelle_publique_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Espace publique</a>
+                    </li> 
+                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'allocation_espace_publique_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Allocation d'éspace</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-credit-card-alt text-white"></i>Notes d'imposition</a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'ni_activite_standard_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;NI-Activité Standard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'ni_activite_marche_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;NI-Activité Marché</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'ni_allocation_place_marche_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;NI-Place Marché</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'ni_allocation_espace_publique_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;NI-Espace Publique</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'ni_allocation_panneau_publicitaire_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;NI-Panneau Pub</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'ni_publicite_mur_cloture_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;NI-Pub Mur.Clôture</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'ni_vehicule_activite_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;NI-Transport Mun</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'ni_droit_stationnement_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;NI-Stationnement</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'ni_vehicule_proprietaire_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;NI-Taxe Propriété</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'ni_impot_foncier_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;NI-Impôt Foncier</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-print text-white"></i>Reporting</a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'centralisation_journaliere_ni' %}">&nbsp;&nbsp;&#x2023;&nbsp;Journal des Notes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'centralisation_journaliere_recette' %}">&nbsp;&nbsp;&#x2023;&nbsp;Journal des Recettes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'recapitulatif_journalier_declarant' %}">&nbsp;&nbsp;&#x2023;&nbsp;Recap des Déclarants</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'recapitulatif_journalier_montant' %}">&nbsp;&nbsp;&#x2023;&nbsp;Recap Notes Imposées</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'recapitulatif_journalier_recette' %}">&nbsp;&nbsp;&#x2023;&nbsp;Recap des Recettes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'report_module_resume' %}">&nbsp;&nbsp;&#x2023;&nbsp;Résumé Modules</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'reconsiliation_banque' %}">&nbsp;&nbsp;&#x2023;&nbsp;reconsiliation des banques</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-folder text-white"></i>Documents</a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'non_redevabilite_list' %}">&nbsp;&nbsp;&#x2023;&nbsp;Att.Non-rédevabilité</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'recapitulatif_de_note_list' %}">&nbsp;&nbsp;&#x2023;&nbsp;recapitulatif des notes</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="divider"></li>
+        </ul>
+    </nav>
+    <button class="sidebar-minimizer brand-minimizer" type="button"></button>
+</div>

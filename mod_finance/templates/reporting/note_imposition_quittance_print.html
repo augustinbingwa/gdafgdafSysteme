@@ -1,0 +1,108 @@
+{% load impot_filter %}
+
+{% load helper_filter %}
+
+{% load parametrage_filter %}
+
+{% load transport_filter %}
+
+{% load humanize %} 
+
+{% load qr_code %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Quittance de {{ obj | get_titre_reporting }}</title>
+  <style type="text/css">
+    .titre {
+      font-family: tahoma, arial, sans-serif;
+      font-size:14px;
+      text-align: center;
+    }
+
+    .information {
+      font-family: tahoma, arial, sans-serif;
+      font-size:12px;
+    }
+    
+    .data {
+      font-family: tahoma, arial, sans-serif;
+      font-size:12px;
+    }
+
+    .strong {
+      font-weight: bold;
+    }
+
+    .strong16 {
+      font-family: tahoma, arial, sans-serif;
+      font-weight: bold;
+      color: red;
+      font-size:20px;
+    }
+
+    .data_specific {
+      color: #000;
+    }
+  </style>   
+</head>
+<body>
+  <table align="center" border="0">
+    <tr>
+      <td  style="height: 75px;"></td> 
+    </tr>
+    <tr>
+      <td><div class="titre strong">Quittance de paiement - {{ obj | get_titre_reporting | default:'Impôt Foncier' }} n° {{ obj.reference }} - <strong class="strong16">{{ obj.periode.get_element_display }} {{ obj.annee }}</strong></div></td>   
+    </tr>
+    <tr>
+      <td  style="height: 10px;"></td> 
+    </tr>
+  </table>
+  <table border="0">
+    <tr>
+      <td style="width: 15%;"></td>
+      <td style="width: 18%;"><div class="information strong marge">{{ obj_entity | get_entity_label }}</div></td>
+      <td style="width: 70%;"><div class="data"><span style="color:red;" class="strong">{{ obj_entity | get_entity_reference }}</span></div></td>
+    </tr>
+    <tr> 
+      <td style="width: 15%;"></td>
+      <td style="width: 18%;"><div class="information strong marge">Nom et prénom</div></td>
+      <td style="width: 70%;"><div class="data">: {{ obj.contribuable.nom }} - <strong style="color:  blue ;"><strong>NIC - {{ obj.contribuable.matricule }}</strong></div></td>
+    </tr>
+    <tr>
+      <td rowspan="5" style="width: 15%; vertical-align: top; text-align: center;">{% qr_from_text qr_data options=qr_options %}
+        <div>
+          <span style="color: red; font-size:14px;">{{ obj.numero_carte_physique }}</span>
+        </div>
+      </td>
+      <td style="width: 15%; vertical-align: top;"><div class="information strong marge">Mention</div></td>
+      <td style="width: 70%; vertical-align: top;"><div class="data">: <strong style="color:  green ;"><strong>{% if obj.entity == 10 %} {{ obj.libelle }} {% else %} {{ obj | get_libelle_note_imposition }} {% endif %}</div></td> <!--ENTITY_IMPOT_FONCIER = 10-->
+    </tr>
+    <tr>
+      <td style="width: 18%; vertical-align: top;"><div class="information strong marge">{{ obj_entity | get_entity_adresse_title }}</div></td>
+      <td style="width: 70%; vertical-align: top;"><div class="data">{{ obj_entity | get_entity_adresse_value }}</div></td>
+    </tr>
+    <tr>
+      <td style="width: 18%;"><div class="information strong marge">Période</div></td>
+      <td style="width: 70%;"><div class="data">: {{ obj.periode.get_element_display | title }} - {{ obj.annee }}</div></td>
+    </tr>
+    <tr>
+      <td style="width: 18%;"><div class="information strong marge">Montant payé</div></td>
+      <td style="width: 70%;"><div class="data">: <span style="color:red;" class="strong">{{ obj.taxe_montant_paye | floatformat:0 | intcomma }} Bif </span></div></td>
+    </tr>
+    <tr>
+      <td colspan="2" style="vertical-align: bottom;"><div class="information strong marge">Quittance imprimée le  {{ obj.date_print |date:"d F Y h:m" }}  par <em>{{ user.get_full_name }}</em></div></td>
+    </tr>
+  </table>
+  <!--ENTITY_VEHICULE_ACTIVITE = 11 et ENTITY_DROIT_STATIONNEMENT = 12-->
+  {% if obj.entity == 11 or obj.entity == 12 %}
+    <table>
+      <tr>
+        <td style="padding-top: 5px;"><div class="data marge" align="center" style="color: red;">A retourner avant le <strong>{{ obj | get_prochaine_periode_transport }}</strong> pour le prochain paiement.</div></td>
+      </tr>
+    </table>
+  {% endif %}
+</body>
+</html>

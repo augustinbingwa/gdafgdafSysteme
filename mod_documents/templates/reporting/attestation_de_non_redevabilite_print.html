@@ -1,0 +1,204 @@
+{% load qr_code %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Note d'imposition</title>
+    <style type="text/css">
+    /*@page {
+      size: letter landscape;
+      margin: 2cm;
+    }*/
+      .entete {
+      font-family: tahoma, arial, sans-serif;
+      font-size:12px;
+      text-align: center;
+    }    .titre {
+      font-family: tahoma, arial, sans-serif;
+      font-size:14px;
+      text-align: center;
+    }
+    .information {
+      font-family: tahoma, arial, sans-serif;
+      font-size:12px;
+    }
+    .data {
+      font-family: tahoma, arial, sans-serif;
+      font-size:12px;
+    }
+
+    .strong {
+      font-weight: bold;
+    }
+
+    .data_specific {
+      color: #000;
+    }
+
+    .marge {
+      padding-left: 10px;
+    }
+
+    .marge_image_left {
+      width: 80px;
+      text-align: left;
+    }
+
+    .image_qr_right{
+      width: 150px;
+      text-align: left;
+      padding-top:4em;
+      padding-left:2.8em;
+    }
+
+    .marge_image_right {
+      width: 80px;
+      text-align: right;
+    }
+
+    </style>
+</head>
+<body onload="myFunction()">
+<table>
+    <tr>
+        <td width="50%">
+            <p style="padding-top:5em;padding-left:0.5em;font-size:15px;">
+                <b></b><br>
+                <b>MINISTERE DE L'INTERIEUR,</b><br>
+                <b>DU DEVELOPPEMENT COMMUNAUTAIRE</b><br>
+                <b>ET DE LA SECURITE PUBLIQUE</b><br>
+                <b><U>MUNICIPALITE DE BUJUMBURA</U></b>
+            </p>
+            <p style="padding-left:0.5em;padding-right:1em;font-size: 15px;"><b>Motif:</b>{{ obj.libelle}}</p>
+        </td>
+
+        <td>
+
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>
+            <div class="titre strong" style="padding-top:2em"><u><strong>ATTESTATION DE NON REDEVABILITE</strong>
+            </u></div>
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>
+            <div style="padding-top:1em;padding-left:2.8em;padding-right:2em;font-size: 15px;">
+                </strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                Nous soussignés, {{nom_chef_dep_impot.nom}} {{nom_chef_dep_impot.prenom}}, {{nom_chef_dep_recette.nom}} {{nom_chef_dep_recette.prenom}} et {{nom_chef_sr_impot.nom}}
+                {{nom_chef_sr_impot.prenom}},
+                respectivement {{nom_chef_dep_impot.fonction}} ,{{nom_chef_dep_recette.fonction}} a.i et {{nom_chef_sr_impot.fonction}} de la Mairie de Bujumbura,
+                attestons par la présente qu’au regard des éléments en notre possession,
+            </div>
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>
+            <div style="padding-top:1em;padding-left:2.8em;padding-right:2em;font-size: 15px;">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                Mme/Mlle/Mr Succ <strong>{{obj.contribuable.nom}}</strong>
+                {% if obj.contribuable.tel %}, Tél: <strong>{{obj.contribuable.tel}} {% endif %}
+
+                {% if obj.contribuable.adresse_exacte %}
+            </strong> ,résidant à <strong>
+                {{ obj.contribuable.adresse_exacte }}
+                {% endif %}
+
+                {% if obj.contribuable.adresse %}
+            </strong> ,résidant à <strong>
+                {{ obj.contribuable.adresse }}
+                {% endif %}
+
+            </strong>
+
+                {% if obj.contribuable.numero_rueavenue %}
+                ,{{ obj.contribuable.numero_rueavenue }},
+                {% endif %}
+                n’est redevable d’aucune somme envers la municipalité de Bujumbura.
+            </div>
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>
+            <div style="padding-top:1em;padding-left:2.8em;padding-right:2em;font-size: 15px;">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                La présente attestation est valable jusqu’au {{ dateval }}
+
+            </div>
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>
+            <div class="titre strong" style="padding-top:4em"><strong>Fait à Bujumbura,le {{ date }}</strong>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="titre strong" style="padding-top:2em"><strong><U>Pour établissement :</U> </strong>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="titre " style="padding-top:1em">{{nom_chef_sr_impot.nom}} {{nom_chef_sr_impot.prenom}}</div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="titre strong" style="padding-top:1em"><strong>{{fc_chef_sr_impot}}</strong>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="titre strong" style="padding-top:0.1em"><strong><U>Pour approbation</U> </strong>
+            </div>
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td style="padding-left:0.5em;padding-right:1em;font-size: 15px;">{{nom_chef_dep_impot.nom}} {{nom_chef_dep_impot.prenom}}</td>
+        <td></td>
+        <td style="padding-top:0.3em;font-size: 15px;"> {{nom_chef_dep_recette.nom}} {{nom_chef_dep_recette.prenom}}</td>
+    </tr>
+    <tr>
+        <td style="padding-left:0.5em;padding-right:1em;font-size: 15px;"><b> CHEF DE DEPARTEMENT <br>{{fc_chef_dep_impot}}</b></td>
+        <td></td>
+        <td style="padding-top:0.3em;font-size: 15px;"><b> CHEF DE DEPARTEMENT <br>{{fc_chef_dep_recette}} a.i</b></td>
+    </tr>
+</table>
+
+
+<table align="center" border="0">
+    <tr>
+        <td>
+            <div class="image_qr_right">{% qr_from_text qr_data options=qr_options %}</div>
+        </td>
+    </tr>
+</table>
+
+{% block javascript %}
+<script type="text/javascript">
+        function myFunction() {
+          window.print();
+        }
+
+</script>
+{% endblock %}
+</body>
+</html>

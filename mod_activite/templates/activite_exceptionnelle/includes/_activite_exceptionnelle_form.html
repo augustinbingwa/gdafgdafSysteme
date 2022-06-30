@@ -1,0 +1,132 @@
+{% block javascript %}
+  <script type="text/javascript">
+    $(document).ready(function () {
+      //Date picker : date de delivrance et expiration
+      Helpers.DatePicker('id_date_delivrance');
+      Helpers.DatePicker('id_date_expiration');
+    });
+  </script>
+{% endblock %}
+
+{% load widget_tweaks %}
+
+<div class="container"> 
+  <div class="row"> 
+   <div class="form-group col-sm-4">
+      <label for="{{ form.numero_activite.id_for_label }}">{{ form.numero_activite.label_tag }}</label>
+      {% render_field form.numero_activite  class+="form-control" %}
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.numero_activite.help_text }}]</em></small></p>
+    </div>
+
+    <div class="form-group col-sm-8">
+      <i class="required_field">*</i>
+      <label for="{{ form.beneficiaire.id_for_label }}">{{ form.beneficiaire.label_tag }}</label>
+      {% render_field form.beneficiaire  class+="form-control" %}
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.beneficiaire.help_text }}]</em></small></p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group col-sm-2">
+      <i class="required_field">*</i>
+      <label for="{{ form.date_delivrance.id_for_label }}">{{ form.date_delivrance.label_tag }}</label>
+      {% render_field form.date_delivrance  class+="form-control" %}
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.date_delivrance.help_text }}]</em></small></p>
+    </div>
+
+    <div class="form-group col-sm-2">
+      <i class="required_field">*</i>
+      <label for="{{ form.date_expiration.id_for_label }}">{{ form.date_expiration.label_tag }}</label>
+      {% render_field form.date_expiration  class+="form-control" %}
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.date_expiration.help_text }}]</em></small></p>
+    </div>
+
+    <div class="form-group col-sm-8">
+      <i class="required_field">*</i>
+      <label for="{{ form.motif_activite.id_for_label }}">{{ form.motif_activite.label_tag }}</label>
+      {% render_field form.motif_activite  class+="form-control" %}
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.motif_activite.help_text }}]</em></small></p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group col-sm-12">
+      <i class="required_field">*</i>
+      <label for="{{ form.taxe.id_for_label }}">{{ form.taxe.label_tag }}</label>
+      {% render_field form.taxe  class+="form-control" %}
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.taxe.help_text }}]</em></small></p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group col-sm-6">
+      <i class="required_field">*</i>
+      <label for="{{ form.piece_nombre_1.id_for_label }}">{{ form.piece_nombre_1.label_tag }}</label>
+      {% render_field form.piece_nombre_1  class+="form-control" %}
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.piece_nombre_1.help_text }}]</em></small></p>
+    </div>
+
+    <div class="form-group col-sm-6">
+      <i class="required_field">*</i>
+      <label for="{{ form.piece_tarif_1.id_for_label }}">{{ form.piece_tarif_1.label_tag }}</label>
+      {% render_field form.piece_tarif_1  class+="form-control" %}
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.piece_tarif_1.help_text }}]</em></small></p>
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="form-group col-sm-6">
+      <label for="{{ form.piece_nombre_2.id_for_label }}">{{ form.piece_nombre_2.label_tag }}</label>
+      {% render_field form.piece_nombre_2  class+="form-control" %}
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.piece_nombre_2.help_text }}]</em></small></p>
+    </div>
+
+    <div class="form-group col-sm-6">
+      <label for="{{ form.piece_tarif_2.id_for_label }}">{{ form.piece_tarif_2.label_tag }}</label>
+      {% render_field form.piece_tarif_2  class+="form-control" %}
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.piece_tarif_2.help_text }}]</em></small></p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group col-sm-6">
+      <label for="{{ form.piece_nombre_3.id_for_label }}">{{ form.piece_nombre_3.label_tag }}</label>
+      {% render_field form.piece_nombre_3  class+="form-control" %}
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.piece_nombre_3.help_text }}]</em></small></p>
+    </div>
+
+    <div class="form-group col-sm-6">
+      <label for="{{ form.piece_tarif_3.id_for_label }}">{{ form.piece_tarif_3.label_tag }}</label>
+      {% render_field form.piece_tarif_3  class+="form-control" %}
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.piece_tarif_3.help_text }}]</em></small></p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group col-sm-6">
+      <label for="{{ form.piece_nombre_4.id_for_label }}">{{ form.piece_nombre_4.label_tag }}</label>
+      {% render_field form.piece_nombre_4  class+="form-control" %}
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.piece_nombre_4.help_text }}]</em></small></p>
+    </div>
+
+    <div class="form-group col-sm-6">
+      <label for="{{ form.piece_tarif_4.id_for_label }}">{{ form.piece_tarif_4.label_tag }}</label>
+      {% render_field form.piece_tarif_4  class+="form-control" %}
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.piece_tarif_4.help_text }}]</em></small></p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group col-sm-6">
+      <label for="{{ form.piece_nombre_5.id_for_label }}">{{ form.piece_nombre_5.label_tag }}</label>
+      {% render_field form.piece_nombre_5  class+="form-control" %}
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.piece_nombre_5.help_text }}]</em></small></p>
+    </div>
+
+    <div class="form-group col-sm-6">
+      <label for="{{ form.piece_tarif_5.id_for_label }}">{{ form.piece_tarif_5.label_tag }}</label>
+      {% render_field form.piece_tarif_5  class+="form-control" %}
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.piece_tarif_5.help_text }}]</em></small></p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block javascript %}
+  <script type="text/javascript">
+    //Initialiser les dates de la période
+    Helpers.DatePicker('reconsiliation_date_du_jour'); //Date
+
+    //Initialiser les dates
+    date = $('#reconsiliation_date_du_jour').val();
+    if (date == "")
+      $('#reconsiliation_date_du_jour').val($.GetNewYearToDateFr());
+
+
+    function checkdiv() {
+      var x = document.getElementById("showdif");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+      }
+    }
+  </script>
+{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <div class="card-header">
+      <div class="row mb-2">
+        <div class="col-sm-7" style="padding-top: 6px;">
+          <h4 class="card-title mb-0"><i class="fa fa-map-o"></i>&nbsp;Reporting / Reconsiliation entre Mairie et les banques</h4>
+        </div>
+        <div class="col-sm-5" style="padding-top: 6px;">
+          <a href="{% url 'reconsiliation_banque' %}" class="btn btn-primary btn-sm ml-2" style="float:left;">Paiement par Banque</a>
+          <a href="{% url 'reconsiliation_banque_paiement' %}" class="btn btn-primary btn-sm ml-2" style="float:left;">Verification Paiement</a>
+          <a href="{% url 'reconsiliation_banque_all' %}" class="btn btn-primary btn-sm ml-2" style="float:left;">tous les Paiements</a>
+        </div>
+      </div>
+    </div>
+    <div class="card-body" style= "overflow-x:auto; padding-top: 5px;">
+      <form method="POST" action="">
+        <div class="row mb-3">
+          <div class="col-sm-6">
+            <div class="btn-toolbar float-left" role="toolbar" aria-label="Toolbar with button groups">
+              <div>
+                <label class="label_date">Date :<input type="text" id="reconsiliation_date_du_jour" name="reconsiliation_date_du_jour"  title="Date du jour Du" class="form-control search-input"/></label>
+                <label>
+                  <button type="submit" id="btn_search" title="Rechercher/Actualiser" class="btn btn-primary btn-sm search-button"><i class="fa fa-search"></i></button>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="row">
+        <div class="col-sm-12">
+          <table class="table table-hover table-bordered table-striped table-outline mb-0 nowrap"  width="100%" cellspacing="0">
+            <thead class="thead-default">
+              <tr>
+                <th class="text-center">No</th>
+                <th class="text-center">Banque</th>
+                <th class="text-center">Note d'Imposition</th>
+                <th class="text-center">Avis d'Imposition</th>
+                <th class="text-center">Total Montant</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr>
+                  <td>1</td>
+                  <td><div align="center">bancobu</div></td>
+                  <td><div align="right">60000</div></td>
+                  <td><div align="right">36000</div></td>
+                  <td><div align="right">96000</div></td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td><div align="center">finbank</div></td>
+                  <td><div align="right">60000</div></td>
+                  <td><div align="right">36000</div></td>
+                  <td><div align="right">96000</div></td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td><div align="center">InterBank</div></td>
+                  <td><div align="right">60000</div></td>
+                  <td><div align="right">36000</div></td>
+                  <td><div align="right">96000</div></td>
+                </tr>
+            </tbody>
+            <bfooter>
+              <tr>
+                <td colspan="2"><strong>Total</strong></td>
+                <td><div align="right"><strong>60000</strong></div></td>
+                <td><div align="right"><strong>36000</strong></div></td>
+                <td><div align="right"><strong>96000</strong></div></td>
+              </tr>
+            </bfooter>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

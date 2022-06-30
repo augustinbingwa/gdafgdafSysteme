@@ -1,0 +1,54 @@
+{% load parametrage_filter %}
+
+<form method="post" enctype="multipart/form-data" action="{% url 'morale_upload' obj.pk %}" class="js-entity-upload-form">
+   {% csrf_token %}
+  <div class="modal-header">
+    <h5 class="modal-title"><i class="fa fa-file-pdf-o"></i>&nbsp;{% if not obj.date_validate %} Joindre des fichiers pour le {% else %} Visualiser ou Télécharger les fichiers du {% endif %} contribuable n°<em>{{ obj }}</em></h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" title="Fermer">
+        <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="container">
+      <div class="form-group row">
+        <div class="{% if obj.date_validate %} col-sm-12 {% else %} col-sm-8 {% endif %}" style="border: 1px solid #c2cfd6;"> 
+            <a target="_blank" class="nav-link {% if not obj.nif_file %} disabled-element-normal {% endif %}" href="{{ obj.nif_file | get_file_upload_url }}">{{ obj.nif_file | get_file_upload:'Le NIF/AUTRES DOCS' }}</a>         
+        </div>
+        <div class="{% if obj.date_validate %} col-sm-0 {% else %} col-sm-4 {% endif %}" id="upload_button">
+          <label>
+            <input id="id_nif_file" type="file" class="" name="nif_file" ngf-select ng-model="new_files" ng-change="fs.uploadFiles(new_files)" {% if obj.date_validate %} disabled: disabled {% endif %} onchange="getFileUploadName(this, 'nif_file_select');">
+            {% if not obj.date_validate %}
+              <span class="btn btn-warning" title="Seléctioner le fichier">
+                 <span class="span-upload-file" id="nif_file_select"><i class="required_field">*</i>&nbsp;Fichier {% if obj.type_caractere == 2 %} AUTRES DOCUMENTS {% else %} NIF {% endif %}...</span>
+              </span>
+            {% endif %}
+          </label>
+        </div>
+      </div>
+      {% if obj.type_caractere == 0 %}
+      <br>
+      <div class="form-group row">
+        <div class="{% if obj.date_validate %} col-sm-12 {% else %} col-sm-8 {% endif %}" style="border: 1px solid #c2cfd6;"> 
+            <a target="_blank" class="nav-link {% if not obj.rc_file %} disabled-element-normal {% endif %}" href="{{ obj.rc_file | get_file_upload_url }}">{{ obj.rc_file | get_file_upload:'Regitre du commerce' }}</a>
+        </div>
+        <div class="{% if obj.date_validate %} col-sm-0 {% else %} col-sm-4 {% endif %}" id="upload_button">
+          <label>
+            <input id="id_rc_file" type="file" class="" name="rc_file" ngf-select ng-model="new_files" ng-change="fs.uploadFiles(new_files)" {% if obj.date_validate %} disabled: disabled {% endif %} onchange="getFileUploadName(this, 'rc_file_select');">
+            {% if not obj.date_validate %}
+              <span class="btn btn-warning" title="Seléctioner le fichier" >
+                <span class="span-upload-file" id="rc_file_select"><i class="required_field">*</i>&nbsp;Fichier RC ...</span>
+              </span>
+            {% endif %}
+          </label>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  <div class="modal-footer">
+    {% if not obj.date_validate %} 
+      <button type="submit" class="btn btn-primary"> <i class="fa fa-save"></i>&nbsp;Enregistrer</button>
+    {% endif %}
+    <button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-undo"></i>&nbsp;{% if obj.date_validate %} Fermer {% else %} Annuler {% endif %}</button>      
+  </div>
+</form>

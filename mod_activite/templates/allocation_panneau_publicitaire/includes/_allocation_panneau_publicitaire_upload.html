@@ -1,0 +1,53 @@
+{% load parametrage_filter %}
+    <form method="post" enctype="multipart/form-data" action="{% url 'allocation_panneau_publicitaire_upload' obj.pk %}" class="js-entity-upload-form">
+       {% csrf_token %}
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fa fa-file-pdf-o"></i>&nbsp;{% if not obj.date_validate %} Joindre des fichiers pour {% else %} Visualiser ou Télécharger les fichiers de {% endif %} l'allocation n°<em>{{ obj }}</em></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="form-group row">
+            <div class="{% if obj.date_validate %} col-sm-12 {% else %} col-sm-8 {% endif %}" style="border: 1px solid #c2cfd6;"> 
+                <a target="_blank" class="nav-link {% if not obj.fichier_lettre_exp_tmp %} disabled-element-normal {% endif %}" href="{{ obj.fichier_lettre_exp_tmp | get_file_upload_url }}">{{ obj.fichier_lettre_exp_tmp | get_file_upload:"La lettre d'expertise" }}</a>
+            </div>
+            <div class="{% if obj.date_validate %} col-sm-0 {% else %} col-sm-4 {% endif %}" id="upload_button">
+              <label>
+                <input id="id_fichier_lettre_exp_tmp" type="file" class="" name="fichier_lettre_exp_tmp" ngf-select ng-model="new_files" ng-change="fs.uploadFiles(new_files)" {% if obj.date_validate %} disabled: disabled {% endif %} onchange="getFileUploadName(this, 'fichier_lettre_exp_tmp_select');">
+                {% if not obj.date_validate %}
+                  <span class="btn btn-warning" title="Seléctioner le fichier">
+                     <span class="span-upload-file" id="fichier_lettre_exp_tmp_select"><i class="required_field">*</i>&nbsp;Lettre d'epxeritise ...</span>
+                  </span>
+                {% endif %}
+              </label>
+            </div>
+          </div>
+          <br>
+          <div class="form-group row">
+            {% if obj.fichier_rap_vis_ter.url is not None %} 
+              <div class="{% if obj.date_validate %} col-sm-12 {% else %} col-sm-8 {% endif %}" style="border: 1px solid #c2cfd6;">
+                  <a target="_blank" class="nav-link {% if not obj.fichier_rap_vis_ter %} disabled-element-normal {% endif %}" href="{{ obj.fichier_rap_vis_ter | get_file_upload_url }}">{{ obj.fichier_rap_vis_ter | get_file_upload:"Le rapport de visite" }}</a>
+              </div>
+            {% endif %}
+            <div class="{% if obj.date_validate %} col-sm-0 {% else %} col-sm-4 {% endif %}" id="upload_button">
+              <label>
+                <input id="id_fichier_rap_vis_ter" type="file" class="" name="fichier_rap_vis_ter" ngf-select ng-model="new_files" ng-change="fs.uploadFiles(new_files)" {% if obj.date_validate %} disabled: disabled {% endif %} onchange="getFileUploadName(this, 'fichier_rap_vis_ter_select');">
+                {% if not obj.date_validate %}
+                  <span class="btn btn-warning" title="Seléctioner le fichier" >
+                    <span class="span-upload-file" id="fichier_rap_vis_ter_select">Rapport de visite ...</span>
+                  </span>
+                {% endif %}
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        {% if not obj.date_validate %} 
+          <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;Enregistrer</button>
+        {% endif %}
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-undo"></i>&nbsp;{% if obj.date_validate %} Fermer {% else %} Annuler {% endif %}</button>      
+      </div>
+    </form>

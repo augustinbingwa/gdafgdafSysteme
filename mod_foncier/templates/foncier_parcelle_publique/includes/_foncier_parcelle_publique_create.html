@@ -1,0 +1,16 @@
+<form method="post" action="{% url 'foncier_parcelle_publique_create' %}" class="js-entity-create-form">
+   {% csrf_token %}
+  <div class="modal-header">
+    <h4 class="modal-title"><i class="fa fa-map-marker"></i>&nbsp;Ajouter une nouvelle espace public</h4>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+     {% include 'foncier_parcelle_publique/includes/_foncier_parcelle_publique_form.html' %}
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary"> <i class="fa fa-save"></i>&nbsp;Enregistrer</button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-undo"></i>&nbsp;Annuler</button>      
+  </div>
+</form>

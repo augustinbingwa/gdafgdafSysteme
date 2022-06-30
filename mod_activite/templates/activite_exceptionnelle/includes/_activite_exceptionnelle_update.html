@@ -1,0 +1,36 @@
+{% load activite_filter %}
+
+{% load helper_filter %}
+
+<form method="post" action="{% url 'activite_exceptionnelle_update' form.instance.pk %}" class="js-entity-update-form">
+   {% csrf_token %}
+  <div class="modal-header">
+    <h4 class="modal-title"><i class="fa fa-play-circle-o"></i>&nbsp;{% if form.instance.date_validate %} Informations {% else %} Mettre à jour les informations {% endif %} de l'activité exceptionnelle {{ form.instance.note | show_note }}</h4>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+     {% include 'activite_exceptionnelle/includes/_activite_exceptionnelle_form.html' %}
+  </div>
+  <div class="modal-footer">
+    {% if not form.instance.date_validate %}     
+      <button type="button" class="btn btn-success" onclick="_Validate({{ form.instance.pk }}, 'validate/', 'Êtes-vous sûr de vouloir valider ce formulaire?')"> <i class="fa fa-check"></i>&nbsp; &nbsp; Valider</button>
+      <button type="submit" class="btn btn-primary"> <i class="fa fa-save"></i>&nbsp; &nbsp; Enregistrer</button>
+    {% else %}
+      {% if not form.instance.date_ecriture %}
+        <span class='bg bg-success' align="right">&nbsp;Validée le {{ form.instance.date_validate }}&nbsp;</span>
+        <span class='bg bg-warning' align="right">&nbsp;Ecriture non générée&nbsp;</span>
+        {% if request.user|has_group:'ECRITURE' %}
+          <button type="button" class="btn btn-danger" onclick="_Ecriture('{{ form.instance.pk }}', 'ecriture/', 'Êtes-vous sûr de vouloir générer l avis d imposition de cette activité exceptionnelle?')"> <i class="fa fa-check"></i>&nbsp;Ecriture</button>
+        {% endif %}
+      {% else %}
+        <span class='bg bg-success' align="right">&nbsp;Validée le {{ form.instance.date_validate }}&nbsp;</span>
+        <span class='bg bg-info' align="right">&nbsp;Générée le {{ form.instance.date_ecriture }}&nbsp;</span>
+      {% endif %}
+    {% endif %}
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+      <i class="{% if not form.instance.date_validate %} fa fa-undo {% else %} fa fa-close {% endif %}"></i>&nbsp;{% if not form.instance.date_validate %} Annuler {% else %} Fermer {% endif %} 
+    </button>
+  </div>
+</form>

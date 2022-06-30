@@ -1,0 +1,111 @@
+{% load foncier_filter %}
+
+{% load mathfilters %}
+
+{% load helper_filter %}
+
+{% load humanize %}
+
+{% for obj in lst %}
+	{% with obj_note=obj|get_note_imposition %}
+		<tr>
+			<td class="text-center">{{ forloop.counter }}</td>
+			<td class="text-center">
+				{% if obj.user_create == user or obj.user_create != user%} 
+					<button type="button" title="{% if obj.date_validate is None  %} Mettre à jour les informations {% else %} Visualiser les informations {% endif %}"
+						class="btn  {% if obj.date_validate and obj|si_exonere %}
+										btn-secondary 
+									{% else %} 
+										{% if not obj.is_ecriture_valid %} 
+											btn-primary 
+										{% else %} 
+											btn-secondary 
+										{% endif %} 
+									{% endif%}
+						btn-sm js-update-entity"
+						data-url="{% url 'foncier_expertise_update' obj.id %}">
+						<span class="{% if obj.date_validate and obj|si_exonere %}
+										fa fa-folder-open-o 
+									{% else %} 
+										 {% if obj.is_ecriture_valid is None %} 
+											fa fa-edit 
+										 {% else %} 
+										 	fa fa-folder-open-o 
+										 {% endif %}
+									{% endif%}"></span> <!--Edition-->
+					</button>
+				{% else %}
+					<button type="button" title="Visualiser les informations"
+						{% if obj.date_validate %} enabled='enabled' {% else %} disabled='disabled' {% endif %}	
+						class="btn btn-secondary btn-sm js-update-entity"
+						data-url="{% url 'foncier_expertise_update' obj.id %}">
+						<span class="fa fa-folder-open-o"></span> <!--Visualisation-->
+					</button>
+				{% endif %}
+
+				<button type="button" title="{% if obj.date_validate and obj.dossier_expertise %} Visualiser le fichier {% else %} Attacher la pièce jointe {% endif %}"
+					{% if not obj.date_validate and obj.user_create_id != user and obj.user_create_id != 1 %} enabled='enabled' {% else %} enabled='enabled' {% endif %}
+					class="btn {% if not obj.date_validate %} 
+									{% if obj.dossier_expertise %} btn-warning {% else %} btn-primary {% endif %} 
+							   {% else %} 
+							   		btn-secondary 
+							   {% endif %} 
+					btn-sm js-upload-entity"
+					data-url="{% url 'foncier_expertise_upload' obj.id %}">
+					<span class="fa fa-paperclip"></span> <!--Upload pièces jointes-->
+				</button>
+
+				<button type="button" title="Caractéristique de la construction"
+					class="btn {% if obj.date_validate is None %} btn-primary {% else %} btn-secondary {% endif %} btn-sm js-update-entity"
+					data-url="{% url 'foncier_expertise_caracteristique' obj.id %}">
+					<span class="fa fa-home"></span> <!--Caractéristique de l'expertie-->
+				</button>
+
+				{% if request.user|has_group:'ECRITURE' and obj.is_ecriture_valid %}
+					<a href="" target="_blank" class="btn btn-primary btn-sm" title="Imprimer la note d'imposition"><span class="fa fa-print"></span></a>
+				{% else %}
+					<!--Pas d'impression si l'objet n'est pas encore validée ni payé -->
+					<button type="button" 
+						class="btn btn-secondary btn-sm" disabled="disabled">
+						<span class="fa fa-print"></span> 
+					</button>
+				{% endif %}
+
+				{% if user.is_superuser %} <!--ANNULATION DE LA DECLARATION BY SUPER ADMIN ONLY-->
+					<button type="button" title="{% if not obj.date_validate %} Annuler la déclaration {% endif %}"
+						{% if obj.date_ecriture %}
+							{% if obj_note.is_payed %}
+							    disabled='disabled'
+								class="btn btn-danger btn-sm js-delete-entity"
+							{% else %}
+								enabled='enabled'
+								class="btn btn-secondary btn-sm js-delete-entity"
+							{% endif %}
+						{% else %}
+							disabled='disabled'
+							class="btn btn-secondary btn-sm"	
+						{% endif %}
+						data-url="{% url 'foncier_expertise_delete' obj.id %}">
+						<span class="fa fa-trash"></span> <!--Suppr (Authorization strict au super user)-->
+					</button>
+				{% endif %}
+			</td>
+			<td><div class='text-center'>{{ obj | filter_status_validate:obj_note }}</div></td>
+			<td><div class='text-center'><strong>{{ obj.annee }}</strong></div></td>
+			<td><div class='text-center'><strong>{{ obj.parcelle }}</strong></div></td>
+			<td><div>{{ obj.parcelle.contribuable.nom }}<br><span class='bg bg-dark text-white'>&nbsp;{{ obj.parcelle.contribuable.matricule }}&nbsp;</span></div></td>
+			<td><div class='text-center'><strong>{{ obj.superficie_non_batie }} m²</strong></div></td>
+			<td><div> {{ obj | get_impot_non_batie }} </div></td>
+			<td><div class='text-right'><strong>{{ obj | get_montant_tnb | floatformat:"0" | intcomma }} Bif</strong></div></td>
+		    <td><div class='text-right'><strong>{{ obj.montant_tb | floatformat:"0" | intcomma }} Bif</strong></div></td>
+		    <td><div class='text-right'>{{ obj | show_taux_accroissement }}{{ obj.accroissement_montant | intcomma }}&nbsp;Bif</strong></span></div></td>
+			<td>
+				<button type="button" title="{% if obj.note %} {{ obj.note }} {% else %} Créer une note {% endif %}"
+					class="btn btn-link js-update-entity"
+					data-url="{% url 'edit_note' obj.id obj.class_name obj.view_list_name %}">
+					{{ obj | show_me:user }}
+				</button><!--Envoi et Lecture de la note-->
+			</td>
+		</tr>
+	{% endwith %}
+{% endfor %}

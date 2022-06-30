@@ -1,0 +1,71 @@
+{% load static %}
+
+<div class="sidebar">
+    <nav class="sidebar-nav">
+        <ul class="nav">
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-people text-white"></i>Contribuable</a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'physique_list' %}">&#x2023;&nbsp;Physique</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'morale_list' %}">&#x2023;&nbsp;Morale</a>
+                    </li>                   
+                </ul>
+            </li>
+            
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-files-o text-white"></i>Activités</a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'activite_standard_list' %}">&#x2023;&nbsp;Standard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'activite_marche_list' %}">&#x2023;&nbsp;Marché</a>
+                    </li>
+                </ul>
+            </li>
+            
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-credit-card text-white"></i>Avis d'imposition</a>
+               <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <!-- mod_parametrage.enums.choix_taxe_filter.TAXE_BASE_ACTIVITE : STANDARD/MARCHE-->
+                        <a class="nav-link" href="{% url 'avis_imposition_list' TAXE_BASE_ACTIVITE %}">&#x2023;&nbsp;Activité</a>
+                    </li>            
+                </ul>
+            </li>
+           
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-map-signs text-white"></i>Impôt foncier</a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'foncier_parcelle_list' %}">&#x2023;&nbsp;Parcelle privée</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'foncier_expertise_list' %}">&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Déclaration</a>
+                    </li>
+                </ul>
+            </li>
+
+           
+             <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-credit-card-alt text-white"></i>Notes d'imposition</a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'ni_activite_standard_list' %}">&#x2023;&nbsp;NI-Activité Standard</a> <!--IMPRESSION DE LA NOTE UNIQUEMENT : IMPORTANT-->
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'ni_activite_marche_list' %}">&#x2023;&nbsp;NI-Activité Marché</a><!--IMPRESSION DE LA NOTE UNIQUEMENT : IMPORTANT-->
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'ni_impot_foncier_list' %}">&#x2023;&nbsp;NI-Impôt Foncier</a><!--IMPRESSION DE LA NOTE UNIQUEMENT : IMPORTANT-->
+                    </li>
+                </ul>
+            </li>  
+            <li class="divider"></li>
+        </ul>
+    </nav>
+    <button class="sidebar-minimizer brand-minimizer" type="button"></button>
+</div>

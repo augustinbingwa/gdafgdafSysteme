@@ -1,0 +1,107 @@
+<!-- MODAL ENTITY , Create, Update, Delete-->
+<div class="modal fade" id="modal-entity" data-keyboard="false" data-backdrop="static" role="dialog" aria-labelledby="modal-entity label" aria-hidden="true">
+   <div class="modal-dialog" role="document" style="max-width: 840px;">
+    <div class="modal-content border-modal-content"></div>
+  </div>
+</div>
+
+<!-- MODAL CONFIRMATION , Validate-->
+    <div class="modal fadeIn" id="modal-avertissement" data-keyboard="false" data-backdrop="static" role="dialog" aria-labelledby="modal-avertissement label" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content card-accent-warning border-warning" style="max-width: 840px; top:200px;">
+                <div class="modal-header">
+                    <h4 class="modal-title"> <i class="fa fa-warning" style="color:#ffc107 !important"></i>&nbsp; &nbsp; GDAF - Avertissement</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="lead" id="avertissement-message"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss='modal' onclick="Helpers.MsgBoxOnYesClickedJs()" > <i class="fa fa-check"></i>&nbsp; &nbsp; Oui</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss='modal' onclick="Helpers.MsgBoxOnNoClickedJs()"> <i class="fa fa-remove"></i>&nbsp; &nbsp; Non</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- MODAL INFORMATION , Validate-->
+    <div class="modal fade" id="modal-information" data-keyboard="false" data-backdrop="static" role="dialog" aria-labelledby="modal-information label" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="width:840px">
+                <div class="modal-header">
+                    <h4 class="modal-title">GDAF - Information</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="lead" id="inforation-message"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" data-dismiss="modal"> <i class="fa fa-check"></i>&nbsp; &nbsp; Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- MODAL ERREUR1 -->
+  <div class="modal fade" id="modal-erreur1" data-keyboard="false" data-backdrop="static" role="dialog" aria-labelledby="modal-erreur label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content card-accent-danger border-danger" style="max-width: 840px; top:75px;">
+            <div class="modal-header">
+                <h4 class="modal-title"> <i class="fa fa-warning" style="color:#f86c6b !important"></i>&nbsp;&nbsp;GDAF - Erreurs</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="lead" id="erreur-message"></div>
+            </div>
+            <div class="modal-footer">
+                <span style="font-size: 15px; color: #FF2800;">Veuillez compléter le motif d'annulation s'il vous plait</span>
+                <button type="submit" class="btn btn-primary" data-dismiss="modal" onclick="Helpers.OkErrorOnClickedJs()"> <i class="fa fa-check"></i>&nbsp; &nbsp; Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL ERREUR2 -->
+  <div class="modal fade" id="modal-erreur2" data-keyboard="false" data-backdrop="static" role="dialog" aria-labelledby="modal-erreur label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content card-accent-danger border-danger" style="max-width: 840px; top:75px;">
+            <div class="modal-header">
+                <h4 class="modal-title"> <i class="fa fa-warning" style="color:#f86c6b !important"></i>&nbsp;&nbsp;GDAF - Erreurs</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="lead" id="erreur-message"></div>
+            </div>
+            <div class="modal-footer">
+                <span style="font-size: 15px; color: #FF2800;">Veuillez écrire au minimum 25 caractères s'il vous plait</span>
+                <button type="submit" class="btn btn-primary" data-dismiss="modal" onclick="Helpers.OkErrorOnClickedJs()"> <i class="fa fa-check"></i>&nbsp; &nbsp; Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL ERREUR -->
+  <div class="modal fade" id="modal-erreur" data-keyboard="false" data-backdrop="static" role="dialog" aria-labelledby="modal-erreur label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content card-accent-danger border-danger" style="max-width: 840px; top:75px;">
+            <div class="modal-header">
+                <h4 class="modal-title"> <i class="fa fa-warning" style="color:#f86c6b !important"></i>&nbsp;&nbsp;GDAF - Erreurs</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="lead" id="erreur-message"></div>
+            </div>
+            <div class="modal-footer">
+                <span style="font-size: 15px; color: #FF2800;">Veuillez s'il vous plait corriger les erreurs suivantes</span>
+                <button type="submit" class="btn btn-primary" data-dismiss="modal" onclick="Helpers.OkErrorOnClickedJs()"> <i class="fa fa-check"></i>&nbsp; &nbsp; Ok</button>
+            </div>
+        </div>
+    </div>
+</div>

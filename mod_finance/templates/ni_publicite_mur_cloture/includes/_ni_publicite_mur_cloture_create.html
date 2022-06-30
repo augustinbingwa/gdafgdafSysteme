@@ -1,0 +1,31 @@
+{% load impot_filter %}
+
+{% load helper_filter %}
+
+<form method="post" action="{% url 'ni_publicite_mur_cloture_create' entity.id %}" class="js-entity-create-form">
+   {% csrf_token %}
+  <div class="modal-header">
+    <h4 class="modal-title"><i class="fa fa-credit-card-alt"></i>&nbsp;Créer une note d'imposition - Publicité mur/clôtureRéf-<em>{{ entity | get_reference_object }}</em></h4>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+     {% include 'ni_publicite_mur_cloture/includes/_ni_publicite_mur_cloture_form.html' %}
+  </div>
+  <div class="modal-footer">
+    {% if entity|has_any_note_not_payed %}
+      {{ entity|show_any_note_not_payed }} <!--Message d'erreur-->
+      <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close"></i>&nbsp;Fermer</button>
+    {% else %}
+      {% if request.user|has_group:'ECRITURE' and entity.is_ecriture_valid %}
+        <!-- GENERER ECRITURE : EXECUTION du bouton invisible-->  
+          <button type="submit" id="btn_ecriture" style="visibility: hidden;"></button>
+
+        <!-- GENERER ECRITURE : CONFIRMATION -->  
+        <button type="button" class="btn btn-danger" title="Générer la note d'imposition'" onclick="_ExecuteButtonAction('btn_ecriture', 'Êtes-vous sûr de vouloir générer la note de cette activité pour la période seléctionnée ?')"><i class="fa fa-check"></i>&nbsp;Ecriture</button>
+      {% endif %}
+       <button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-undo"></i>&nbsp;Annuler</button>
+    {% endif %}
+  </div>
+</form>

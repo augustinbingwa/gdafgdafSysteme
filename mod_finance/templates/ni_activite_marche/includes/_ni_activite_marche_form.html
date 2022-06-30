@@ -1,0 +1,80 @@
+{% load widget_tweaks %}
+
+{% load impot_filter %} 
+
+{% load humanize %}
+
+<div class="container"> 
+  <div class="row">
+    <div class="form-group col-sm-3">
+      <i class="required_field">*</i>
+      <label for="{{ form.reference.id_for_label }}">{{ form.reference.label_tag }}</label>
+      {% render_field form.reference class+="form-control" %}
+      {% if form.reference.help_text %}
+        <p class="help-inline"><small><em class="help-inline-ext">[{{ form.reference.help_text }}]</em></small></p>
+      {% endif %}
+    </div>
+
+    <div class="form-group col-sm-3">
+      <i class="required_field">*</i>
+      <label for="{{ form.entity_id.id_for_label }}">{{ form.entity_id.label_tag }}</label>  
+      <input type="text" name="auto_entity_id" class="form-control" id="id_auto_entity_id" value="{% if form.instance.id %} {{ form.instance | get_reference_object }} {% else %} {{ entity | get_reference_object }} {% endif %}" readonly="readonly"/>
+      <input type="hidden" name="entity_id" class="form-control" required="" id="id_entity_id" value="{% if form.instance.id %}{{ form.instance.entity_id }}{% else %}{{ entity.id  }}{% endif %}" />
+      {% if form.entity_id.help_text %}
+        <p class="help-inline"><small><em class="help-inline-ext">[{{ form.entity_id.help_text }}]</em></small></p>
+      {% endif %}
+    </div>
+
+    <div class="form-group col-sm-6">
+      <i class="required_field">*</i>
+      <label for="{{ form.contribuable.id_for_label }}">{{ form.contribuable.label_tag }}</label>  
+      <input type="text" name="auto_contribuable" class="form-control" id="id_auto_contribuable" value="{% if form.instance.contribuable %} {{ form.instance.contribuable.nom }} ({{ form.instance.contribuable.matricule }}) {% else %} {{ entity.contribuable.nom }} ({{ entity.contribuable.matricule }}) {% endif %}" readonly="readonly"/>
+      <input type="hidden" name="contribuable" class="form-control" required="" id="id_contribuable" value="{% if  form.instance.contribuable %} {{form.instance.contribuable.id}} {% else %} {{entity.contribuable.id}} {% endif %}"/>
+      {% if form.contribuable.help_text %}
+        <p class="help-inline"><small><em class="help-inline-ext">[{{ form.contribuable.help_text }}]</em></small></p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="row"> 
+    <div class="form-group col-sm-12">
+      <i class="required_field">*</i>
+      <label for="{{ form.taxe.id_for_label }}">{{ form.taxe.label_tag }}</label>
+       <input type="hidden" name="taxe" class="form-control" id="id_taxe" value="{% if form.instance.taxe %} {{ form.instance.taxe.id }} {% else %} {{ entity.taxe.id }} {% endif %}" />
+      {% if form.taxe.help_text %}
+        <input type="text" name="taxe_libelle" class="form-control" id="id_taxe_libelle" value="{% if form.instance.taxe %} {{ form.instance.taxe }} {% else %} {{ entity.taxe }} {% endif %}" disabled/>
+        <p class="help-inline"><small><em class="help-inline-ext">[{{ form.taxe.help_text }}]</em></small></p>
+      {% endif %}
+    </div>
+  </div>
+  
+  <div class="row"> 
+    <div class="form-group col-sm-6">
+      <i class="required_field">*</i>
+      <input type="hidden" name="periode_hidden" required="" id="periode_id" value="{{ form.periode.value }}" />
+      <label for="{{ form.periode.id_for_label }}">{{ form.periode.label_tag }}</label>
+      {% render_field form.periode class+="form-control disabled-element-periode" %}
+      {% if form.periode.help_text %}
+        <p class="help-inline"><small><em class="help-inline-ext">[{{ form.periode.help_text }}]</em></small></p>
+      {% endif %}
+    </div>
+  
+    <div class="form-group col-sm-3">
+      <i class="required_field">*</i>
+      <label for="{{ form.annee.id_for_label }}">{{ form.annee.label_tag }}</label>
+      {% render_field form.annee class+="form-control specific-field" %}
+      {% if form.annee.help_text %}
+        <p class="help-inline"><small><em class="help-inline-ext">[{{ form.annee.help_text }}]</em></small></p>
+      {% endif %}
+    </div>
+
+    <div class="form-group col-sm-3">
+      <i class="required_field">*</i>
+      <label for="{{ form.taxe_montant.id_for_label }}">{{ form.taxe_montant.label_tag }}</label>
+      {% render_field form.taxe_montant class+="form-control" %}
+      {% if form.taxe_montant.help_text %}
+        <p class="help-inline"><small><em class="help-inline-ext">[{{ form.taxe_montant.help_text }}]</em></small></p>
+      {% endif %}
+    </div>
+  </div>
+</div>

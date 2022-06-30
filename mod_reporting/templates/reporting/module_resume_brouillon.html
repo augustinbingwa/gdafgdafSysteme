@@ -1,0 +1,170 @@
+{% load contribuable_filter %}
+
+{% load activite_filter %}
+
+{% load impot_filter %}
+
+{% load foncier_filter %}
+
+{% load helper_filter %}
+
+{% load humanize %}
+
+{% load mathfilters %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Résumé des modules</title>
+  <style type="text/css">
+    @page { 
+      size: letter landscape;
+      margin-top: 1cm; 
+      padding-left: 5px;
+      padding-right: 5px;
+    }
+
+    .entete {
+      font-family: tahoma, arial, sans-serif;
+      font-size:12px;
+      text-align: center;
+    }
+
+    .titre {
+      font-family: tahoma, arial, sans-serif;
+      font-size:12px;
+      text-align: center;
+    }
+
+    .information {
+      font-family: tahoma, arial, sans-serif;
+      font-size:12px;
+    }
+    .data {
+      font-family: tahoma, arial, sans-serif;
+      font-size:12px;
+    }
+
+    .strong {
+      font-weight: bold;
+    }
+
+    .data_specific {
+      color: #000;
+    }
+
+    .data_column {
+      text-align: right;
+      padding-right: 5px;
+    }
+
+    .marge {
+      padding-left: 10px;
+    }
+
+    .marge_image_left {
+      width: 80px;
+      text-align: left;
+    }
+
+    .marge_image_right {
+      width: 80px;
+      text-align: right;
+    }
+  </style>   
+</head>
+<body>
+  <table align="center" border="1" width="35%">
+    <tr>
+      <td style="padding-top: 5px;"><div class="entete strong">RÉSUMÉ DES MODULES</div></td>  
+    </tr>
+  </table>
+  
+  <table align="center" width="45%">
+    <tr>
+      <td><div class="titre strong" style="text-decoration: underline black; padding-top: 10px;">Période du 02/01/2019 au 16/01/2019</div></td>  
+    </tr>
+  </table>
+  
+  <hr width="100%">
+  <table align="center" width="100%">
+    <tr>
+      <td colspan="2"><h4>CONTRIBUABLES ENREGISTRÉS</h4></td>  
+    </tr>
+    <tr>
+      <td width="30%"><div class="information">Contribuables enregistrés</div></td>  
+      <td><div class="data strong">: {{ 0 | nombre_contribuables }}</div></td>
+    </tr>
+    <tr>  
+      <td><div class="information">Personnes physiques</div></td>  
+      <td><div class="data strong">: {{ 1 | nombre_contribuables }}</div></td>
+    </tr>
+    <tr>
+      <td><div class="information">Personne morales</div></td>  
+      <td><div class="data strong">: {{ 2 | nombre_contribuables }}</div></td>
+    </tr>
+  </table>
+  <hr width="100%">
+  
+  <table align="center" width="100%">
+    <tr>
+      <td colspan="2"><h4>IMPÔTS FONCIERS</h4></td>  
+    </tr>
+    <tr>
+      <td width="30%"><div class="information">Parcelles enregistrées</div></td>  
+      <td><div class="data strong">: {{ 1 | nombre_impot_foncier }}</div></td>
+    </tr>
+    <tr>  
+      <td><div class="information">Déclarations enregistrées</div></td>  
+      <td><div class="data strong">: {{ 2 | nombre_impot_foncier }}</div></td>
+    </tr>
+    <tr>
+      <td><div class="information">Contribuables</div></td>  
+      <td><div class="data strong" style="color: green;">: {{ 6 | nombre_contribuables }}</div></td>
+    </tr>
+  </table>
+  <hr width="100%">
+  
+  {% with ni_if_p=10|nombre_ni_payement ni_if_np=10|nombre_ni_payement:False %}
+    <table align="center" width="100%">
+      <tr>
+        <td colspan="2"><h4>NOTES D'IMPOSITION</h4></td>  
+      </tr>
+      <tr>
+        <td width="30%"><div class="information">Notes générées</div></td>  
+        <td><div class="data strong">: {{ ni_if_p | addition:ni_if_np }}</div></td>
+      </tr>
+      <tr>  
+        <td><div class="information">Notes payées</div></td>  
+        <td><div class="data strong" style="color: green;">: {{ ni_if_p }}</div></td>
+      </tr>
+      <tr>
+        <td><div class="information">Notes non payées</div></td>  
+        <td><div class="data strong" style="color: red;">: {{ ni_if_np }}</div></td>
+      </tr>
+    </table>
+  {% endwith %}
+  <hr width="100%">
+  
+  {% with  ni_if_np=10|ni_recette_entity_not_payed ni_if_p=10|ni_recette_entity_payed ni_as_p=1|ni_recette_entity_payed prev_ni_if_np=10|ni_recette_entity_not_payed  prev_ni_if_p=10|ni_recette_entity_payed %}
+    <table align="center" width="100%">
+      <tr>
+        <td colspan="2"><h4>PAYEMENTS NOTES D'IMPOSITION</h4></td>  
+      </tr>
+      <tr>
+        <td width="30%"><div class="information">Total payées</div></td>  
+        <td><div class="data strong">: <i style="color: green;">{{ ni_if_p  | intcomma }}</i> Bif</div></td>
+      </tr>
+      <tr>  
+        <td><div class="information">Total impayées</div></td>  
+        <td><div class="data strong">: <i style="color: red;">{{ ni_if_np | intcomma }}</i> Bif</div></td>
+      </tr>
+      <tr>
+        <td><div class="information">Prévisions</div></td>  
+        <td><div class="data strong">: <i style="color: blue;">{{ prev_ni_if_np | addition:prev_ni_if_p | intcomma }}</i> Bif</div></td>
+      </tr>
+    </table>
+  {% endwith %}
+   
+</body> 

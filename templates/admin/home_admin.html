@@ -1,0 +1,77 @@
+{% load helper_filter %}
+
+{% load contribuable_filter %}
+
+<div class="card card-body-traffic" id="refresh">
+    <div class="card-body" id="time">
+        <div class="row">
+            <div class="col-sm-5">
+                <h4 class="card-title mb-0">Monitoring / <span class="small"><strong class="text-success">{{ request.online_now.count}}</strong>&nbsp;{{ request.online_now.count|pluralize:"connecté, connectés" }}</span></h4>
+                <div class="small text-muted">du {% now "d-m-Y" %}</div>
+            </div>
+            <!--/.col-->
+            <div class="col-sm-7 hidden-sm-down">
+                <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
+                    <div class="btn-group mr-3" data-toggle="buttons" aria-label="First group">
+                        <label class="btn btn-outline-secondary active">
+                            <input type="radio" name="options" id="option1" onchange="">{% now "d" %}
+                        </label>
+                        <label class="btn btn-outline-secondary">
+                            <input type="radio" name="options" id="option2" onchange="">{% now "m" %}
+                        </label>
+                        <label class="btn btn-outline-secondary">
+                            <input type="radio" name="options" id="option3" onchange="">{% now "Y" %}
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <!--/.col-->
+        </div>
+
+        <div class="chart-wrapper">
+            <table class="table table-hover table-bordered table-striped table-outline mb-0 nowrap" id="entity-table" width="100%" cellspacing="0">
+                <thead class="thead-default">
+                    <tr>
+                        <th class='text-center'>#</th>
+                        <th class='text-center'>Avatar</th>
+                        <th class='text-center'>Nom</th>
+                        <th class='text-center'>Prénom</th>
+                        <th class='text-center'>Tél-Email</th>
+                        <th class='text-center'>Fonction</th>
+                        <th class='text-center'>login</th>
+                        <th class='text-center'>Groups</th>
+                        <th class='text-center'>Dernère connexion</th>
+                        <th class='text-center'>Connecté</th>
+                    </tr>
+                </thead>
+                <tbody>        
+                    {% for user in user_list %}
+                        <tr>
+                            <td class='text-center' style="vertical-align: middle;">{{ forloop.counter }}</td>
+                            <td class="text-center">
+                                <div class="avatar">
+                                    <img src="{{ user | get_user_avatar }}" class="img-avatar" alt="">
+                                    {% if user in request.online_now %}
+                                        <span class="avatar-status badge-danger"></span>
+                                    {% endif %}
+                                </div>
+                            </td>
+                            <td>{{ user.last_name }}</td>
+                            <td>{{ user.first_name }}</td>
+                            <td class="text-center">{{ user | get_user_tel | phone_format }}<br>{{ user | get_user_email | email_format }}</td>
+                            <td>{{ user | get_user_function | default:'' }}</td>
+                            <td>{{ user }}</td>
+                            <td class='text-primary'>{{ user | get_all_groups_by_user }}</td>
+                            <td class='text-center'><div class='badge badge-primary'>{{ user.last_login | default:'' }}</div></td>
+                            <td class='text-center text-success'>
+                                {% if user in request.online_now %}
+                                    <i class="fa fa-check-circle" aria-hidden="true"></i>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table> 
+        </div>
+    </div>
+</div>

@@ -1,0 +1,28 @@
+{% load helper_filter %}
+
+{% for obj in lst %}
+<tr>
+	<td class="text-center">{{ forloop.counter }}</td>
+	<td class="text-center">
+		<button type="button" title="" class="btn btn-warning btn-sm js-update-entity"
+				data-url="{% url 'non_redevabilite_update' obj.id %}"><span class="fa fa-edit"></span>
+		</button>
+
+		<a href="{% url 'non_redevabilite_pdf' obj.id %}" class="btn btn-primary btn-sm"><i class="fa fa-print"></i></a>
+	</td>
+	<td><div class="text-center"><strong>{{ obj.reference }}</strong></div></td>
+	<td><div class="text-center"><strong></strong></div></td>
+	<td><div class="text-center">
+		<strong>{{obj.contribuable.matricule }}</strong>
+		{{obj.contribuable.nom }}
+		{{obj.contribuable.prenom }}
+	</div></td>
+
+		<td><div class="text-center"><strong>{{ obj.user_create }}</strong></div></td>
+	<td>
+		<button type="button" title="{% if obj.note %} {{ obj.note }} {% else %} Créer une note {% endif %}"
+			class="btn btn-link js-update-entity">
+		</button><!--Envoi et Lecture de la note-->
+	</td>
+</tr>
+{% endfor %}

@@ -1,0 +1,1 @@
+from mod_crm.subforms.form_contribuable import * #Import de tous les forms

@@ -1,0 +1,87 @@
+{% load tz %}
+
+{% load impot_filter %}
+
+{% load helper_filter %}
+
+{% load humanize %} 
+
+{% for obj in lst %}
+<tr>
+	<td class="text-center">{{ forloop.counter }}</td>
+	<td class="text-center">
+		{% if obj.user_create != user %}
+			<button type="button" title="{% if not obj.date_validate %} Modifier les informations de l'avis {% else %} Visualiser les informations de l'avis {% endif %}"
+				class="btn {% if not obj.date_validate %} btn-primary {% else %} btn-secondary {% endif %} btn-sm js-update-entity"
+				data-url="{% url 'avis_imposition_update' obj.id %}">
+				<span class="{% if not  obj.date_validate  %} fa fa-edit {% else %} fa fa-folder-open-o {% endif %}"></span> 
+			</button><!--Modification/Visualisation-->
+		{% else %}
+			<button type="button" title="Visualiser les informations"
+				{% if obj.date_validate %} enabled='enabled' {% else %} disabled='disabled' {% endif %}	
+				class="btn btn-secondary btn-sm js-update-entity"
+				data-url="{% url 'avis_imposition_update' obj.id %}">
+				<span class="fa fa-folder-open-o"></span> 
+			</button><!--Visualisation-->
+		{% endif %}
+
+		{% if TAXE_AI_FILTER != '2' and TAXE_AI_FILTER != 2 and TAXE_AI_FILTER != 3 and TAXE_AI_FILTER != '3' and TAXE_AI_FILTER != '4' and TAXE_AI_FILTER != 4 and TAXE_AI_FILTER != '5' and TAXE_AI_FILTER != 5 %} <!-- TAXE_AI_DOCUMENT_FINANCIER = 2, TAXE_BASE_ACTIVITE != 3, TAXE_ACTIVITE_EXCEPTIONNELLE = 4 TAXE_VISITE_SITE_TOURISTIQUE = 5-->
+			<button type="button" title="Supprimer l'avis d'imposition"
+				{% if obj.date_validate is None %} enabled='enabled' {% else %} disabled='disabled' {% endif %}
+				{% if obj.user_create != user %} 
+					disabled='disabled' 
+					class="btn btn-secondary btn-sm"
+				{% else %}
+					class="btn {% if obj.date_validate is None %} btn-danger {% else %} btn-secondary {% endif %} btn-sm js-delete-entity"	
+				{% endif %}
+				data-url="{% url 'avis_imposition_delete' obj.id %}">
+				<span class="fa fa-trash"></span> <!--Suppr (Authorization strict à l'user de création uniquement)-->
+			</button>
+		{% endif %}
+		
+
+			<button type="button" title="{% if obj.date_validate and obj.fichier_carterose %} Visualiser le fichier {% else %} Attacher les pièces jointes {% endif %}"
+				{% if not obj.date_validate %} disabled='disabled' {% else %} enabled='enabled' {% endif %}
+				class="btn {% if not obj.date_validate %} 
+								{% if obj.fichier_carterose %} btn-warning {% else %} btn-info {% endif %} 
+						   {% else %} 
+						   		btn-secondary 
+						   {% endif %} 
+				btn-sm js-upload-entity"
+				data-url="{% url 'avis_imposition_upload' obj.id %}">
+				<span class="fa fa-paperclip"></span> <!--Upload pièces jointes-->
+			</button>
+		
+			<button type="button" title="{% if not obj.date_validate %} Faire le paiement {% else %} Visualiser le paiement {% endif %}"
+				{% if not obj.date_validate %} disabled='disabled' {% else %} enabled='enabled' {% endif %}
+				class="btn {% if not obj.date_validate %} btn-warning {% else %} btn-secondary {% endif %} btn-sm js-update-entity"
+				data-url="{% url 'avis_imposition_update_paiement' obj.id %}">
+				<span class="fa fa-dollar"></span> <!--Paiement-->
+			</button>
+
+
+		{% if obj.date_validate  %}
+			<a href="{% url 'avis_imposition_quittance_print' obj.id %}" target="_blank" class="btn btn-success btn-sm {% if not request.user|has_group:'MENU_RECETTE' or not request.user|has_group:'ADMINISTRATIF_AVIS' %} disabled-element {% endif %}" title="Imprimer la quittance">
+			<span class="fa fa-print"></span></a>
+			<!--Impression de la quittance de l'avis d'imposition: avis d'imposition validé et payé-->
+		{% else %}
+			<a href="{% url 'avis_imposition_print' obj.id %}" target="_blank" class="btn btn-primary btn-sm" title="Imprimer l'avis"><span class="fa fa-print"></span></a>
+			<!--Impression de l'avis d'imposition: avis d'imposition validé-->
+		{% endif %}
+	</td>
+	<td><div class="text-center">{{ obj|ai_status_paiement }}</div></td>
+	<td><div class="text-center"><strong>{{ obj.reference }}</strong></div></td> 
+	<td><div>{{ obj | get_libelle_note_imposition }}</div></td>
+	<td><div>{{ obj.nom|get_beneficiaire:obj.contribuable }}</div></td>
+	<td><div class="text-right"><strong>{{ obj.montant_total | floatformat:0 | intcomma }} Bif</strong></div></td>
+	<td><div class="text-center">{{ obj.ref_paiement | default:'' }}</div></td>
+	<td><div class="text-center">{{ obj.agence | default:'' }}</div></td>
+	<td><div class="text-center">{{ obj.date_create|date:"d/m/Y" }}</div></td>
+	<td>
+		<button type="button" title="{% if obj.note %} {{ obj.note }} {% else %} Créer une note {% endif %}"
+			class="btn btn-link js-update-entity"
+			data-url="{% url 'edit_note' obj.id obj.class_name obj.view_list_name %}">
+			{{ obj | show_me:user }}
+		</button><!--Envoi et Lecture de la note-->
+	</td>
+{% endfor %} 

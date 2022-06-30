@@ -1,0 +1,45 @@
+{% load widget_tweaks %}
+
+<form method="post" enctype="multipart/form-data" action="{% url 'vehicule_activite_arretEtReouverture' obj.pk %}" class="js-entity-upload-form">
+  {% csrf_token %}
+   <div class="modal-header">
+    <h4 class="modal-title"><i class="fa fa-times-circle" style="color: red;"></i>&nbsp;{% if objac.actif %}Arret{% else %} Rouverture {% endif %}d'activite n°{{ obj.numero_activite }}</h4>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="container">
+      <div class="row">
+        <div class="form-group col-sm-12" style="margin-bottom: 4px; resize: none;">
+          {% if objac.actif %}
+            <label for="Motif d'arret">Motif d'arret</label>
+            <textarea id="id_motif" name="motif" type="text" rows="4" cols="85" style="resize: none;" minlength="5"
+    required ></textarea>
+          {% endif %}
+        </div>
+        <div class="{% if obj.date_validate %} col-sm-0 {% else %} col-sm-4 {% endif %}" id="upload_button">
+          <label>&nbsp;&nbsp;&nbsp;
+            <input id="id_fichier_formulaire_arret" type="file" class="" name="fichier_formulaire_arret" ngf-select ng-model="new_files" ng-change="fs.uploadFiles(new_files)"  onchange="getFileUploadName(this, 'dossier_activite_arret_select');">
+              <span class="btn btn-warning" title="Seléctioner le fichier">
+                 <span class="span-upload-file" id="dossier_activite_arret_select"><i class="required_field">*</i>&nbsp;{% if objac.actif %}Lettre d'arret ...{% else %} Lettre de reouverture ...{% endif %}</span>
+              </span>
+          </label>
+          {% if not objac.actif %}
+            <input type="hidden" class="aria-hidden" name="ouverture" value="ouverture">
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    {% if objac.actif %}
+      <button type="submit" class="btn btn-danger" title="Arret l'activite du vehicile"> <i class="fa fa-remove"></i>&nbsp;Arret activite</button>
+    {% else %}
+      <button type="submit" class="btn btn-primary" title="Reouveture d'activite du vehicile"> <i class="fa fa-save"></i>&nbsp;Reouveture d'activite</button>
+    {% endif %}
+      <!-- <button type="submit" class="btn btn-danger" title="Arret l'activite du vehicile" onclick="_arretActivite('{{ form.instance.pk }}', 'action/', 'Êtes-vous sûr de vouloir arret cette activite?',1)"> <i class="fa fa-remove"></i>&nbsp;Arret activite</button> -->
+      <button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-undo"></i>&nbsp;Fermer</button>
+  </div>
+</form>
+

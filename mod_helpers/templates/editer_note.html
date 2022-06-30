@@ -1,0 +1,103 @@
+{% load helper_filter %}
+
+{% load widget_tweaks %}
+
+{% block javascript %}
+  <script type="text/javascript">
+      // Taper au minimum 25 caractères
+      $( "#id_note" ).keydown(function() {
+        var len = $.trim($( "#id_note" ).val()).length;
+        if (len<25) {
+          $( "#btn_envoyer" ).prop('disabled', true);
+          //alert('La note doit avoir au minimum 10 caractères.');
+        } else {
+          $( "#btn_envoyer" ).prop('disabled', false);
+        }
+      });
+  </script>
+{% endblock %}
+
+<form method="post" action="{% url 'edit_note' obj.pk obj.class_name obj.view_list_name %}" class="js-entity-udapte-form">
+  {% csrf_token %}
+  <div class="modal-header">
+    <h5 class="modal-title"><i class="fa fa-commenting"></i>&nbsp; Ecrire une note pour l'objet {{ obj | get_info_object }}</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  
+  <div class="modal-body">
+    <div class="container"> 
+      <div class="row">
+        <div class="form-group col-sm-12">
+            <label for="note" class="control-label">Note de <em style="color: green;">{{ obj.user_note | default:user | capfirst }}</em>:</label>
+            <textarea id="id_note" rows="3" cols="30" placeholder="Ecrire la note (25 caractères minimum)..." name="note" maxlength="250" class="form-control" style="font-size: 16px;"
+            {% if obj.note %} 
+              disabled="disabled" 
+            {% endif %} 
+            required="required" title="Note de 25 caractères au minimum">{{ obj.note|default:'' }}</textarea>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-12">
+            <br>
+        </div>
+      </div>
+      {% if obj.user_create != user %}
+        <div class="row">
+          <div class="form-group col-sm-12">
+              <label for="reponse_note" class="control-label">Réponse de <em style="color: #88421D;">{{ obj.user_create | capfirst }}</em>:</label>
+              <textarea id="id_reponse_note" rows="3" cols="30" placeholder="Ecrire la réponse ..." name="reponse_note" maxlength="250" class="form-control" style="font-size: 16px;" 
+              {% if user != obj.user_create %} 
+                disabled="disabled" 
+              {% elif obj.reponse_note and obj.demande_annulation_validation %}
+                disabled="disabled"
+              {% endif %}
+              >{{ obj.reponse_note|default:'' }}</textarea>
+          </div>
+        </div>
+      {% endif %}
+      <div class="row">
+        <div class="form-group col-sm-12">
+            <br>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-12">
+          <input type="checkbox" id="id_demande_annulation_validation" name="demande_annulation_validation" 
+            {% if obj.demande_annulation_validation %} 
+              checked 
+            {% endif %}
+            {% if user != obj.user_create %} 
+              disabled="disabled" 
+            {% elif obj.reponse_note and obj.demande_annulation_validation %}
+              disabled="disabled"
+            {% elif obj.user_create == user %}
+              checked 
+            {% endif %} 
+            class="{% if obj.user_create == user %} disabled-element {% endif %}"/>
+          <label style="color: red;" class="control-label">Demande d'annulation de validation</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <span style="width:100%;">Réf<strong style="font-size: 14px;">&nbsp;{{ obj }},&nbsp;{{ obj | get_user_annulation }}</strong></span>
+    <!--AUTORIZATION D'ANNULATION DE LA VALIDATION-->
+    {% if request.user|has_group:'IT_ADMIN' and obj.note and obj.date_validate and obj.demande_annulation_validation %}
+      {% if not obj.date_cancel %}
+        <button type="button" class="btn btn-warning" onclick="_Unvalidate('{{ obj.pk }}', '{% url 'unvalidate_entity' %}', '{{ obj.class_name }}' , 'Êtes-vous sûr de vouloir annuler la validation de cette information ?')"><i class="fa fa-undo"></i>&nbsp; Annuler la validation</button>
+      {% endif %}
+    {% else %} 
+      {% if not obj.note %}
+        <button type="submit" id="btn_envoyer" class="btn btn-primary"> <i class="fa fa-save"></i>&nbsp;Envoyer</button>
+      {% elif obj.note and user == obj.user_create %}
+        {% if not obj.reponse_note or not obj.demande_annulation_validation %} 
+          <button type="submit" class="btn btn-primary"> <i class="fa fa-save"></i>&nbsp;Répondre</button>
+        {% endif %}
+      {% endif %}
+    {% endif %}
+    <button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-close"></i>&nbsp;Fermer</button>
+  </div>
+</form>

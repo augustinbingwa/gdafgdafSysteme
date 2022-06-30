@@ -1,0 +1,140 @@
+{% load helper_filter %}
+
+{% load mathfilters %}
+
+{% load impot_filter %}
+
+{% load humanize %} 
+
+{% load qr_code %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Note d'imposition</title>
+  <style type="text/css">
+    /*@page {
+      size: letter landscape;
+      margin: 2cm;
+    }*/
+
+    .entete {
+      font-family: tahoma, arial, sans-serif;
+      font-size:12px;
+      text-align: center;
+    }
+
+    .titre {
+      font-family: tahoma, arial, sans-serif;
+      font-size:14px;
+      text-align: center;
+    }
+
+    .information {
+      font-family: tahoma, arial, sans-serif;
+      font-size:12px;
+    }
+    .data {
+      font-family: tahoma, arial, sans-serif;
+      font-size:12px;
+    }
+
+    .strong {
+      font-weight: bold;
+    }
+
+    .data_specific {
+      color: #000;
+    }
+
+    .marge {
+      padding-left: 10px;
+    }
+
+    .marge_image_left {
+      width: 80px;
+      text-align: left;
+    }
+
+    .marge_image_right {
+      width: 80px;
+      text-align: right;
+    }
+  </style>   
+</head>
+<body>
+  <table align="center" border="0">
+    <tr>
+      <td width="12%"><div class="marge_image_left"><img src="static/img/logo-pays.png"></div></td> 
+      <td width="76%" ><div class="entete">REPUBLIQUE DU BURUNDI <br> MINISTÈRE DE L'INTÉRIEUR, DU DÉVELOPPEMENT COMMUNAUTAIRE <br>ET DE LA SÉCURITÉ PUBLIQUE <br><br>MUNICIPALITÉ DE BUJUMBURA</div></td>  
+      <td width="12%"><div class="marge_image_right"><img src="static/img/logo-mairie.png"></div></td>
+    </tr>
+  </table>
+  <table align="center" border="1" width="60%">
+    <tr>
+      <td><div class="titre strong" style="padding-top: 10px;">Note d'imposition pour {{ obj | get_titre_reporting }}<br><strong style="color:  red ;">Réf-{{ obj.reference }}</div></td>  
+    </tr>
+  </table>
+  <br><br>
+  <table align="center" border="0">
+    <tr>
+      <td width="20%"><div class="information strong marge">Nom/Raison sociale</div></td>
+      <td width="80%"><div class="data">: {{ obj.contribuable.nom }} - <strong style="color:  blue ;"><strong>NIC</strong> : <strong class="strong16">{{ obj.contribuable.matricule }}</strong></div></td>
+    </tr>
+    <tr>
+      <td><div class="information strong marge">Adresse</div></td>
+      <td><div class="data">: {{ obj.contribuable.adresse|default:'' }}, {{ obj.contribuable.numero_rueavenue|default:''}}, N° {{ obj.contribuable.numero_police|default:'' }} {{ obj.contribuable.adresse_exacte|default:'' }}</div></td>
+    </tr>
+    <tr>
+      <td valign="top"><div class="information strong marge">{{ obj_entity | get_entity_label }}</div></td>
+      <td><div class="data"><strong style="color: red ;"><strong>{{ obj_entity | get_entity_reference }}</strong></div></td>
+    </tr>
+    <tr>
+      <td valign="top"><div class="information strong marge">Mention</div></td>
+      <td><div class="data">: <strong style="color:  green ;"><strong>{{ obj | get_libelle_note_imposition }}</div></td>
+    </tr>
+    <tr>
+      <td><div class="information strong marge">Date de saisie</div></td>
+      <td><div class="data"style="color: black;">: <strong>{{ obj_entity.date_create | date:"d/m/Y h:m" }}</strong></div></td>
+    </tr>
+    <tr>
+      <td  colspan="2" style="height: 5px;"></td>
+    </tr>
+    <tr>
+      <td style="width: 18%; vertical-align: top;"><div class="information strong marge">{{ obj_entity | get_entity_adresse_title }}</div></td>
+      <td style="width: 70%; vertical-align: top;"><div class="data">{{ obj_entity | get_entity_adresse_value }}</div></td>
+    </tr>
+    <tr>
+      <td><div class="information strong marge">Période</div></td>
+      <td><div class="data"style="color: red;">: <strong>{{ obj.periode.get_element_display }} - {{ obj.annee }}</strong></div></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><div class="information strong marge">Montant à payer</div></td>
+      <td><div class="data">: <strong>{{ obj.taxe_montant | floatformat:0 | intcomma }} Bif</strong> {{ obj | get_accroissement_label:obj_entity }} {{ obj | get_solde_depart_label:obj_entity }}</div></td>
+    </tr>
+    <tr>
+      <td colspan="2" style="height: 10px;"></td>
+    </tr>
+    <tr>
+      <td colspan="2"><div class="information marge">{{ obj.taxe_montant | int_to_letter }}</div></td>
+    </tr>
+    {% if obj.entity != 8 and obj.entity != 11 and obj.entity != 12 and obj.entity != 13 %}
+      <tr>
+        <td  colspan="2" style="height: 10px;"></td>
+      </tr>
+      <tr>
+        <td colspan="2"><div class="information marge" style="color: red;">Ce montant doit être payé avant le <strong>{{ 0 | ni_date_limit_paiement }}/{% now "Y" %}</strong>; sinon une pénalité de <strong>{{ 0 | ni_penalite_paiement_premier_mois }}%</strong> et <strong>{{ 0 | ni_penalite_paiement_autres_mois }}%</strong> par mois de retard sera appliquée.</div></td>
+      </tr>
+    {% endif %}
+    <tr>
+      <td  colspan="2" style="height: 10px;"></td>
+    </tr>
+    <tr>
+      <td  colspan="2"><div class="information marge"><em>Note d'imposition imprimée par <strong>{{ user.get_full_name }}</strong>, le {{ obj.date_print | date:"d F Y h:m" }}. <p style="font-size: 11px;">Contribuable créé par {{ obj.contribuable.user_create.get_full_name }} le {{ obj.contribuable.date_create | date:"d/m/Y h:m" }}, imposé par {{ obj_entity.user_create.get_full_name }} le {{ obj_entity.date_create | date:"d/m/Y h:m" }} et note générée par {{ obj_entity.user_ecriture.get_full_name }} le {{ obj_entity.date_ecriture | date:"d/m/Y h:m" }}.</p></em></div></td>
+    </tr>
+  </table>
+  <hr width="90%">
+  <div class="data" style="text-align: center;">{{ None|get_mairie_identification }}</div>
+</body>
+</html>

@@ -1,0 +1,9 @@
+from mod_reporting.subviews.view_report_module_resume import * 
+
+from mod_reporting.subviews.view_report_centralisation_journaliere_ni import * 
+from mod_reporting.subviews.view_report_centralisation_journaliere_recette import * 
+
+from mod_reporting.subviews.view_report_recapitulatif_journalier_declarant import *
+from mod_reporting.subviews.view_report_recapitulatif_journalier_montant import * 
+from mod_reporting.subviews.view_report_recapitulatif_journalier_recette import *
+from mod_reporting.subviews.view_report_reconsiliation_banque import *

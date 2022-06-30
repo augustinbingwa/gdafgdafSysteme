@@ -1,0 +1,42 @@
+{% load helper_filter %}    
+
+{% if lst.paginator.count > 1 %}    
+    <nav aria-label="Page navigation"> 
+        <ul class="pagination">
+            {% if lst.paginator.count %}
+                <li class="page-item disabled paginator-style"><a class="page-link" href="#"><em style="color: #c52;">{{ lst.paginator.count }}</em>&nbsp;/{{ total }}</a></li>
+                {% if lst.has_previous %}
+                    <li class="page-item paginator-style">
+                      <a class="page-link" href="?page=1" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">begin</span>
+                      </a>
+                    </li>
+                {% endif %}
+                {% for n in lst.paginator.page_range %}
+                    {% if lst.number == n %}
+                        <li class="page-item active paginator-style">
+                            <span class="page-link">{{ n }}<span class="sr-only">(current)</span></span>
+                        </li>
+                    {% elif n > lst.number|add:'-3' and n < lst.number|add:'3' %}
+                        <li class="page-item paginator-style"><a class="page-link" href="?page={{ n }}">{{ n }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if lst.has_next %}
+                    <li class="page-item paginator-style">
+                        <a class="page-link" href="?page={{ lst.paginator.num_pages }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">end</span>
+                        </a>
+                    </li>
+                {% endif %}
+            {% endif %}   
+        </ul>
+    </nav>
+{% elif lst.paginator.count == 1 %}
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            <li class="page-item disabled"><a class="page-link" href="#">Total:&nbsp;<strong style="color: #c52;">{{ lst.paginator.count }}</strong></a></li>
+        </ul>
+    </nav>
+{% endif %}

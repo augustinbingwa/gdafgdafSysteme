@@ -1,0 +1,78 @@
+{% load activite_filter %}
+
+{% load helper_filter %}
+
+{% load mathfilters %}
+
+{% load humanize %} 
+
+{% for obj in lst %}
+	<tr>
+		<td class="text-center">{{ forloop.counter }}</td>
+		<td class="text-center">
+			{% if obj.user_create == user %}
+				<button type="button" title="{% if obj.date_validate is None  %} Mettre à jour {% else %} Visualiser {% endif %} les informations"
+					class="btn {% if obj.date_validate is None %} btn-primary {% else %} btn-secondary {% endif %} btn-sm js-update-entity"
+					data-url="{% url 'publicite_mur_cloture_update' obj.id %}">
+					<span class="{% if obj.date_validate is None  %} fa fa-edit {% else %} fa fa-folder-open-o {% endif %}"></span> <!--Edition-->
+				</button>
+			{% else %}
+				<button type="button" title="Visualiser les informations"
+					{% if obj.date_validate %} enabled='enabled' {% else %} disabled='disabled' {% endif %}	
+					class="btn btn-secondary btn-sm js-update-entity"
+					data-url="{% url 'publicite_mur_cloture_update' obj.id %}">
+					<span class="fa fa-folder-open-o"></span> <!--Visualisation-->
+				</button>
+			{% endif %}
+
+			<button type="button" title="{% if obj.date_validate and obj.fichier_lettre_exp_tmp %} Visualiser les pièces jointes {% else %} Attacher les pièces jointes {% endif %}"
+				{% if not obj.date_validate and obj.user_create != user %} disabled='disabled' {% else %} enabled='enabled' {% endif %}
+				class="btn {% if not obj.date_validate %} 
+								{% if obj.fichier_lettre_exp_tmp %} btn-warning {% else %} btn-info {% endif %} 
+						   {% else %} 
+						   		btn-secondary 
+						   {% endif %} 
+				btn-sm js-upload-entity"
+				data-url="{% url 'publicite_mur_cloture_upload' obj.id %}"> 
+				<span class="fa fa-paperclip"></span> <!--Upload pièces jointes : Le fichier_lettre_exp_tmp est obligatoire !!!-->
+			</button>
+
+		{% if user.is_superuser %} <!--SUPPRESSION INTERDITE-->
+			<button type="button" title="Attacher les pièces jointes"
+				class="btn btn-danger  
+				btn-sm js-upload-entity"
+				data-url="{% url 'publicite_mur_cloture_upload' obj.id %}">
+				<span class="fa fa-paperclip"></span> <!--Upload pièces jointes-->
+			</button>
+		{% endif %}	
+		
+			{% if request.user|has_group:'ECRITURE' %}
+				<!--GENERER LA NOTE D'IMPISITION DE LA PERIODE SUIVANTE-->
+				<button type="button" title="Générer la note de la période suivante" 
+					class="btn {% if obj.is_ecriture_valid %} btn-primary {% else %} btn-secondary {% endif %} btn-sm js-update-entity" 
+					data-url="{% url 'ni_publicite_mur_cloture_create' obj.id %}"
+					{% if not obj.is_ecriture_valid %} disabled="disabled" {% endif %}>
+					<span class="fa fa-check"></span>
+				</button>
+			{% endif %}
+		</td>
+		<td><div class="text-center">{{ obj | filter_status_validate }}</div></td>
+		<td><div class="text-center"><strong>{{ obj.numero_allocation }}</strong></div></td>
+		<td><div class="text-center">{{ obj.type_publicite | show_type_publicite }}</div></td>
+		<td><div class="text-center">{{ obj.reference_juridique }}</div></td>
+		<td><div>{{ obj.contribuable.nom }}<br><span class='bg bg-dark text-white'>&nbsp;{{ obj.contribuable.matricule }}&nbsp;</span></div></td>
+		<td><div>{{ obj.adresse }} - {{ obj.numero_rueavenue }}</div></td>
+		<td><div class="text-right"><strong>{{ obj.superficie | intcomma }} m²</strong></div></td>
+		<td><div class="text-right"><strong>{{ obj.taxe.tarif | intcomma }} Bif / m²</strong></div></td>
+		<td><div class="text-right"><strong>{{ obj.superficie | mul:obj.taxe.tarif | intcomma }} Bif</strong></div></td>
+		<td><div class="text-center">{{ obj.date_debut | date:"d/m/Y" }}</div></td>
+		<td><div class="text-right"><strong>{{ obj.solde_depart | floatformat:"0" | intcomma }} Bif</strong></div>
+		<td>
+			<button type="button" title="{% if obj.note %} {{ obj.note }} {% else %} Créer une note {% endif %}"
+				class="btn btn-link js-update-entity"
+				data-url="{% url 'edit_note' obj.id obj.class_name obj.view_list_name %}">
+				{{ obj | show_me:user }}
+			</button><!--Envoi et Lecture de la note-->
+		</td>
+	</tr>
+{% endfor %}

@@ -1,0 +1,108 @@
+{% load widget_tweaks %}
+
+{% load impot_filter %}
+
+{% block javascript %}
+  <script type="text/javascript">     
+    //Auto complete contribuable
+    $(document).ready(function(){
+      $( "#num_bordereau" ).autocomplete({
+        source: "/finance/note_imposition/num_bordereau/autocomplete/",
+        appendTo: idModalEntity,
+        select: function(event, ui) {
+            event.preventDefault();
+            var value = ui.item.value.split(",")
+            $(this).val(ui.item.label); 
+            $("#id_numero").val(ui.item.id);  
+            $("#num_bordereau_change").val(ui.item.label); 
+            $("#ref").val(value[1]);
+            $("#bank").val(value[3]); 
+            $("#montant").val(value[0]); 
+            $("#date").val(value[2]);
+            // Charger l'accessibilité de l´activite
+            Load_Accessibilite();
+        },
+        focus: function(event, ui) {
+            event.preventDefault();                    
+            //$(this).val(ui.item.label);
+        }
+      });
+
+      //Date picker : date de déclaration de l'impot foncier
+      Helpers.DatePicker('id_debut');
+  });
+  </script>
+{% endblock %}
+
+<form method="post" action="{% url 'ni_impot_foncier_change_numebord' %}" class="js-entity-upload-form">
+     {% csrf_token %}
+   <div class="modal-header">
+    <h4 class="modal-title"><i class="fa fa-times-circle" style="color: red;"></i>&nbsp;Modification du numero de bordereau axistant</h4>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="container">
+      <div class="row">
+        <div class="form-group col-sm-12">
+          <i class="required_field">*</i>
+          <label for="bordero existant">Rechercher Bordero existant</label>
+        </div><br>
+        <div class="form-group col-sm-12">
+              <input type="text" name="num_bordereau" class="col-sm-4" id="num_bordereau" value="{{ obj.ref_paiement| get_numero_bordereau }}" required="required" placeholder="Rechercher numero Bordereau">
+              <input type="hidden" name="id_numero" id="id_numero">
+        </div>
+      </div><br>
+
+      <div class="row">
+        <div class="form-group col-sm-12">
+          <label for="Reference">Reference note imposition</label>
+        </div><br>
+        <div class="form-group col-sm-12">
+            <input type="text" name="ref" id="ref" readonly="readonly" class="col-sm-4">
+        </div>
+      </div><br>
+
+      <div class="row">
+        <div class="form-group col-sm-12">
+          <label for="Banque">Banque</label>
+        </div><br>
+        <div class="form-group col-sm-12">
+            <input type="text" name="bank" id="bank" readonly="readonly" class="col-sm-4">
+        </div>
+      </div><br>
+
+      <div class="row">
+        <div class="form-group col-sm-12">
+          <label for="montant">Montant Paye</label>
+        </div><br>
+        <div class="form-group col-sm-12">
+            <input type="text" name="montant" id="montant" readonly="readonly" class="col-sm-4">
+        </div>
+      </div><br>
+
+      <div class="row">
+        <div class="form-group col-sm-12">
+          <label for="date">Date paiement</label>
+        </div><br>
+        <div class="form-group col-sm-12">
+            <input type="text" name="date" id="date" readonly="readonly" class="col-sm-4">
+        </div>
+      </div><br>
+      <div class="row">
+        <div class="form-group col-sm-12">
+          <i class="required_field">*</i>
+          <label for="bordero existant">Numero Bordereau a modifier</label>
+        </div><br>
+        <div class="form-group col-sm-12">
+          <input type="text" name="num_bordereau_change" class="col-sm-4" id="num_bordereau_change">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-danger" title="Annuler la déclaration"> <i class="fa fa-remove"></i>&nbsp;Modifiser</button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-undo"></i>&nbsp;Fermer</button>
+  </div>
+</form>

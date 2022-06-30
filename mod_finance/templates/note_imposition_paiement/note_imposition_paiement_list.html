@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% load impot_filter %}
+
+{% load tz %}
+
+{% load humanize %} 
+
+{% load helper_filter %}
+
+{% block javascript %}
+  <script src="{% static 'js/note_imposition.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <div class="card-header">   
+      <div class="row">
+        <div class="col-sm-9 text-left" style="padding-top: 6px;">
+          <h4 class="card-title mb-0"><i class="fa fa-money"></i>&nbsp;Suivi de paiement de la note d'imposition n°<strong>{{ obj.reference }}</strong></h5>
+        </div>
+        <div class="col-sm-3 text-right" style="padding-top: 6px;">
+          {% if not user.is_superuser %}
+            {% if not obj.is_payed %}
+              <button type="button" class="btn btn-primary float-right js-create-entity" data-url="{% url 'note_imposition_paiement_create' %}">
+                <i class="fa fa-plus"></i>&nbsp; Nouveau paiement
+              </button>
+            {% else %}
+              {% if not obj|is_print_number_achieved %}
+                <!--ENTITY_DROIT_STATIONNEMENT=12-->
+                {% if obj.entity == 12 %}
+                  {% if obj|is_ni_vehicule_activite_payed %}
+                    <button type="button" title="Imprimer la quittance" class="btn btn-success js-update-entity"
+                      data-url="{% url 'ni_quittance_print' obj.id %}"
+                      {% if not request.user|has_group:'MENU_RECETTE' %} disabled='disabled' {% endif %}>
+                      <i class="fa fa-print"></i>&nbsp; Imprimer
+                      <!--Impression de la quittance de la note validée et payée-->
+                    </button>
+                  {% endif %}
+                {% else %}
+                  <button type="button" title="Imprimer la quittance" class="btn btn-success js-update-entity"
+                    data-url="{% url 'ni_quittance_print' obj.id %}"
+                    {% if not request.user|has_group:'MENU_RECETTE' %} disabled='disabled' {% endif %}>
+                    <i class="fa fa-print"></i>&nbsp; Imprimer
+                    <!--Impression de la quittance de la note validée et payée-->
+                  </button>
+                {% endif %}
+              {% else %}
+                <button type="button" title="Demander l'autorisation d'impression" class="btn btn-warning js-update-entity"
+                  data-url="{% url 'ni_quittance_print_authorization' obj.id %}"
+                  {% if request.user|has_group:'MENU_RECETTE' %} disabled='disabled' {% endif %}>
+                  <i class="fa fa-print"></i> &nbsp; Autorisation
+                  <!--Print : Demande d'authorisation si on a dépassé le nombre limite-->
+                </button>
+              {% endif %}
+            {% endif %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="row"> 
+        <div class="form-group col-sm-12">
+          <span><h5 style="color: #88421D;">{{ obj.libelle }} / {{ obj.contribuable.nom }} - {{ obj.contribuable.matricule }} / <strong>{{ obj.periode.get_element_display }}&nbsp;{{ obj.annee }}</strong> / Montant:&nbsp;<strong>{{ obj.taxe_montant | floatformat:0 | intcomma }} Bif</strong></h5></span>
+        </div>
+      </div>
+      <table class="table table-hover table-bordered table-striped table-outline mb-0 nowrap" id="entity-table" width="100%" cellspacing="0">
+        <thead class="thead-default">
+          <tr>
+            <th class="text-center"></th>
+            <th class="text-center">Action</th>
+            <th class="text-center">Status</th>
+            <th class="text-center">Réf-paiement</th>
+            <th class="text-center">Agence</th>
+            <th class="text-center">Payé-le</th>
+            <th class="text-center">Utilisateur</th>
+            <th class="text-center">Montant-payé</th>
+            <th class="text-center">Excedant</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% include 'note_imposition_paiement/includes/_note_imposition_paiement_list.html' %}
+        </tbody>
+      </table>
+    </div>
+    <div class="card-footer text-right"><span><h5 style="padding-right: 5px;">Total payé:&nbsp;<strong>{{ obj.taxe_montant_paye | floatformat:0 | intcomma }} Bif</strong></h5></span></div>
+  </div>
+{% endblock %}

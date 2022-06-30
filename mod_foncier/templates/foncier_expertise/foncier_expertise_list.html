@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% load foncier_filter %}
+
+{% load static %}
+
+{% load helper_filter %}
+
+{% block javascript %}
+  <script src="{% static 'js/foncier.js' %}"></script>
+  <script type="text/javascript">
+    //Initialiser les dates de la période
+    Helpers.DatePicker('fexp_du'); //Date début
+    Helpers.DatePicker('fexp_au'); //Date fin
+  </script>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header">   
+      <div class="row">
+        <div class="col-sm-8" style="padding-top: 6px;">
+          <h4 class="card-title mb-0"><i class="fa fa-map-o"></i>&nbsp;Enregistrement de la déclaration de l'impôt foncier</h4>
+        </div>
+        <div class="col-sm-4 hidden-sm-down" style="padding-top: 6px;">
+          {% if not user.is_superuser %}
+            <button type="button" class="btn btn-primary float-right js-create-entity" data-url="{% url 'foncier_expertise_create' %}" {% if user.is_superuser or request.user|has_group:'IT_ADMIN' or request.user|has_group:'IT_USERS' %} disabled="disabled" title="Vous n'avez pas droit" {% endif %}>
+              <i class="fa fa-plus"></i>&nbsp;Ajouter une déclaration
+            </button>
+          {% endif %}
+        </div>
+      </div>
+  </div>
+  <div class="card-body" style= "overflow-x:auto; padding-top: 5px;">
+    <form method="POST" action="{% url 'foncier_expertise_list' %}">
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="btn-toolbar float-left" role="toolbar" aria-label="Toolbar with button groups">
+            <div>
+              <label class="label_search">Du:<input type="text" id="fexp_du" name="fexp_du" value="{{ fexp_du }}" placeholder="" title="Date début" class="form-control search-input"/></label>
+              <label class="label_search">Au:<input type="text" id="fexp_au" name="fexp_au" value="{{ fexp_au }}" placeholder="" title="Date fin" class="form-control search-input"/></label>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-8">
+          <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
+            <div>
+              <label class="label_search">Référence:<input type="text" name="fexp_numero_parcelle" value="{{ fexp_numero_parcelle }}" placeholder="..." title="Contenant le numéro d'allocation" class="form-control search-input" autofocus/></label>
+              <label class="label_search">Année:<input type="text" maxlength="4" name="fexp_annee" value="{{ fexp_annee }}" placeholder="..." title="Année de déclaration" class="form-control search-input"/></label>
+              <label class="label_search">Commune:<input type="text" name="fexp_commune" value="{{ fexp_commune }}" placeholder="..." title="Contenant le nom de la commune" class="form-control search-input"/></label>
+              <label class="label_search">Zone:<input type="text" name="fexp_zone" value="{{ fexp_zone }}" placeholder="..." title="Contenant le nom de la zone" class="form-control search-input"/></label>
+              <label class="label_search">Quartier:<input type="text" name="fexp_quartier" value="{{ fexp_quartier }}" placeholder="..." title="Contenant le nom du quartier" class="form-control search-input"/></label>
+              <label class="label_search">Rue-Avenue:<input type="text" name="fexp_rue_avenue" value="{{ fexp_rue_avenue }}" placeholder="..." title="Contenant le numéro de Rue/avenue" class="form-control search-input"/></label>
+              <label class="label_search">Matricule:<input type="text" name="fexp_matricule" value="{{ fexp_matricule }}" placeholder="..." title="Contenant le numéro matricule" class="form-control search-input"/></label>
+              <label class="label_search">Nom:<input type="text" name="fexp_nom" value="{{ fexp_nom }}" placeholder="..." title="Contenant le nom et prénom" class="form-control search-input"/></label>
+              <label class="label_search">Utilisateur:<input type="text" name="fexp_user_create" value="{{ fexp_user_create }}" placeholder="..." title="Crée par" class="form-control search-input"/></label>
+              <label class="label_search">
+                Status:
+                <select name="fexp_status" class="form-control search-input">
+                  <option value="0">...</option>
+                  <option value="1" {% if fexp_status == '1' %} selected='selected' {% endif %}>Validée</option>
+                  <option value="2" {% if fexp_status == '2' %} selected='selected' {% endif %}>En attente</option>
+                  <option value="3" {% if fexp_status == '3' %} selected='selected' {% endif %}>Brouillon</option>
+                </select> 
+              </label>
+              <label><button type="submit" id="btn_search" title="Rechercher/Actualiser" class="btn btn-primary btn-sm search-button"><i class="fa fa-search"></i></button></label>
+              <label>&nbsp;&nbsp;&nbsp;&nbsp;<button type="submit" id="btn_excel" title="Genere excel" class="btn btn-sm btn-success"><i class="fa fa-file-excel-o"></i>&nbsp;Generer excel</button></label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <table class="table table-hover table-bordered table-striped table-outline mb-0 nowrap" id="entity-table" width="100%" cellspacing="0">
+      <thead class="thead-default">
+        <tr>
+          <th class="text-center"></th>
+          <th class="text-center">Action</th>
+          <th class="text-center">Status</th>
+          <th class='text-center'>Année</th>
+          <th class='text-center'>N° Parcelle</th>
+          <th class='text-center'>Contribiable</th>
+          <th class='text-center'>Sup. non bâtie</th>
+          <th class='text-center'>Caractéristiques non bâti</th>
+          <th class='text-center'>Impôt non bâti</th>
+          <th class='text-center'>Impôt bâti</th>
+          <th class='text-center'>Accroissement</th>
+          <th class="text-center">Crée par</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% include 'foncier_expertise/includes/_foncier_expertise_list.html' %}          
+      </tbody>
+    </table>
+
+    {% include 'paginator.html' %}
+    
+  </div>
+  <div class="card-footer">{{ lst | nombre_enreg_by_user:user }}</div>
+</div>
+{% endblock %}

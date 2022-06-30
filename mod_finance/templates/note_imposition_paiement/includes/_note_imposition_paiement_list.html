@@ -1,0 +1,50 @@
+{% load tz %}
+
+{% load impot_filter %}
+
+{% load humanize %}
+
+{% for obj in lst %}
+	<tr>
+		<td class="text-center"></td>
+		<td class="text-center">
+			<button type="button" title="{% if not obj.date_validate  %} Editer le paiement {% else %} Visualiser le paiement {% endif %}"
+				class="btn {% if not  obj.date_validate %} btn-primary {% else %} btn-secondary {% endif %} btn-sm js-update-entity"
+				data-url="{% url 'note_imposition_paiement_update' obj.id %}">
+				<span class="{% if obj.date_validate is None  %} fa fa-edit {% else %} fa fa-folder-open-o {% endif %}"></span> <!--Edition-->
+			</button>
+			<button type="button" title="{% if not obj.date_validate  %} Supprimer le paiement {% endif %}"
+				{% if obj.date_validate %} disabled='disabled' {% endif %}
+				class="btn btn-danger btn-sm js-delete-entity"
+				data-url="{% url 'note_imposition_paiement_delete' obj.id %}">
+				<span class="fa fa-trash"></span> <!--Suppression-->
+			</button>
+			<button type="button" title="{% if not obj.date_validate  %} Attacher {% else %} Visualiser {% endif %} le bordereau"
+				class="btn {% if obj.date_validate is None %} btn-info {% else %} btn-secondary {% endif %} btn-sm js-upload-entity"
+				data-url="{% url 'note_imposition_paiement_upload' obj.id %}">
+				<span class="fa fa-paperclip"></span> <!--Upload-->
+			</button>
+			
+			{% if user.is_superuser %}
+				<button type="button" title="Attacher le bordereau"
+					class="btn btn-danger btn-sm js-upload-entity"
+					data-url="{% url 'note_imposition_paiement_upload_temp' obj.id %}">
+					<span class="fa fa-paperclip"></span> <!--Upload-->
+				</button>
+			{% endif %}
+		</td>
+		<td><div align="center">{{ obj | ni_status_paiement_details }}</div></td>
+		<td><div align="center">{{ obj.ref_paiement }}</div></td>
+		<td><div align="center">{{ obj.agence }}</div></td>
+		<td><div align="center">{{ obj.date_paiement|date:"d/m/Y" }}</div></td>
+		<td><div align="center">
+			<button type="button" title="{% if obj.note %} {{ obj.note }} {% else %} Créer une note {% endif %}"
+				class="btn btn-link js-update-entity"
+				data-url="{% url 'edit_note' obj.id obj.class_name obj.view_list_name %}">
+				{{ obj | show_me:user }}
+			</button></div><!--Envoi et Lecture de la note-->
+		</td>
+		<td><div align="right"><strong class="text-success">{{ obj.montant_tranche | floatformat:0 | intcomma }}</strong>&nbsp;Bif</div></td>
+		<td><div align="right"><strong class="text-danger">{{ obj.montant_excedant | floatformat:0 | intcomma }}</strong>&nbsp;Bif</div></td>
+	</tr>
+{% endfor %}  

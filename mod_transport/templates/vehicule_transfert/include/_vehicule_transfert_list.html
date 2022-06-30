@@ -1,0 +1,66 @@
+{% load transport_filter %}
+{% load helper_filter %}
+{% for obj in lst %}
+<tr>
+	<td class="text-center">{{ forloop.counter }}</td>
+	<td class="text-center">
+	
+		<button type="button" title="{% if not obj.date_transfert %} Valider le transfert {% else %} Visualiser les informations de transfert {% endif %}"	
+			class="btn{% if not obj.date_transfert %} btn-warning {% else %} btn-secondary {% endif %} btn-sm js-update-entity"
+			data-url="{% url 'vehicule_transfert_update' obj.id %}">
+			<span class="{% if obj.date_transfert is None %} fa fa-edit {% else %} fa fa-folder-open-o {% endif %}"></span> 
+		</button>
+        {% if request.user|has_group:'STAFF_TRANSPORT' %}
+            <!-- upload carte de nouveau contribuble -->
+			<button type="button" title="{% if obj.date_transfert and obj.vehicule.fichier_carterose %} Visualiser la carte rose {% else %} Attacher la carte rose {% endif %}"
+				{% if not obj.date_transfert %} disabled='disabled' {% else %} enabled='enabled' {% endif %}
+				class="btn {% if not obj.vehicule.date_validate %}
+								{% if obj.vehicule.fichier_carterose %} btn-primary{% else %}  btn-warning {% endif %}
+						   {% else %}
+								btn-secondary
+						   {% endif %}
+				btn-sm js-upload-entity"
+				{% if obj.date_transfert and obj.vehicule.fichier_carterose %} 
+					data-url="{% url 'vehicule_transfert_upload_cr' obj.id %}"
+				{% else %} 
+					data-url="{% url 'vehicule_transfert_upload_temp' obj.vehicule.id %}"
+				{% endif %}
+				>
+				<span class="fa fa-paperclip"></span> <!--Upload pièces jointes-->
+			</button>
+			<!-- upload le fichier non redevabilite -->
+			<button type="button" title="{% if obj.date_transfert %} Visualiser la non redvabilité {% else %} Attacher la lettre de non redevabilite {% endif %}"
+				{% if obj.date_transfert%} disabled='disabled' {% else %} enabled='enabled' {% endif %}
+				class="btn {% if not obj.date_transfert %}
+								{% if obj.fichier_non_redevabilite %} btn-warning {% else %} btn-primary {% endif %}
+						   {% else %}
+								btn-secondary
+						   {% endif %}
+				btn-sm js-upload-entity"
+				data-url="{% url 'vehicule_transfert_upload' obj.id %}">
+				<span class="fa fa-paperclip"></span> <!--Upload pièces jointes-->
+			</button>
+
+			<button type="button" title="Attacher les pièces jointes"
+					class="btn {% if obj.date_transfert is None %} btn-danger {% else %} btn-secondary {% endif %} btn-sm js-delete-entity"
+					{% if obj.date_transfert%} disabled='disabled' {% else %} enabled='enabled' {% endif %}
+				data-url="{% url 'vehicule_transfert_delete' obj.id %}">
+				<span class="fa fa-trash"></span> <!--suppression d'un transfert-->
+			</button>
+		{% endif %}
+	</td>
+	<td><div class="text-center">{{obj | filter_status_transfert}}</div></td>
+	<td><div class="text-center {% if not obj.locale %} text-danger {% endif %}"><strong>{{ obj.plaque }}</strong></div></td>
+	<td><div>{{ obj.sous_categorie.nom | show_compte_propre:obj.compte_propre }}</div></td>
+	<td><div>{{ obj.modele }}</div></td>
+	<td><div>{{ obj.contribuable_encien.nom }}<br><span class='bg bg-dark text-white'>&nbsp;{{ obj.contribuable_encien.matricule }}&nbsp;</span></div></td>
+	<td><div>{{ obj.contribuable_nouveau.nom }}<br><span class='bg bg-dark text-white'>&nbsp;{{ obj.contribuable_nouveau.matricule }}&nbsp;</span></div></td>
+	<td>
+		<button type="button" title="{% if obj.note %} {{ obj.note }} {% else %} Créer une note {% endif %}"
+			class="btn btn-link js-update-entity"
+			data-url="{% url 'edit_note' obj.id obj.class_name obj.view_list_name %}">
+			{{ obj | show_me_tr:user }}
+		</button><!--Envoi et Lecture de la note-->
+	</td>
+</tr>
+{% endfor %}

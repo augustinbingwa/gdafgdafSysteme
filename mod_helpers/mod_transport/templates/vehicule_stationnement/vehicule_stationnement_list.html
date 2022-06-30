@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% load transport_filter %}
+
+{% load helper_filter %}
+
+{% block javascript %}
+  <script type="text/javascript">
+    //Initialiser les dates de la période
+    Helpers.DatePicker('va_du'); //Date début
+    Helpers.DatePicker('va_au'); //Date fin
+  </script>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header">   
+    <div class="row">
+      <div class="col-sm-12" style="padding-top: 6px;">
+        <h4 class="card-title mb-0"><i class="fa fa-taxi"></i>&nbsp;Gestion des droits de stationnement</h4>
+      </div>
+    </div>
+  </div>
+  <div class="card-body" style= "overflow-x:auto; padding-top: 5px;">
+    <form method="POST" action="{% url 'vehicule_stationnement_list' %}">
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="btn-toolbar float-left" role="toolbar" aria-label="Toolbar with button groups">
+            <div>
+              <label class="label_search">Du:<input type="text" id="va_du" name="va_du" value="{{ va_du }}" placeholder="" title="Date début" class="form-control search-input"/></label>
+              <label class="label_search">Au:<input type="text" id="va_au" name="va_au" value="{{ va_au }}" placeholder="" title="Date fin" class="form-control search-input"/></label>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-8">
+          <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
+            <div>
+              <label class="label_search">Référence:<input type="text" name="va_numero_activite" value="{{ va_numero_activite }}" placeholder="..." title="Contenant la Référence de l'activité" class="form-control search-input"/></label>
+              <label class="label_search">Marque-Modèle:<input type="text" name="va_modele" value="{{ va_modele }}" placeholder="..." title="Contenant la marque et/ou modèle" class="form-control search-input"/></label>
+              <label class="label_search">Plaque:<input type="text" name="va_plaque" value="{{ va_plaque }}" placeholder="..." title="Contenant le numéro de plaque" class="form-control search-input"/></label>
+              <label class="label_search">Chassis:<input type="text" name="va_chassis" value="{{ va_chassis }}" placeholder="..." title="Contenant le chassis ou cadre" class="form-control search-input"/></label>
+              <label class="label_search">Matricule:<input type="text" name="va_matricule" value="{{ va_matricule }}" placeholder="..." title="Contenant le numéro matricule"  class="form-control search-input"/></label>
+              <label class="label_search">Nom:<input type="text" name="va_nom" value="{{ va_nom }}" placeholder="..." title="Contenant le nom et prénom" class="form-control search-input"/></label>
+              <label class="label_search">Utilisateur:<input type="text" name="va_user_create" value="{{ va_user_create }}" placeholder="..." title="Crée par" class="form-control search-input"/></label>
+              <label class="label_search">
+                Status:
+                <select name="va_status" class="form-control search-input">
+                  <option value="0">...</option>
+                  <option value="1" {% if va_status == '1' %} selected='selected' {% endif %}>Validée</option>
+                  <option value="2" {% if va_status == '2' %} selected='selected' {% endif %}>En attente</option>
+                  <option value="3" {% if va_status == '3' %} selected='selected' {% endif %}>Brouillon</option>
+                </select> 
+              </label>
+              <label><button type="submit" id="btn_search" title="Rechercher/Actualiser" class="btn btn-primary btn-sm search-button"><i class="fa fa-search"></i></button></label>
+              <label>&nbsp;&nbsp;&nbsp;&nbsp;<button type="submit" id="btn_excel" title="Genere excel" class="btn btn-sm btn-success"><i class="fa fa-file-excel-o"></i>&nbsp;Generer excel</button></label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <table class="table table-hover table-bordered table-striped table-outline mb-0 nowrap" id="entity-table" width="100%" cellspacing="0">
+      <thead class="thead-default">
+        <tr>
+          <th class="text-center"></th>
+          <th class="text-center">Action</th>
+          <th class="text-center">Status</th>
+          <th class="text-center">Référence</th>
+          <th class="text-center">Sous-Catégorie</th>
+          <th class="text-center">Véhicule</th>
+          <th class="text-center">Contribuable</th>
+          <th class="text-center">Ouverture</th>
+          <th class="text-center">Crée par</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% include 'vehicule_stationnement/include/_vehicule_stationnement_list.html' %}          
+      </tbody>
+    </table>
+    {% include 'paginator.html' %}
+  </div>
+  <div class="card-footer">{{ lst | nombre_enreg_by_user:user }}</div>
+</div>
+{% endblock %}

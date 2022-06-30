@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% load helper_filter %}
+
+{% block javascript %}
+  <script src="{% static 'js/transport.js' %}"></script>
+  <script type="text/javascript">
+    //Initialiser les dates de la période
+    Helpers.DatePicker('v_du'); //Date début
+    Helpers.DatePicker('v_au'); //Date fin
+  </script>
+{% endblock %}
+
+{% load transport_filter %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header">   
+    <div class="row">
+      <div class="col-sm-8" style="padding-top: 6px;">
+        <h4 class="card-title mb-0"><i class="fa fa-car"></i>&nbsp;Gestion de transfert des véhicules/motos/vélos</h4>
+      </div>
+      <div class="col-sm-4 hidden-sm-down" style="padding-top: 6px;">
+        {% if not user.is_superuser %}
+          <button type="button" class="btn btn-primary float-right js-create-entity" data-url="{% url 'vehicule_create' %}" {% if user.is_superuser or request.user|has_group:'IT_ADMIN' or request.user|has_group:'IT_USERS' %} disabled="disabled" title="Vous n'avez pas droit" {% endif %}>
+            <i class="fa fa-plus"></i>&nbsp;Ajouter un véhicule
+          </button>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+   <div class="card-body" style= "overflow-x:auto; padding-top: 5px;">
+    <form method="POST" action="{% url 'vehicule_transfert_list' %}">
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="btn-toolbar float-left" role="toolbar" aria-label="Toolbar with button groups">
+            <div>
+              <label class="label_search">Du:<input type="text" id="v_du" name="v_du" value="{{ v_du }}" placeholder="" title="Date début" class="form-control search-input"/></label>
+              <label class="label_search">Au:<input type="text" id="v_au" name="v_au" value="{{ v_au }}" placeholder="" title="Date fin" class="form-control search-input"/></label>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-8">
+          <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
+            <div>
+              <label class="label_search">Marque-Modèle:<input type="text" name="v_modele" value="{{ v_modele }}" placeholder="..." title="Contenant la marque et/ou modèle" class="form-control search-input"/></label>
+              <label class="label_search">Plaque:<input type="text" name="v_plaque" value="{{ v_plaque }}" placeholder="..." title="Contenant le numéro de plaque" class="form-control search-input"/></label>
+              <label class="label_search">Chassis:<input type="text" name="v_chassis" value="{{ v_chassis }}" placeholder="..." title="Contenant le chassis ou cadre" class="form-control search-input"/></label>
+              <label class="label_search">Matricule:<input type="text" name="v_matricule" value="{{ v_matricule }}" placeholder="..." title="Contenant le numéro matricule"  class="form-control search-input"/></label>
+              <label class="label_search">Nom de l'encien:<input type="text" name="v_nom_e" value="{{ v_nom_e }}" placeholder="..." title="Contenant le nom et prénom" class="form-control search-input"/></label>
+              <label class="label_search">Nom du nouveu:<input type="text" name="v_nom_n" value="{{ v_nom_n }}" placeholder="..." title="Contenant le nom et prénom" class="form-control search-input"/></label>
+              <label class="label_search">Utilisateur:<input type="text" name="v_user_create" value="{{ v_user_create }}" placeholder="..." title="Crée par" class="form-control search-input"/></label>
+              <label><button type="submit" id="btn_search" title="Rechercher/Actualiser" class="btn btn-primary btn-sm search-button"><i class="fa fa-search"></i></button></label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <table class="table table-hover table-bordered table-striped table-outline mb-0 nowrap" id="entity-table" width="100%" cellspacing="0">
+      <thead class="thead-default">
+        <tr>
+          <th class="text-center"></th>
+          <th class="text-center">Action</th>
+          <th class="text-center">Status</th>
+          <th class="text-center">N°Plaque</th>
+          <th class="text-center">Catégories</th>
+          <th class="text-center">Marque - Modèle</th>
+          <th class="text-center">Encien Propriétaire</th>
+          <th class="text-center">Nouveau Propriétaire</th>
+          <th class="text-center">Transférer par</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% include 'vehicule_transfert/include/_vehicule_transfert_list.html' %}          
+      </tbody>
+    </table>
+    {% include 'paginator.html' %}
+  </div>
+  <div class="card-footer">{{ lst | nombre_enreg_by_user:user }}</div>
+</div>
+{% endblock %}

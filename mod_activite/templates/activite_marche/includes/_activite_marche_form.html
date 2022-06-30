@@ -1,0 +1,96 @@
+{% block javascript %}
+  <script type="text/javascript">
+    $(document).ready(function(){
+        //Autocomplete : Recherche d'une allocation de place dan le marché (le contribuable est déjà rattaché)
+        $("#id_auto_allocation_place_marche").autocomplete({
+            'minLength':3,
+            source: "/activite/allocation_place_marche/autocomplete/",
+            appendTo: idModalEntity,
+            select: function (event, ui) {
+                event.preventDefault();
+                $(this).val(ui.item.label);
+                $("#id_allocation_place_marche").val(ui.item.value);
+            },
+            focus: function (event, ui) {
+                event.preventDefault();
+                $(this).val(ui.item.label);
+            }
+        });
+
+        //Autocomplete : Recherche d'une taxe sur activité marché (Modèl : Taxe)
+        $("#id_auto_taxe").autocomplete({
+            source: "/finance/taxe_activite/autocomplete",
+            'minLength':1,
+            appendTo: idModalEntity,
+            select: function (event, ui) {
+                event.preventDefault();
+                $(this).val(ui.item.label);
+                $("#id_taxe").val(ui.item.value);
+            },
+            focus: function (event, ui) {
+                event.preventDefault();
+                $(this).val(ui.item.label);
+            }
+        });
+  
+        //Date picker : date debut activité
+        Helpers.DatePicker('id_date_debut');
+    });
+  </script>
+{% endblock %}
+
+{% load widget_tweaks %}
+
+<div class="container"> 
+  <div class="row"> 
+    <div class="form-group col-sm-4">
+      <label for="{{ form.numero_activite.id_for_label }}">{{ form.numero_activite.label_tag }}</label>
+      {% render_field form.numero_activite  class+="form-control" %}
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.numero_activite.help_text }}]</em></small></p>
+    </div>
+
+    <div class="form-group col-sm-4">
+      <i class="required_field">*</i>
+      <label for="{{ form.date_debut.id_for_label }}">{{ form.date_debut.label_tag }}</label>
+      {% render_field form.date_debut  class+="form-control" %}
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.date_debut.help_text }}]</em></small></p>
+    </div>
+
+     <div class="form-group col-sm-4">
+      <label for="{{ form.solde_depart.id_for_label }}">{{ form.solde_depart.label_tag }}</label>
+      {% render_field form.solde_depart class+="form-control" %}
+      {% if form.solde_depart.help_text %}
+        <p class="help-inline"><small><em class="help-inline-ext">[{{ form.solde_depart.help_text }}]</em></small></p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group col-sm-12">
+      <i class="required_field">*</i>
+      <label for="{{ form.allocation_place_marche.id_for_label }}">{{ form.allocation_place_marche.label_tag }}</label>
+      <input type="text" name="auto_allocation_place_marche" placeholder="Chercher allocation par contribuable..." class="form-control" id="id_auto_allocation_place_marche" value="{{form.instance.allocation_place_marche}}" {% if form.instance.date_validate %} disabled="disabled" {% endif %}/>
+      <input type="hidden" name="allocation_place_marche" class="form-control" required="" id="id_allocation_place_marche" value="{{form.instance.allocation_place_marche.id}}" />
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.allocation_place_marche.help_text }}]</em></small></p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group col-sm-12">
+      <i class="required_field">*</i>
+      <label for="{{ form.taxe.id_for_label }}">{{ form.taxe.label_tag }}</label>
+      <input type="text" name="auto_taxe" placeholder="Chercher l'activité par code et libellé..." class="form-control" id="id_auto_taxe" value="{{form.instance.taxe}}" {% if form.instance.date_validate %} disabled="disabled" {% endif %}/>
+      <input type="hidden" name="taxe" class="form-control" required="" id="id_taxe" value="{{form.instance.taxe.id}}" />
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.taxe.help_text }}]</em></small></p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group col-sm-12">
+      <i class="required_field">*</i>
+      <label for="{{ form.ai_cout_carte.id_for_label }}">{{ form.ai_cout_carte.label_tag }}</label>
+      {% render_field form.ai_cout_carte  class+="form-control" %}
+       <p class="help-inline"><small><em class="help-inline-ext">[{{ form.ai_cout_carte.help_text }}]</em></small></p>
+    </div>
+  </div>
+</div>

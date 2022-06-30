@@ -1,0 +1,83 @@
+{% load static %}
+
+<div class="sidebar">
+    <nav class="sidebar-nav">
+        <ul class="nav">
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-people"></i>Contribuable</a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'physique_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Physique</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'morale_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Morale</a>
+                    </li>                   
+                </ul>
+            </li>
+            
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-files-o"></i>Activités</a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'allocation_place_marche_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Allocation place</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'visite_site_touristique_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Site touristique</a>
+                    </li>
+                </ul>
+            </li>
+            
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-credit-card"></i>Avis d'imposition</a>
+               <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <!-- mod_parametrage.enums.choix_taxe_filter.TAXE_ACTIVITE_EXCEPTIONNELLE -->
+                        <a class="nav-link" href="{% url 'avis_imposition_list' TAXE_ACTIVITE_EXCEPTIONNELLE %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Exceptionnelle</a>
+                    </li>
+                    <li class="nav-item">
+                        <!-- mod_parametrage.enums.choix_taxe_filter.TAXE_VISITE_SITE_TOURISTIQUE -->
+                        <a class="nav-link" href="{% url 'avis_imposition_list' TAXE_VISITE_SITE_TOURISTIQUE %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Accès site touristique</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-credit-card-alt"></i>Notes d'imposition</a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'ni_activite_standard_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;NI-Activité Standard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'ni_activite_marche_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;NI-Activité Marché</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'ni_allocation_place_marche_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;NI-Place Marché</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'ni_allocation_espace_publique_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;NI-Espace Publique</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'ni_allocation_panneau_publicitaire_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;NI-Panneau Pub</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'ni_publicite_mur_cloture_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;NI-Pub Mur.Clôture</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'ni_vehicule_activite_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;NI-Transport Mun</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'ni_droit_stationnement_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;NI-Stationnement</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'ni_vehicule_proprietaire_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;NI-Taxe Propriété</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'ni_impot_foncier_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;NI-Impôt Foncier</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="divider"></li>
+        </ul>
+    </nav>
+    <button class="sidebar-minimizer brand-minimizer" type="button"></button>
+</div>

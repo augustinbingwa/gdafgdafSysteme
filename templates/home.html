@@ -1,0 +1,36 @@
+<!--GESTION DES TABLEAUX DE BORD SELON GROUP-->
+{% extends 'base.html' %}
+
+{% load helper_filter %}
+
+{% block content %}
+	{% csrf_token %}
+
+	{% if user.is_superuser or request.user|has_group:'IT_ADMIN' or request.user|has_group:'IT_USERS' %}
+		{% include 'admin/home_admin.html' %}
+	{% else %}
+		{% if request.user|has_group:'MENU_CONTRIBUABLE' %}
+			{% include 'contribuable/home_contribuable.html' %}
+		{% endif %}
+
+		{% if request.user|has_group:'MENU_TECHNIQUE' %}
+			{% include 'technique/home_technique.html' %}
+		{% endif %}
+
+		{% if request.user|has_group:'MENU_COMMUNICATION' %}
+			{% include 'communication/home_communication.html' %}
+		{% endif %}
+
+		{% if request.user|has_group:'MENU_IMPOSITION' %}
+			{% include 'imposition/home_imposition.html' %}
+		{% endif %}
+
+		{% if request.user|has_group:'MENU_RECETTE' %}
+			{% include 'recette/home_recette.html' %}
+		{% endif %}
+
+		{% if request.user|has_group:'MENU_TRANSPORT' %}
+			{% include 'transport/home_transport.html' %}
+		{% endif %}
+	{% endif %}
+{% endblock %}

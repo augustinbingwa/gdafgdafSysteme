@@ -1,0 +1,133 @@
+{% block javascript %}
+  <script type="text/javascript">
+    //Mettre à jour le champs accessibilité
+    Manage_Accessibilite();
+   
+    //Auto complete contribuable
+    $(document).ready(function(){
+      $( "#id_auto_contribuable" ).autocomplete({
+        'minLength':3,
+        source: "/crm/contribuable/autocomplete/",
+        appendTo: idModalEntity,
+        select: function(event, ui) {
+            event.preventDefault();
+            $(this).val(ui.item.label); 
+            $("#id_contribuable").val(ui.item.value);                
+        },
+        focus: function(event, ui) {
+            event.preventDefault();                    
+            $(this).val(ui.item.label);
+        }
+      });
+
+      //Autocomplete Adresse (Commune - Zone - Quartier)
+      $( "#id_auto_adresse" ).autocomplete({
+        'minLength':3,
+        source: "/parametrage/adresse/zone/autocomplete/",
+        appendTo: idModalEntity,
+        select: function(event, ui) {
+            event.preventDefault();
+            $(this).val(ui.item.label); 
+            $("#id_adresse").val(ui.item.value); 
+        },
+        focus: function(event, ui) {
+            event.preventDefault();                    
+            $(this).val(ui.item.label);
+        },
+      });
+
+      //Rue ou Avenue autocomplete
+      jQuery('#id_auto_numero_rueavenue').autocomplete({
+        'search':function(event,ui){
+            var newUrl="/parametrage/adresse/zone/quartier/"+$("#id_adresse").val()+"/rue_avenue/autocomplete/";
+            $(this).autocomplete("option", "source", newUrl)
+        },
+        'minLength':1,
+        appendTo: idModalEntity,
+        select: function(event, ui) {
+          event.preventDefault();
+          $(this).val(ui.item.label); 
+          $("#id_numero_rueavenue").val(ui.item.value);
+
+          // Seléctionner l'accessibilité
+          $("#id_accessibilite").val(ui.item.accessibilite_id);
+
+          // Gérer le contrôle
+          if (ui.item.accessibilite_id != null) {
+            $('#id_accessibilite').addClass("disabled-element"); 
+          }else{
+            $('#id_accessibilite').removeClass("disabled-element");
+          }
+        },
+        focus: function(event, ui) {
+          event.preventDefault();                    
+          $(this).val(ui.item.label);
+        },
+        'source':[]
+      });
+  });
+  </script>
+{% endblock %}
+
+{% load widget_tweaks %}
+ <!--champ caché categorie-->
+ {% render_field form.categorie  class+="form-control" %}
+
+<div class="container">
+  <div class="row"> 
+    <div class="form-group col-sm-3">
+      <i class="required_field">*</i>
+      <label for="{{ form.numero_parcelle.id_for_label }}">{{ form.numero_parcelle.label_tag }}</label>
+      {% render_field form.numero_parcelle  class+="form-control" %}
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.numero_parcelle.help_text }}]</em></small></p>
+    </div>
+
+    <div class="form-group col-sm-6">
+      <i class="required_field">*</i>
+      <label for="{{ form.adresse.id_for_label }}">{{ form.adresse.label_tag }}</label>  
+      <input type="text" name="auto_adresse" placeholder="Chercher adresse..." class="form-control {% if form.instance.date_validate %} disabled-element {% endif %}" id="id_auto_adresse" value="{{form.instance.adresse}}" required="required"/>
+      <input type="hidden" name="adresse" class="form-control" id="id_adresse" value="{{form.instance.adresse.id}}" />
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.adresse.help_text }}]</em></small></p>
+    </div>
+
+    <div class="form-group col-sm-3">
+      <i class="required_field">*</i>
+      <label for="{{ form.numero_rueavenue.id_for_label }}">{{ form.numero_rueavenue.label_tag }}</label>  
+      <input type="text" name="auto_numero_rueavenue" placeholder="Chercher ..." class="form-control {% if form.instance.date_validate %} disabled-element {% endif %}" id="id_auto_numero_rueavenue" value="{{ form.instance.numero_rueavenue | default:'' }}" required="required"/>
+      <input type="hidden" name="numero_rueavenue" class="form-control" id="id_numero_rueavenue" value="{{form.instance.numero_rueavenue.id}}" />
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.numero_rueavenue.help_text }}]</em></small></p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group col-sm-3">
+      <label for="{{ form.numero_police.id_for_label }}">{{ form.numero_police.label_tag }}</label>     
+      {% render_field form.numero_police  class+="form-control" %}
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.numero_police.help_text }}]</em></small></p>
+    </div>   
+    
+    <div class="form-group col-sm-3" id="div_accessibilite">
+      <i class="required_field">*</i>
+      <label for="{{ form.accessibilite.id_for_label }}">{{ form.accessibilite.label_tag }}</label>
+      {% render_field form.accessibilite class+="form-control" %}
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.accessibilite.help_text }}]</em></small></p>
+    </div>
+
+    <div class="form-group col-sm-6">
+      <i class="required_field">*</i>
+      <label for="{{ form.contribuable.id_for_label }}">{{ form.contribuable.label_tag }}</label>  
+      <input type="text" name="auto_contribuable" placeholder="Chercher contribuable..." class="form-control {% if form.instance.date_validate %} disabled-element {% endif %}" id="id_auto_contribuable" value="{{form.instance.contribuable}}" required="required"/>
+      <input type="hidden" name="contribuable" class="form-control" id="id_contribuable" value="{{form.instance.contribuable.id}}"/>
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.contribuable.help_text }}]</em></small></p>
+    </div>
+  </div>    
+
+  <div class="row">
+    <div class="form-group col-sm-12">
+      <i class="required_field">*</i>
+      <label for="{{ form.taxe.id_for_label }}">{{ form.taxe.label_tag }}</label>
+      {% render_field form.taxe  class+="form-control" %}
+       <p class="help-inline"><small><em class="help-inline-ext">[{{ form.taxe.help_text }}]</em></small></p>
+    </div>
+  </div>
+</div>

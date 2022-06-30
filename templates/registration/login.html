@@ -1,0 +1,130 @@
+{% load static %}
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Mairie - LES DOCUMENTS FINANCIERS ET ADMINISTRATIFS ">
+    <meta name="author" content="yzy solutions">
+    <meta name="keyword" content="Mairie, burundi">
+    <link rel="shortcut icon" href="{% static '/img/favicon.png' %}">
+    <title>GDAF</title>
+    <link href="{% static '/css/font-awesome.css' %}" rel="stylesheet">
+    <link href="{% static '/css/simple-line-icons.css' %}" rel="stylesheet">
+    <link href="{% static '/css/style.css' %}" rel="stylesheet">
+    <style type="text/css">
+        body{
+            align-items: baseline !important; 
+            background-image: url('static/img/bg.png')
+        }
+    </style>    
+</head>
+
+<body class="app flex-row align-items-center" >
+    {% block content %}  
+  <!-- <div class = "container-login100"> -->     
+  
+    <div class="container">       
+        <div class="row justify-content-center" style="text-align: center;margin-bottom: 10px;margin-top: 45px;">
+            <div class="col-md-12">
+              <h4 style="color: #fff;">REPUBLIQUE DU BURUNDI
+                <br>MINISTÈRE DE L'INTÉRIEUR, DU DÉVELOPPEMENT COMMUNAUTAIRE ET DE LA SÉCURITÉ PUBLIQUE <br><br><strong>MUNICIPALITE DE BUJUMBURA</strong>
+              </h4>             
+            </div> 
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card-group mb-0 login-box">
+                    <div class="p-4 container-login100 login-content" style="background-color: #D5ECE8;">
+                        <div class="card-body">
+                             <form method="post" action="{% url 'login' %}">
+                                {% csrf_token %}
+                                <h1 style="font-size: 20px;text-align: center;">BIENVENUE SUR L'APPLICATION DE <br>GESTION DES DOCUMENTS ADMINISTRATIFS ET FINANCIERS<br>
+                                  DE LA MUNICIPALITE DE BUJUMBURA<br>(<strong>G D A F</strong>)</h1>
+                                <p class="text-muted"><strong>Ouvrir une session</strong></p>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-addon"><i class="icon-user"></i></span>
+                                     {% render_field form.username class+="form-control"  %}
+                                </div>
+                                <div class="input-group mb-4">
+                                    <span class="input-group-addon"><i class="icon-lock"></i></span>
+                                     {% render_field form.password class+="form-control"  %}
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <button class="btn btn-primary px-4" type="submit" value="login"><i class="fa fa-check" aria-hidden="true"></i>&nbsp; Se connecter</button>
+                                        <input type="hidden" name="next" value="{{ next }}" />
+                                        <img  src="{% static '/img/logo-mairie.png' %}" alt="logo" style="width: 30%;float: right;">
+                                    </div>
+                                </div>
+                             </form>
+                        </div>
+                        {% if form.errors %}                            
+                            <p style="color: #FB584C;">Erreur, votre nom d'utilisateur et votre mot de passe ne correspondent pas. Veuillez réessayer!!!</p>
+                        {% endif %}
+
+                        {% if next %}
+                            {% if user.is_authenticated %}
+                                <p style="color: #FB584C;">Erreur, votre compte n'a pas accès à cette applicatiton. Veuillez vous connecter avec un compte valide!!!</p>                           
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+    <!-- </div> -->
+    {% endblock %} 
+     <!-- Bootstrap and necessary plugins -->
+    <script src = "{% static 'js/library/jquery.min.js' %}"></script>
+    <script src = "{% static 'js/library/popper.min.js' %}"></script>
+    <script src = "{% static 'js/library/bootstrap.min.js' %}"></script>   
+    <script src = "{% static 'js/library/pace.min.js' %}"></script>
+    <!-- Plugins and scripts required by all views -->
+    <script src = "{% static 'js/library/chart.min.js' %}"></script>
+    <script src = "{% static 'js/library/screenfull.min.js' %}"></script>
+     <!--  main scripts -->
+    <script src = "{% static 'js/app.js' %}"></script>
+
+</body>
+
+</html>
+<style>
+        .container-login100 {
+          width: 100%; 
+          
+          display: -webkit-box;
+          display: -webkit-flex;
+          display: -moz-box;
+          display: -ms-flexbox;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          align-items: center;
+          padding: 15px;
+          background: #ffffff;
+          /*background: -webkit-linear-gradient(bottom, #0250c5, #d43f8d);
+          background: -o-linear-gradient(bottom, #0250c5, #d43f8d);
+          background: -moz-linear-gradient(bottom, #0250c5, #d43f8d);
+          background: linear-gradient(bottom, #0250c5, #d43f8d);*/
+          position: relative;
+          z-index: 1;
+    }
+    .container-login100::before {
+      content: "";
+      display: block;
+      position: absolute;
+      z-index: -1;
+      width: 70%;
+      height: 100%;
+      margin-left: 122px;
+      top: 0;
+      left: 0;
+      /*background-image: url('../static/img/fond.png');
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;*/
+    }
+</style>

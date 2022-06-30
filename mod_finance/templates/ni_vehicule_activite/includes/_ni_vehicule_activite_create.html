@@ -1,0 +1,79 @@
+{% load impot_filter %}
+
+{% load helper_filter %}
+
+{% block javascript %}
+  <script type="text/javascript">
+    //--------------------------------------------------------------------------------
+    //---------- MESSAGE DE CONFIRMATION PERMETTANT D'EXECUTER DE GENERER  -----------
+    //---- UNE ECRITURE DE NOTE POUR UNE ACTIVITE MUNICIPALE EXTERNE-TEMPORAIRE ------
+    //--------------------------------------------------------------------------------
+    function _Ecriture_Externe(pk, url, message)
+    {
+      var annee = $("#id_annee").val();
+      var periode_id = $("#id_periode").val();
+
+      $("#modal-entity").css("opacity","0.75");
+      var onYesClicked = function(){
+        $("#modal-entity").css("opacity","1");
+
+        // Exectuter l'ecriture externe
+        $.ajax({
+          url : url,
+          type : "POST",
+          data : {"id": pk , "annee" : annee, "periode_id":periode_id},
+          dataType : "json",
+          success : function(data){
+            //fermer le pop-up principal
+            Helpers.HideModalEntity();
+            
+            //Ouvrir la liste (avec paginator)
+            location.href = data.url_redirect; //window.open(data.url_redirect);
+          }
+        });
+        
+        return true;
+      }
+
+      // Ouvrir le message de confirmation
+      Helpers.ShowMessageAlert(message, onYesClicked);
+    }
+  </script>
+{% endblock %}
+
+<form method="post" action="{% url 'ni_vehicule_activite_create' entity.id %}" class="js-entity-create-form">
+   {% csrf_token %}
+  <div class="modal-header">
+    <h4 class="modal-title"><i class="fa fa-credit-card-alt"></i>&nbsp;Créer une note d'imposition - Activité municipale Réf-<em>{{ entity | get_reference_object }}</em></h4>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+     {% include 'ni_vehicule_activite/includes/_ni_vehicule_activite_form.html' %}
+  </div>
+  <div class="modal-footer">
+    <!--DETETER SI IL Y A AU MOINS UNE NOTE NON PAYEE ET RENDRE INVISIBLE LES BOUONS D'ATIONS-->
+    {% if entity|has_any_note_not_payed %}
+      {{ entity|show_any_note_not_payed }} <!--Message d'erreur-->
+      <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close"></i>&nbsp;Fermer</button>
+    {% else %}
+      {% if request.user|has_group:'ECRITURE' and entity.is_ecriture_valid %}
+        {% if request.user|has_group:'ECRITURE_EXT_CARTE_MUNICIPALE' %}
+          <!--MESSAGE D'AVERTISSSEMENT-->
+          <span class="text-danger"><strong class="text-primary">AVERTISEMENT:</strong> Le montant de cette activité sera égal à <strong>ZERO</strong> si vous générez sa note pour une activité <strong>EXTERNE TEMPORAIRE</strong> de la période mentionnée.</span>
+          
+          <!-- GENERER ECRITURE EXTERNE : CONFIRMATION de la note à ZERO Pour les voitures qui exercent temporairement des activités à l'exterieur-->  
+          <button type="button" class="btn btn-warning" title="Générer la note de cette activité EXTERNE" onclick='_Ecriture_Externe("{{ entity.id }}", "ecriture_externe/", "Êtes-vous sûr de vouloir générer la note de cette activité ? <br>&laquo;<em class=text-danger>AVERTISSSEMENT: la note sera toujours générée et le montant deviendra ZERO car ce véhicule a exercé une activité externe pour cette période.</em>&raquo;<br><em class=text-primary>&rarr; Si OUI, veuillez attacher la carte municipale externe (obligatoire)!<em/>")'><i class="fa fa-check"></i>&nbsp;Ecriture Externe</button>
+        {% else %}
+          <!-- GENERER ECRITURE : EXECUTION du bouton invisible-->  
+          <button type="submit" id="btn_ecriture" style="visibility: hidden;"></button>
+
+          <!-- GENERER ECRITURE : CONFIRMATION -->  
+          <button type="button" class="btn btn-danger" title="Générer la note d'imposition" onclick="_ExecuteButtonAction('btn_ecriture', 'Êtes-vous sûr de vouloir générer la note de cette activité pour la période seléctionnée ?')"><i class="fa fa-check"></i>&nbsp;Ecriture</button>
+        {% endif %}
+      {% endif %}
+      <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-undo"></i>&nbsp;Annuler</button>
+    {% endif %}
+  </div>
+</form>

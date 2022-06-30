@@ -1,0 +1,40 @@
+{% block javascript %}
+  <script type="text/javascript">
+    $(document).ready(function(){
+      
+
+    });
+  </script>
+{% endblock %}
+
+{% load widget_tweaks %}
+
+<div class="container"> 
+  <div class="row">
+    <div class="form-group col-sm-3">
+      <label for="{{ form.type.id_for_label }}">{{ form.type.label_tag }}</label>       
+      {% render_field form.type  class+="form-control" %}
+      <p class="help-inline"></p>
+    </div>
+
+    <div class="form-group col-sm-3">
+      <label for="{{ form.user_validate.id_for_label }}">{{ form.user_validate.label_tag }}</label>
+      {% render_field form.user_validate  class+="form-control" %}
+      <p class="help-inline"></p>
+    </div>
+
+    <div class="form-group col-sm-6">
+      <label for="{{ form.objet.id_for_label }}">{{ form.objet.label_tag }}</label>
+      {% render_field form.objet  class+="form-control" %}
+      <p class="help-inline"></p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group col-sm-12">
+      <label for="{{ form.message.id_for_label }}">{{ form.message.label_tag }}</label>
+      {% render_field form.message  class+="form-control" %}
+      <p class="help-inline"></p>
+    </div>
+  </div> 
+</div>

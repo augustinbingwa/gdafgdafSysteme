@@ -1,0 +1,29 @@
+{% load widget_tweaks %}
+
+<form method="post" action="{% url 'foncier_expertise_delete' form.instance.pk %}" class="js-entity-delete-form">
+  {% csrf_token %}
+   <div class="modal-header">
+    <h4 class="modal-title"><i class="fa fa-times-circle" style="color: red;"></i>&nbsp;Annulation de la déclaration n°{{ form.instance }}</h4>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="container">
+      <div class="row">
+        <div class="form-group col-sm-12">
+          <i class="required_field">*</i>
+          <label for="{{ form.motif_delete.id_for_label }}">{{ form.motif_delete.label_tag }}</label>
+          {% render_field form.motif_delete  class+="form-control" %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    {% if form.instance.date_validate %}
+      <button type="button" class="btn btn-danger" title="Annulation partielle" onclick="_Delete('{{ form.instance.pk }}', 'delete_action/', 'Êtes-vous sûr de vouloir annuler cette déclaration ?',1)"> <i class="fa fa-remove"></i>&nbsp;Annulation partielle</button>
+      <button type="button" class="btn btn-danger" title="Annulation Totale" onclick="_Delete('{{ form.instance.pk }}', 'delete_action/', 'Êtes-vous sûr de vouloir annuler cette déclaration ?',2)"> <i class="fa fa-remove"></i>&nbsp;Annulation Totale</button>
+    {% endif %}
+    <button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-undo"></i>&nbsp;Fermer</button>
+  </div>
+</form>

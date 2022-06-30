@@ -1,0 +1,143 @@
+{% block javascript %}
+  <script type="text/javascript">
+    $(document).ready(function(){
+      //Auto complete contribuable
+      $( "#id_auto_contribuable" ).autocomplete({
+        'minLength':3,
+        source: "/crm/contribuable/autocomplete/",
+        appendTo: idModalEntity,
+        select: function(event, ui) {
+            event.preventDefault();
+            $(this).val(ui.item.label);
+            $("#id_contribuable").val(ui.item.value);
+        },
+        focus: function(event, ui) {
+            event.preventDefault();
+            $(this).val(ui.item.label);
+        }
+      });
+
+      //Autocomplete : Recherche d'une taxe sur activité marché (Modèl : Taxe)
+      $("#id_auto_taxe").autocomplete({
+          source: "/finance/taxe_activite/autocomplete",
+          'minLength':1,
+          appendTo: idModalEntity,
+          select: function (event, ui) {
+              event.preventDefault();
+              $(this).val(ui.item.label);
+              $("#id_taxe").val(ui.item.value);
+          },
+          focus: function (event, ui) {
+              event.preventDefault();
+              $(this).val(ui.item.label);
+          }
+      });
+
+      //Autocompletion de l'allocation de l'espace/parcelle publique non occupée et validée
+      $( "#id_auto_allocation_espace_publique" ).autocomplete({
+        'minLength':3,
+        source: "/activite/allocation_parcelle_publique/autocomplete/",
+        appendTo: idModalEntity,
+        select: function(event, ui) {
+          event.preventDefault();
+          $(this).val(ui.item.label);
+          $("#id_allocation_espace_publique").val(ui.item.value);
+
+          // Reloader le contribuable et l'adresse et rue_avenue de l'allocation selectionnée
+          $("#id_contribuable").val(ui.item.contribuable_id);
+          $("#id_auto_contribuable").val(ui.item.acontribuable_label);
+
+          $("#id_adresse").val(ui.item.adresse_id);
+          $("#id_auto_adresse").val(ui.item.adresse_label);
+
+          $("#id_numero_rueavenue").val(ui.item.numero_rueavenue_id);
+          $("#id_auto_numero_rueavenue").val(ui.item.numero_rueavenue_label);
+        },
+        focus: function(event, ui) {
+          event.preventDefault();
+          $(this).val(ui.item.label);
+        }
+      });
+
+      //Autocomplete Adresse (Commune - Zone - Quartier)
+      $( "#id_auto_adresse" ).autocomplete({
+        'minLength':3,
+        source: "/parametrage/adresse/zone/autocomplete/",
+        appendTo: idModalEntity,
+        select: function(event, ui) {
+            event.preventDefault();
+            $(this).val(ui.item.label);
+            $("#id_adresse").val(ui.item.value);
+        },
+        focus: function(event, ui) {
+            event.preventDefault();
+            $(this).val(ui.item.label);
+        },
+      });
+
+      //Rue ou Avenue autocomplete
+      jQuery('#id_auto_numero_rueavenue').autocomplete({
+        'search':function(event,ui){
+            var newUrl="/parametrage/adresse/zone/quartier/"+$("#id_adresse").val()+"/rue_avenue/autocomplete/";
+            $(this).autocomplete("option", "source", newUrl)
+        },
+        'minLength':1,
+        appendTo: idModalEntity,
+        select: function(event, ui) {
+          event.preventDefault();
+          $(this).val(ui.item.label);
+          $("#id_numero_rueavenue").val(ui.item.value);
+        },
+        focus: function(event, ui) {
+          event.preventDefault();
+          $(this).val(ui.item.label);
+        },
+        'source':[]
+      });
+
+      //!!! IMPOTANT POUR LA VALIDATION -> Forcer la désactivation (Ceci est dû à l'event OnTypeEspaceChange())!!!
+      {% if form.instance.date_validate %}
+        $('#id_auto_contribuable').attr("disabled", true);
+        $('#id_auto_adresse').attr("disabled", true);
+        $('#id_auto_numero_rueavenue').attr("disabled", true);
+        $('#id_numero_police').attr("disabled", true);
+      {% endif %}
+    });
+
+    //Date picker : date debut activité
+    Helpers.DatePicker('id_date_debut');
+
+    //Mettre le numero de police en majiscule
+    To_Majiscule('#id_numero_police');
+  </script>
+{% endblock %}
+{% load contribuable_filter %}
+{% load widget_tweaks %}
+
+<div class="container">
+  <div class="row">
+    <div class="form-group col-sm-3">
+      <label for="{{ form.reference.id_for_label }}">{{ form.reference.label_tag }}</label>
+      {% render_field form.reference  class+="form-control" %}
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.reference.help_text }}]</em></small></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group col-sm-12">
+      <i class="required_field" id="contribuable_required">*</i>
+      <label for="{{ form.contribuable.id_for_label }}">{{ form.contribuable.label_tag }}</label>
+      <input type="text" name="auto_contribuable" placeholder="Chercher le contribuable..." class="form-control" id="id_auto_contribuable" value="{{form.instance.contribuable}}" />
+      <input type="hidden" name="contribuable" class="form-control" required="" id="id_contribuable" value="{{form.instance.contribuable.id}}"/>
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.contribuable.help_text }}]</em></small></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group col-sm-12">
+      <i class="required_field">*</i>
+      <label for="{{ form.libelle.id_for_label }}">{{ form.libelle.label_tag }}</label>
+      {% render_field form.libelle class+="form-control" %}
+      <p class="help-inline"><small><em class="help-inline-ext">[{{ form.libelle.help_text }}]</em></small></p>
+    </div>
+  </div>
+
+</div>

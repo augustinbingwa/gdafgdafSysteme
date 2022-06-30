@@ -1,0 +1,65 @@
+{% block javascript %}
+
+{% endblock %}
+
+{% load contribuable_filter %}
+
+{% for obj in lst %}
+<tr>
+	<td class="text-center">{{ forloop.counter }}</td>
+	<td class="text-center">
+		{% if obj.user_create == user %} 
+			<button type="button" title="{% if obj.date_validate is None  %} Mettre à jour les informations {% else %} Visualiser les informations {% endif %}"
+				class="btn {% if obj.date_validate is None %} btn-primary {% else %} btn-secondary {% endif %} btn-sm js-update-entity"
+				data-url="{% url 'morale_update' obj.id %}">
+				<span class="{% if obj.date_validate is None  %} fa fa-edit {% else %} fa fa-folder-open-o {% endif %}"></span> <!--Edition-->
+			</button>
+		{% else %}
+			<button type="button" title="Visualiser les informations"
+				{% if not user.is_superuser %} 
+					{% if obj.date_validate %} enabled='enabled' {% else %} disabled='disabled' {% endif %}	
+				{% endif %}
+				class="btn btn-secondary btn-sm js-update-entity"
+				data-url="{% url 'morale_update' obj.id %}">
+				<span class="fa fa-folder-open-o"></span> <!--Visualisation-->
+			</button>
+		{% endif %}
+
+		{% if user.is_superuser %} <!--SUPPRESSION INTERDITE-->
+			<button type="button" title="{% if not obj.date_validate %} Supprimer ce contribuable {% endif %}"
+				{% if obj.date_validate is None %} enabled='enabled' {% else %} disabled='disabled' {% endif %}
+				{% if obj.user_create != user %} 
+					disabled='disabled' 
+					class="btn btn-secondary btn-sm"
+				{% else %}
+					class="btn {% if obj.date_validate is None %} btn-danger {% else %} btn-secondary {% endif %} btn-sm js-delete-entity"
+				{% endif %}
+				data-url="{% url 'morale_delete' obj.id %}">
+				<span class="fa fa-trash"></span> <!--Suppr-->
+			</button>
+		{% endif %}			
+		
+		<button type="button" title="{% if obj.date_validate and obj.nif_file %} Visualiser les pièces jointes {% else %} Attacher les pièces jointes {% endif %}"
+			{% if not obj.date_validate and obj.user_create != user %} disabled='disabled' {% else %} enabled='enabled' {% endif %}
+			class="btn btn-secondary btn-sm js-upload-entity"
+			data-url="{% url 'morale_upload' obj.id %}">
+			<span class="fa fa-paperclip"></span> <!--Pièce jointe-->
+		</button>
+	</td>
+	<td><div class="text-center">{{ obj |filter_status_validate }} </div></td>	
+	<td><div class="text-center"><strong>{{ obj.matricule }}</strong></div></td>
+	<td><div>{{ obj.nom }}</div></td>
+	<td><div class="text-center">{{ obj.type_caractere|filter_type_caractere }}</div></td>
+	<td><div> {{ obj.adresse }} - {{ obj.numero_rueavenue }} {{ obj.numero_police | numero_police_is_none }} {{ obj.adresse_exacte | filter_adresse_none}}</div></td>
+	<td><div class="text-center">{{ obj.tel | phone_format }}</div></td>
+	<td><div class="text-center">{{ obj.statut_numero }}</div></td>
+	<td><div class="text-center">{{ obj.rc_numero }}</div></td>
+	<td>
+		<button type="button" title="{% if obj.note %} {{ obj.note }} {% else %} Créer une note {% endif %}"
+			class="btn btn-link js-update-entity"
+			data-url="{% url 'edit_note' obj.id obj.class_name obj.view_list_name %}">
+			{{ obj | show_me:user }}
+		</button><!--Envoi et Lecture de la note-->
+	</td>
+</tr>
+{% endfor %}

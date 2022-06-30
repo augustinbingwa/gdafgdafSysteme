@@ -1,0 +1,33 @@
+{% load transport_filter %}
+
+{% load helper_filter %}
+
+{% for obj in lst %}
+<tr>
+	<td class="text-center">{{ forloop.counter }}</td>
+	<td class="text-center">
+		<!--GENERER LA NOTE D'IMPISITION DE LA PERIODE SUIVANTE-->
+		<button type="button" title="Générer la note de la période suivante" 
+			class="btn {% if obj.is_ecriture_valid and request.user|has_group:'ECRITURE' %} btn-primary {% else %} btn-secondary {% endif %} btn-sm js-update-entity" 
+			data-url="{% url 'ni_droit_stationnement_create' obj.id %}"
+			{% if not obj.is_ecriture_valid or not request.user|has_group:'ECRITURE' %} 
+				disabled="disabled"
+			{% endif %}>
+			<span class="fa fa-check"></span>
+		</button>
+	</td>
+	<td><div align="center">{{ obj | filter_status_validate:True }}</div></td>
+	<td><div align="center"><strong>{{ obj.numero_activite }}</strong></div></td>
+	<td><div>{{ obj.vehicule.sous_categorie.nom | show_compte_propre:obj.vehicule.compte_propre }}</div></td>
+	<td><div><strong>{{ obj.vehicule.plaque }}</strong> - ({{ obj.vehicule.modele }})</div></td>
+	<td><div>{{ obj.contribuable.nom }}<br><span class='bg bg-dark text-white'>&nbsp;{{ obj.contribuable.matricule }}&nbsp;</span></div></td>
+	<td><div align="center"> {{ obj.date_debut | date:"d/m/Y" }}</div></td>
+	<td>
+		<button type="button" title="{% if obj.note %} {{ obj.note }} {% else %} Créer une note {% endif %}"
+			class="btn btn-link js-update-entity"
+			data-url="{% url 'edit_note' obj.id obj.class_name obj.view_list_name %}">
+			{{ obj | show_me:user }}
+		</button><!--Envoi et Lecture de la note-->
+	</td>
+</tr>
+{% endfor %}

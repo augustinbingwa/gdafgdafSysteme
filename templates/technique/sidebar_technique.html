@@ -1,0 +1,42 @@
+{% load static %}
+
+<div class="sidebar">
+    <nav class="sidebar-nav">
+        <ul class="nav">
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-people"></i>Contribuable</a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'physique_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Physique</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'morale_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Morale</a>
+                    </li>                   
+                </ul>
+            </li>
+
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-map-signs"></i>Impôt foncier</a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'foncier_parcelle_publique_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Espace publique</a>
+                    </li> 
+                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'allocation_espace_publique_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;Allocation d'éspace</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-credit-card-alt"></i>Notes d'imposition</a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'ni_allocation_espace_publique_list' %}">&nbsp;&nbsp;&nbsp;&nbsp;&#x2023;&nbsp;NI-Espace Publique</a> <!--EN MODE IMPRESSION UNIQUEMENT : IMPORTANT-->
+                    </li>
+                </ul>
+            </li>  
+            <li class="divider"></li>
+        </ul>
+    </nav>
+    <button class="sidebar-minimizer brand-minimizer" type="button"></button>
+</div>

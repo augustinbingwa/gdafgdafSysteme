@@ -1,0 +1,1 @@
+from mod_crm.submodels.model_contribuable import * #Import de tous les models de contribution.py

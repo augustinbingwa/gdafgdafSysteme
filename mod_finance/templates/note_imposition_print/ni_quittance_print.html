@@ -1,0 +1,40 @@
+{% load widget_tweaks %}
+
+{% load impot_filter %}
+
+<form method="post" action="{% url 'ni_quittance_print' form.instance.pk %}" class="js-entity-update-form">
+   {% csrf_token %}
+  <div class="modal-header">
+    <h4 class="modal-title"><i class="fa fa-print"></i>&nbsp;Mise à jour du numéro physique de la quittance. Réf-{{ form.instance.reference }}</h4>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+         <div class="container"> 
+      <div class="row">
+        <div class="form-group col-sm-8">
+          <label for="{{ form.numero_carte_physique.id_for_label }}">{{ form.numero_carte_physique.label_tag }}</label>       
+          {% render_field form.numero_carte_physique class+="form-control" %}
+          <p class="help-inline"><small><em class="help-inline-ext">[{{ form.numero_carte_physique.help_text }}]</em></small></p>
+        </div>
+        <div class="form-group col-sm-4">
+          <label for="{{ form.nombre_impression.id_for_label }}">{{ form.nombre_impression.label_tag }}</label>
+          <input type="text" name="auto_nombre_impression" class="form-control" id="id_auto_nombre_impression" value="{{ form.instance.nombre_impression | get_print_quota }}" disabled="disabled" />
+          <p class="help-inline"><small><em class="help-inline-ext">[{{ form.nombre_impression.help_text }}]</em></small></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <!--Elément d'impression (download direct)-->
+    <a id="print_card" href="{% url 'ni_quittance_print_pdf' form.instance.pk %}" target="_blank"></a>
+    
+    {% if form.instance|is_print_number_achieved %}
+      <span class='bg bg-warning' align="right">&nbsp; Nombre d'impressions atteint, veuillez demander une autorisation à votre supérieur.&nbsp;</span>
+    {% endif %}
+    <!--Action de confirmation de l'impression-->
+    <button type="button" class="btn btn-success" onclick="_Print_Confirm('{{ form.instance.pk }}', '{% url 'ni_quittance_print_confirm' form.instance.pk %}', 'Êtes-vous sûr de vouloir imprimer cette quittance ?')"> <i class="fa fa-print"></i>&nbsp; &nbsp; Imprimer</button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-undo"></i>&nbsp; &nbsp;Annuler</button> 
+  </div>
+</form>

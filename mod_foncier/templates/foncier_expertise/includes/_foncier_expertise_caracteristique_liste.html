@@ -1,0 +1,28 @@
+{% load mathfilters %}
+
+{% load foncier_filter %}
+
+{% load humanize %}
+
+{% for objCara in lstCara %}
+  <tr> 
+    <td class='text-center'><div><strong>{{ objCara.superficie_batie }} m²</strong></div></td> 
+    <td><div>{{ objCara | get_impot_batie }}</div></td>
+    <td class='text-right'><div><strong>{{ objCara.superficie_batie | mul:objCara.impot_batie.impot | floatformat:"0" | intcomma }}</strong></div></td>
+    <td class="text-center">               
+      <button type="button" title="{% if not objPar.date_validate %} Supprimer cette construction {% endif %}"
+        {% if objPar.date_validate is None and objPar.user_create == user or objPar.user_create != user  %} enabled='enabled' {% else %} enabled='enabled' {% endif %}
+        class="btn {% if objPar.date_validate is None %} btn-danger {% else %} btn-default {% endif %} btn-sm js-delete-entity"
+        onclick="SupprimerCaracteristique('{{ objPar.id }}','{{objCara.id}}')">
+        <span class="fa fa-trash"></span> <!--Suppr-->
+      </button>
+    </td>
+  </tr>
+{% empty %}
+  <tr>
+    <td colspan="4" class="text-center"><h1 class="text-danger">Pas de constructions</h1></td>
+  </tr>
+{% endfor %}
+  <tr>
+    <td colspan="4" class="text-right" style="padding-right: 55px; color: #3498db; background-color: #d6eaf8;"><strong>Total: {{ objPar | get_total_montant_caracteristique | intcomma }} BIF</strong></td>
+  </tr>

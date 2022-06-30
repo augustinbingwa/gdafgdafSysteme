@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% load impot_filter %}
+
+{% block javascript %}
+  <script src="{% static 'js/note_imposition.js' %}"></script>
+  <script type="text/javascript">
+    //Initialiser les dates de la période
+    Helpers.DatePicker('ni_pmc_du'); //Date début
+    Helpers.DatePicker('ni_pmc_au'); //Date fin
+  </script>
+{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <div class="card-header">
+      <div class="row">
+        <div class="col-sm-12 text-left" style="padding-top: 6px;">
+          <h4 class="card-title mb-0"><i class="fa fa-credit-card-alt"></i>&nbsp;Gestion des notes d'imposition - Publicités Murs/Clôtures</h4>
+        </div>
+      </div>
+    </div>
+    <div class="card-body" style= "overflow-x:auto; padding-top: 5px;">
+      <form method="POST" action="{% url 'ni_publicite_mur_cloture_list' %}">
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="btn-toolbar float-left" role="toolbar" aria-label="Toolbar with button groups">
+              <div>
+                <label class="label_search">Du:<input type="text" id="ni_pmc_du" name="ni_pmc_du" value="{{ ni_pmc_du }}" placeholder="" title="Date début" class="form-control search-input"/></label>
+                <label class="label_search">Au:<input type="text" id="ni_pmc_au" name="ni_pmc_au" value="{{ ni_pmc_au }}" placeholder="" title="Date fin" class="form-control search-input"/></label>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-8">
+            <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
+              <div>
+                <label class="label_search">Réf note:<input type="text" name="ni_pmc_reference" value="{{ ni_pmc_reference }}" placeholder="..." title="Contenant la référence de la note" class="form-control search-input" autofocus/></label>
+                <label class="label_search">Réf allocation:<input type="text" name="ni_pmc_numero_activite" value="{{ ni_pmc_numero_activite }}" placeholder="..." title="Contenant la référence de l'allocation" class="form-control search-input"/></label>
+                <label class="label_search">Réf juridique:<input type="text" name="ni_pmc_reference_juridique" value="{{ ni_pmc_reference_juridique }}" placeholder="..." title="Contenant la référence juridique" class="form-control search-input"/></label>
+                <label class="label_search">Matricule:<input type="text" name="ni_pmc_matricule" value="{{ ni_pmc_matricule }}" placeholder="..." title="Contenant le matricule du contribuable" class="form-control search-input"/></label>
+                <label class="label_search">Nom:<input type="text" name="ni_pmc_nom" value="{{ ni_pmc_nom }}" placeholder="..." title="Contenant le nom du contribuable" class="form-control search-input"/></label>
+                <label class="label_search">Utilisateur:<input type="text" name="ni_pmc_user_create" value="{{ ni_pmc_user_create }}" placeholder="..." title="Crée par" class="form-control search-input"/></label>
+                <label class="label_search">
+                  Status:
+                  <select name="ni_pmc_status" class="form-control search-input">
+                    <option value="0">...</option>
+                    <option value="1" {% if ni_pmc_status == '1' %} selected='selected' {% endif %}>Validée</option>
+                    <option value="2" {% if ni_pmc_status == '2' %} selected='selected' {% endif %}>En attente</option>
+                  </select>
+                </label>
+                <label class="label_search">
+                  Payé:
+                  <select name="ni_pmc_paiement" class="form-control search-input">
+                    <option value="0">...</option>
+                    <option value="1" {% if ni_pmc_paiement == '1' %} selected='selected' {% endif %}>Oui</option>
+                    <option value="2" {% if ni_pmc_paiement == '2' %} selected='selected' {% endif %}>Non</option>
+                  </select> 
+                </label>
+                <label><button type="submit" id="btn_search" title="Rechercher/Actualiser" class="btn btn-primary btn-sm search-button"><i class="fa fa-search"></i></button></label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <table class="table table-hover table-bordered table-striped table-outline mb-0 nowrap" id="entity-table" width="100%" cellspacing="0">
+        <thead class="thead-default">
+          <tr>
+            <th class="text-center"></th>
+            <th class="text-center">Action</th>
+            <th class="text-center">Status</th>
+            <th class="text-center">Réf-Note</th>
+            <th class="text-center">Contribuable</th>
+            <th class="text-center">Objet</th>
+            <th class="text-center">Période</th>
+            <th class="text-center">Créée-le</th>
+            <th class="text-center">Montant</th>
+            <th class="text-center">Payé</th>
+            <th class="text-center">Crée par</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% include 'ni_publicite_mur_cloture/includes/_ni_publicite_mur_cloture_list.html' %}
+        </tbody>
+      </table>
+      {% include 'paginator.html' %}
+    </div>
+    <div class="card-footer">{{ lst | nombre_enreg_by_user:user }}</div>
+  </div>
+{% endblock %}
